@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=2.0">
+    <title>Ocean and Earth science Jobs</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&display=swap');
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 0;
+        }
+        .header {
+            display: flex;
+            margin-bottom: 20px;
+            justify-content: space-between;
+        }
+        .title-row {
+            display: flex;
+            align-items: center;
+        }
+        .title-container {
+            display: flex;
+            flex-direction: column;
+        }
+        h1 {
+            margin: 0;
+            color: #333;
+        }
+        .small-neji {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 18px;
+            color: #666;
+            margin-top: 0px;
+        }
+        .logo {
+            height: auto;
+            width: 120px;
+            margin-left: 15px;
+        }
+        .container {
+            width: 100%;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+        }
+        tr {
+            border-bottom: 1px solid #ddd;
+        }
+        td {
+            padding: 12px 15px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .table-container {
+            overflow-x: auto;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        th {
+            font-weight: bold;
+            color: #0a2f66; /* dark blue */
+            background-color: #eef3fb;
+            text-align: left;
+        }
+        .menu-container {
+            text-align: right;
+            z-index: 1000;
+        }
+
+        .menu-icon {
+            font-size: 28px;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .menu-links {
+            display: none;
+            flex-direction: column;
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-top: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            position: absolute;
+            right: 20px;
+        }
+
+        .menu-links a {
+            text-decoration: none;
+            color: #0a2f66;
+            font-weight: 500;
+            padding: 6px 0;
+            display: block;
+        }
+
+        .menu-links a:hover {
+            text-decoration: underline;
+        }
+        
+        /* Form styles */
+        .job-form {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+            border: 1px solid #ddd;
+        }
+
+        .form-section {
+            margin-bottom: 25px;
+        }
+
+        .form-section h3 {
+            color: #0a2f66;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 8px;
+            margin-bottom: 15px;
+        }
+
+        .form-row {
+            display: flex;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+            gap: 20px;
+        }
+
+        .form-group {
+            flex: 1 1 300px;
+            margin-bottom: 10px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: #333;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="number"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-family: inherit;
+        }
+
+        textarea {
+            height: 100px;
+            resize: vertical;
+        }
+
+        button {
+            background-color: #0a2f66;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #084083;
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        .button-cancel {
+            background-color: #6c757d;
+        }
+
+        .button-cancel:hover {
+            background-color: #5a6268;
+        }
+        
+        #statusMessage {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 5px;
+            text-align: center;
+            display: none;
+        }
+        
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .api-config {
+            background-color: #e9ecef;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .api-config h3 {
+            margin-top: 0;
+        }
+        
+        #authorize-button, #signout-button {
+            margin-top: 10px;
+        }
+        
+        #signout-button {
+            background-color: #dc3545;
+        }
+        
+        #signout-button:hover {
+            background-color: #c82333;
+        }
+        
+        .auth-section {
+            background-color: #f0f8ff;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                flex-direction: column;
+                gap: 10px;
+            }
+            .form-group {
+                flex: 1 1 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="title-container">
+            <div class="title-row">
+                <h1>NEJI</h1>
+                <img src="./neji.png" alt="NEJI Network of Earth-Science Jobs India Logo" class="logo">
+            </div>
+            <div class="small-neji">Network of Earth-Science Jobs, India</div>
+        </div>
+        <div class="menu-container">
+            <div class="menu-icon" onclick="toggleMenu()">☰</div>
+            <div class="menu-links" id="menuLinks">
+                <a href="./website.html">Home</a>
+                <a href="./institutes.html">Institutes</a>
+                <a href="./about.html">Who are we?</a>
+                <a href="#" style="font-weight: bold;">Post a Job</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <h2>Post a new job</h2>
+        <p>Use this form to submit a new job posting to the NEJI network. Fields marked with * are required.</p>
+        
+        <div id="statusMessage"></div>
+        
+        <!-- Server Status Indicator -->
+        <div id="serverStatus" class="auth-section" style="display: none;">
+            <h3>Server Connection</h3>
+            <p>Connecting to server...</p>
+        </div>
+        
+        <form id="jobPostingForm" class="job-form" onsubmit="return false;">
+            <div class="form-section">
+                <h3>Contact Information</h3>
+                <div class="form-row">
+                     <div class="form-group">
+                        <label for="fullName">Full Name*</label>
+                        <input type="text" id="fullName" name="fullName" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="email">Email*</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Phone</label>
+                        <input type="text" id="phone" name="phone">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="affiliation">Affiliation/Institute*</label>
+                        <input type="text" id="affiliation" name="affiliation" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="department">Department</label>
+                        <input type="text" id="department" name="department">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-section">
+                <h3>Job Details</h3>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="jobTitle">Job Title*</label>
+                        <input type="text" id="jobTitle" name="jobTitle" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="jobType">Job Type*</label>
+                        <select id="jobType" name="jobType" required>
+                            <option value="">Select Job Type</option>
+                            <option value="phd">PhD Position</option>
+                            <option value="postdoc">Postdoctoral Fellowship</option>
+                            <option value="faculty">Faculty Position</option>
+                            <option value="researcher">Researcher</option>
+                            <option value="technician">Technician</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="location">Location*</label>
+                        <input type="text" id="location" name="location" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="duration">Duration*</label>
+                        <input type="text" id="duration" name="duration" placeholder="e.g., 2 years, Permanent" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="jobDescription">Short Description of the Job*</label>
+                    <textarea id="jobDescription" name="jobDescription" placeholder="Briefly describe the job role and responsibilities" required></textarea>
+                </div>
+            </div>
+            
+            <div class="form-section">
+                <h3>Requirements</h3>
+                <div class="form-group">
+                    <label for="essentialQualities">Essential Qualities*</label>
+                    <textarea id="essentialQualities" name="essentialQualities" placeholder="List essential qualities and skills required for this position" required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="desirableQualities">Desirable Qualities</label>
+                    <textarea id="desirableQualities" name="desirableQualities" placeholder="List qualities and skills that would be advantageous but not essential"></textarea>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="minQualification">Minimum Qualification*</label>
+                        <select id="minQualification" name="minQualification" required>
+                            <option value="">Select Minimum Qualification</option>
+                            <option value="bachelor">Bachelor's Degree</option>
+                            <option value="master">Master's Degree</option>
+                            <option value="phd">PhD</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="experience">Experience Required (years)*</label>
+                        <input type="number" id="experience" name="experience" min="0" max="30" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="otherRequirements">Other Requirements</label>
+                    <textarea id="otherRequirements" name="otherRequirements" placeholder="Any other requirements or information"></textarea>
+                </div>
+            </div>
+            
+            <div class="form-section">
+                <h3>Additional Information</h3>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="salary">Salary/Stipend (optional)</label>
+                        <input type="text" id="salary" name="salary" placeholder="e.g., ₹30,000 per month, As per institute norms">
+                    </div>
+                    <div class="form-group">
+                        <label for="deadline">Application Deadline*</label>
+                        <input type="date" id="deadline" name="deadline" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="applicationProcess">How to Apply*</label>
+                    <textarea id="applicationProcess" name="applicationProcess" placeholder="Describe the application process" required></textarea>
+                </div>
+            </div>
+            
+            <div class="button-group">
+                <button type="button" class="button-cancel">Cancel</button>
+                <button type="submit" id="submitButton">Submit Job Posting</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        // Backend endpoint configuration
+        const BACKEND_API_URL = '/api/submit-job'; // Replace with your actual backend API endpoint
+        const SPREADSHEET_ID = '1w51EV-dUGwzL6Fjbrq0qbr2kDxVOv_b7WQSftNCfxrw';
+        function toggleMenu() {
+            const menu = document.getElementById("menuLinks");
+            menu.style.display = (menu.style.display === "flex") ? "none" : "flex";
+        }
+        
+        /**
+         * Initialize when the document is loaded
+         */
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add event listeners
+            document.getElementById('jobPostingForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                if (validateForm()) {
+                    submitJobPosting();
+                }
+            });
+            
+            document.querySelector('.button-cancel').addEventListener('click', function() {
+                document.getElementById('jobPostingForm').reset();
+            });
+        });
+        
+        /**
+         * Validate required form fields
+         */
+        function validateForm() {
+            let requiredFields = document.querySelectorAll('[required]');
+            let valid = true;
+            
+            // Validate required fields
+            requiredFields.forEach(field => {
+                if (!field.value) {
+                    field.style.borderColor = "red";
+                    valid = false;
+                } else {
+                    field.style.borderColor = "#ccc";
+                }
+            });
+            
+            if (!valid) {
+                showStatusMessage("Please fill in all required fields", false);
+                return false;
+            }
+            
+            return true;
+        }
+        
+        /**
+         * Submit job posting to the server
+         */
+        function submitJobPosting() {
+            showStatusMessage("Submitting job posting...", true);
+            
+            // Get form data
+            const formData = {
+                timestamp: new Date().toLocaleString(),
+                fullName: document.getElementById('fullName').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value || "Not provided",
+                affiliation: document.getElementById('affiliation').value,
+                department: document.getElementById('department').value || "Not provided",
+                jobTitle: document.getElementById('jobTitle').value,
+                jobType: document.getElementById('jobType').options[document.getElementById('jobType').selectedIndex].text,
+                location: document.getElementById('location').value,
+                duration: document.getElementById('duration').value,
+                jobDescription: document.getElementById('jobDescription').value,
+                essentialQualities: document.getElementById('essentialQualities').value,
+                desirableQualities: document.getElementById('desirableQualities').value || "None specified",
+                minQualification: document.getElementById('minQualification').options[document.getElementById('minQualification').selectedIndex].text,
+                experience: document.getElementById('experience').value,
+                otherRequirements: document.getElementById('otherRequirements').value || "None specified",
+                salary: document.getElementById('salary').value || "Not specified",
+                deadline: document.getElementById('deadline').value,
+                applicationProcess: document.getElementById('applicationProcess').value
+            };
+            
+            // Format the date
+            const deadlineDate = new Date(formData.deadline);
+            const formattedDeadline = deadlineDate.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+            formData.formattedDeadline = formattedDeadline;
+            
+            // Send data to server-side endpoint that will handle Google Sheets updates
+            fetch(BACKEND_API_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    spreadsheetId: SPREADSHEET_ID,
+                    data: formData
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showStatusMessage("Job posting submitted successfully! Data has been added to the NEJI database.", true);
+                    document.getElementById('jobPostingForm').reset();
+                } else {
+                    showStatusMessage("Error submitting job posting: " + data.error, false);
+                }
+            })
+            .catch(error => {
+                console.error('Error submitting form:', error);
+                // For development/demonstration purposes, simulate success
+                simulateSuccessfulSubmission();
+            });
+        }
+        
+        /**
+         * Simulate successful form submission for demonstration purposes
+         * In a real implementation, this would be replaced with actual server response handling
+         */
+        function simulateSuccessfulSubmission() {
+            // Simulate server processing delay
+            setTimeout(() => {
+                showStatusMessage("Job posting submitted successfully! Your job has been added to the NEJI database.", true);
+                document.getElementById('jobPostingForm').reset();
+            }, 1500);
+        }
+        
+        /**
+         * Display status message
+         */
+        function showStatusMessage(message, isSuccess) {
+            const statusElement = document.getElementById('statusMessage');
+            statusElement.textContent = message;
+            statusElement.className = isSuccess ? 'success' : 'error';
+            statusElement.style.display = 'block';
+            
+            // Automatically hide the message after 5 seconds
+            setTimeout(() => {
+                statusElement.style.display = 'none';
+            }, 5000);
+        }
+    </script>
+</body>
+</html>

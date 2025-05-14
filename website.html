@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=2.0">
+    <title>Ocean and Earth science Jobs</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&display=swap');
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 0;
+        }
+        .header {
+            display: flex;
+            margin-bottom: 20px;
+        }
+        .title-row {
+            display: flex;
+            align-items: center;
+        }
+        .title-container {
+            display: flex;
+            flex-direction: column;
+        }
+        h1 {
+            margin: 0;
+            color: #333;
+        }
+        .small-neji {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 18px;
+            color: #666;
+            margin-top: 0px;
+        }
+        .logo {
+            height: auto;
+            width: 120px;
+            margin-left: 15px;
+        }
+        .container {
+            width: 100%;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+        }
+        tr {
+            border-bottom: 1px solid #ddd;
+        }
+        td {
+            padding: 12px 15px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .table-container {
+            overflow-x: auto;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        th {
+            font-weight: bold;
+            color: #0a2f66; /* dark blue */
+            background-color: #eef3fb;
+            text-align: left;
+            }
+        .menu-container {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    text-align: right;
+    z-index: 1000;
+}
+
+.menu-icon {
+    font-size: 28px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.menu-links {
+    display: none;
+    flex-direction: column;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-top: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.menu-links a {
+    text-decoration: none;
+    color: #0a2f66;
+    font-weight: 500;
+    padding: 6px 0;
+    display: block;
+}
+
+.menu-links a:hover {
+    text-decoration: underline;
+}
+
+
+    </style>
+</head>
+<script>
+function toggleMenu() {
+    const menu = document.getElementById("menuLinks");
+    menu.style.display = (menu.style.display === "flex") ? "none" : "flex";
+}
+</script>
+
+<body>
+    <div class="header">
+        <div class="title-container">
+            <div class="title-row">
+                <h1>NEJI</h1>
+                <img src="./neji.png" alt="NEJI Network of Earth-Science Jobs India Logo" class="logo">
+            </div>
+            <div class="small-neji">Network of Earth-Science Jobs, India</div>
+        </div>
+        <div class="menu-container">
+    <div class="menu-icon" onclick="toggleMenu()">☰</div>
+    <div class="menu-links" id="menuLinks">
+        <a href="./website.html">Home</a>
+        <a href="./institutes.html">Institutes</a>
+        <a href="./put_your_word.html">Put your word out</a>
+        <a href="./about.html">Who are we?</a>
+    </div>
+</div>
+    </div>
+    <div class="container">
+        <div class="table-container">
+            <table>
+                <tr>
+                    <th>Job Position</th>
+                    <th>Organization Name</th>
+                    <th>Location</th>
+                    <th>Posted Date</th>
+                </tr>
+                <tr>
+                    <td><a href="https://www.nio.res.in/vacancies/temporary" 		    target="_blank">
+            Research Scientist - Oceanography </a>
+        	   </td>
+                    <td>National Institute of Ocean Technology</td>
+                    <td>Chennai, India</td>
+                    <td>May 10, 2025</td>
+                </tr>
+                <tr>
+                    <td>Geophysicist - Remote Sensing</td>
+                    <td>Indian Space Research Organisation</td>
+                    <td>Bengaluru, India</td>
+                    <td>May 5, 2025</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</body>
+</html>
