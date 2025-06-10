@@ -3,10 +3,9 @@
 Google app script
 
 Deployment successfully updated.
-Version 1 on Jun 2, 2025, 10:58 AM
-Deployment ID
-AKfycbwIEBH9DV9TnhaEp9UdgFEy-90lSaG4hUP7Z1vmLKTHR_ap0MQrOApL3ONLNWt7CCga
+Version 25.06.10 on Jun 10, 2025, 10:58 AM
 Web app
 URL
-https://script.google.com/macros/s/AKfycbwIEBH9DV9TnhaEp9UdgFEy-90lSaG4hUP7Z1vmLKTHR_ap0MQrOApL3ONLNWt7CCga/exec
+https://script.google.com/macros/s/AKfycbxjjgXGVAXyLBDQqHbnFssoNMw86pzPNBVdno66pjt5svrAQUOkufI0CQpMw5yniEMe/exec
+
 
