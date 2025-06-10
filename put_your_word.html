@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=2.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ocean and Earth science Jobs</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&display=swap');
@@ -146,6 +146,7 @@
         input[type="text"],
         input[type="email"],
         input[type="number"],
+        input[type="date"],
         textarea,
         select {
             width: 100%;
@@ -154,6 +155,14 @@
             border-radius: 4px;
             box-sizing: border-box;
             font-family: inherit;
+        }
+
+        .form-field-error {
+            border-color: #dc3545 !important;
+        }
+
+        .form-field-valid {
+            border-color: #28a745;
         }
 
         textarea {
@@ -175,6 +184,11 @@
 
         button:hover {
             background-color: #084083;
+        }
+
+        button:disabled {
+            background-color: #6c757d;
+            cursor: not-allowed;
         }
 
         .button-group {
@@ -211,37 +225,10 @@
             border: 1px solid #f5c6cb;
         }
         
-        .api-config {
-            background-color: #e9ecef;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-        }
-        
-        .api-config h3 {
-            margin-top: 0;
-        }
-        
-        #authorize-button, #signout-button {
-            margin-top: 10px;
-        }
-        
-        #signout-button {
-            background-color: #dc3545;
-        }
-        
-        #signout-button:hover {
-            background-color: #c82333;
-        }
-        
-        .auth-section {
-            background-color: #f0f8ff;
-            padding: 20px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+        .loading {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
         }
 
         @media (max-width: 768px) {
@@ -260,18 +247,18 @@
         <div class="title-container">
             <div class="title-row">
                 <h1>NEJI</h1>
-                <img src="./neji.png" alt="NEJI Network of Earth-Science Jobs India Logo" class="logo">
+                <img src="./neji.png" alt="NEJI Network of Earth-Science Jobs India Logo" class="logo" onerror="this.style.display='none'">
             </div>
             <div class="small-neji">Network of Earth-Science Jobs, India</div>
         </div>
         <div class="menu-container">
             <div class="menu-icon" onclick="toggleMenu()">☰</div>
             <div class="menu-links" id="menuLinks">
-                <a href="./website.html">Home</a>
-                <a href="./institutes.html">Institutes</a>
-                <a href="./about.html">Who are we?</a>
-                <a href="#" style="font-weight: bold;">Post a Job</a>
-            </div>
+          	   <a href="./website.html">Home</a>
+    	 	    <a href="./institutes.html">Institutes</a>
+   	 	    <a href="./put_your_word.html">Put your word out</a>
+   	 	    <a href="./about.html">Who are we?</a>
+             </div>
         </div>
     </div>
 
@@ -281,13 +268,7 @@
         
         <div id="statusMessage"></div>
         
-        <!-- Server Status Indicator -->
-        <div id="serverStatus" class="auth-section" style="display: none;">
-            <h3>Server Connection</h3>
-            <p>Connecting to server...</p>
-        </div>
-        
-        <form id="jobPostingForm" class="job-form" onsubmit="return false;">
+        <form id="jobPostingForm" class="job-form">
             <div class="form-section">
                 <h3>Contact Information</h3>
                 <div class="form-row">
@@ -408,157 +389,214 @@
                     <label for="applicationProcess">How to Apply*</label>
                     <textarea id="applicationProcess" name="applicationProcess" placeholder="Describe the application process" required></textarea>
                 </div>
+                <div class="form-group">
+                    <label for="link">link</label>
+                    <textarea id="link" name="link" placeholder="please provide link of advt if available" required></textarea>
+                </div>
             </div>
             
             <div class="button-group">
-                <button type="button" class="button-cancel">Cancel</button>
+                <button type="button" class="button-cancel" onclick="resetForm()">Cancel</button>
                 <button type="submit" id="submitButton">Submit Job Posting</button>
             </div>
         </form>
     </div>
 
     <script>
-        // Backend endpoint configuration
-        const BACKEND_API_URL = '/api/submit-job'; // Replace with your actual backend API endpoint
-        const SPREADSHEET_ID = '1w51EV-dUGwzL6Fjbrq0qbr2kDxVOv_b7WQSftNCfxrw';
+        // Replace this URL with your Google Apps Script Web App URL after deployment
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxjjgXGVAXyLBDQqHbnFssoNMw86pzPNBVdno66pjt5svrAQUOkufI0CQpMw5yniEMe/exec';
+        
         function toggleMenu() {
             const menu = document.getElementById("menuLinks");
             menu.style.display = (menu.style.display === "flex") ? "none" : "flex";
         }
         
-        /**
-         * Initialize when the document is loaded
-         */
-        document.addEventListener('DOMContentLoaded', function() {
-            // Add event listeners
-            document.getElementById('jobPostingForm').addEventListener('submit', function(e) {
-                e.preventDefault();
-                if (validateForm()) {
-                    submitJobPosting();
-                }
-            });
+        // Form submission handler
+        document.getElementById('jobPostingForm').addEventListener('submit', function(e) {
+            e.preventDefault();
             
-            document.querySelector('.button-cancel').addEventListener('click', function() {
-                document.getElementById('jobPostingForm').reset();
-            });
-        });
-        
-        /**
-         * Validate required form fields
-         */
-        function validateForm() {
-            let requiredFields = document.querySelectorAll('[required]');
-            let valid = true;
-            
-            // Validate required fields
-            requiredFields.forEach(field => {
-                if (!field.value) {
-                    field.style.borderColor = "red";
-                    valid = false;
-                } else {
-                    field.style.borderColor = "#ccc";
-                }
-            });
-            
-            if (!valid) {
-                showStatusMessage("Please fill in all required fields", false);
-                return false;
+            if (!validateForm()) {
+                return;
             }
             
-            return true;
+            // URL validation removed - using configured Google Apps Script URL
+            
+            submitToGoogleSheets();
+        });
+        
+        function validateForm() {
+            const requiredFields = document.querySelectorAll('[required]');
+            let isValid = true;
+            
+            // Clear previous validation styling
+            document.querySelectorAll('.form-field-error').forEach(field => {
+                field.classList.remove('form-field-error');
+            });
+            
+            requiredFields.forEach(field => {
+                if (!field.value.trim()) {
+                    field.classList.add('form-field-error');
+                    isValid = false;
+                } else {
+                    field.classList.remove('form-field-error');
+                    field.classList.add('form-field-valid');
+                }
+            });
+            
+            // Email validation
+            const emailField = document.getElementById('email');
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (emailField.value && !emailRegex.test(emailField.value)) {
+                emailField.classList.add('form-field-error');
+                isValid = false;
+                showStatusMessage('Please enter a valid email address.', 'error');
+            }
+            
+            // Date validation (deadline should be in the future)
+            const deadlineField = document.getElementById('deadline');
+            if (deadlineField.value) {
+                const selectedDate = new Date(deadlineField.value);
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+                
+                if (selectedDate < today) {
+                    deadlineField.classList.add('form-field-error');
+                    isValid = false;
+                    showStatusMessage('Application deadline should be in the future.', 'error');
+                }
+            }
+            
+            if (!isValid && !document.querySelector('.error')) {
+                showStatusMessage('Please fill in all required fields correctly.', 'error');
+            }
+            
+            return isValid;
         }
         
-        /**
-         * Submit job posting to the server
-         */
-        function submitJobPosting() {
-            showStatusMessage("Submitting job posting...", true);
+        function submitToGoogleSheets() {
+            const submitButton = document.getElementById('submitButton');
+            const originalText = submitButton.textContent;
             
-            // Get form data
-            const formData = {
-                timestamp: new Date().toLocaleString(),
-                fullName: document.getElementById('fullName').value,
-                email: document.getElementById('email').value,
-                phone: document.getElementById('phone').value || "Not provided",
-                affiliation: document.getElementById('affiliation').value,
-                department: document.getElementById('department').value || "Not provided",
-                jobTitle: document.getElementById('jobTitle').value,
-                jobType: document.getElementById('jobType').options[document.getElementById('jobType').selectedIndex].text,
-                location: document.getElementById('location').value,
-                duration: document.getElementById('duration').value,
-                jobDescription: document.getElementById('jobDescription').value,
-                essentialQualities: document.getElementById('essentialQualities').value,
-                desirableQualities: document.getElementById('desirableQualities').value || "None specified",
-                minQualification: document.getElementById('minQualification').options[document.getElementById('minQualification').selectedIndex].text,
-                experience: document.getElementById('experience').value,
-                otherRequirements: document.getElementById('otherRequirements').value || "None specified",
-                salary: document.getElementById('salary').value || "Not specified",
-                deadline: document.getElementById('deadline').value,
-                applicationProcess: document.getElementById('applicationProcess').value
-            };
+            // Show loading state
+            submitButton.textContent = 'Submitting...';
+            submitButton.disabled = true;
+            showStatusMessage('Submitting your job posting...', 'loading');
             
-            // Format the date
-            const deadlineDate = new Date(formData.deadline);
-            const formattedDeadline = deadlineDate.toLocaleDateString('en-US', {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric'
+            // Collect form data
+            const formData = new FormData();
+            
+            // Add timestamp
+            formData.append('timestamp', new Date().toLocaleString());
+            
+            // Add all form fields
+            const formFields = [
+                'fullName', 'email', 'phone', 'affiliation', 'department',
+                'jobTitle', 'jobType', 'location', 'duration', 'jobDescription',
+                'essentialQualities', 'desirableQualities', 'minQualification',
+                'experience', 'otherRequirements', 'salary', 'deadline', 'applicationProcess','link'
+            ];
+            
+            formFields.forEach(fieldName => {
+                const field = document.getElementById(fieldName);
+                let value = field.value || '';
+                
+                // Use the actual value for data consistency
+                formData.append(fieldName, value);
             });
-            formData.formattedDeadline = formattedDeadline;
             
-            // Send data to server-side endpoint that will handle Google Sheets updates
-            fetch(BACKEND_API_URL, {
+            // Submit to Google Apps Script
+            fetch(SCRIPT_URL, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    spreadsheetId: SPREADSHEET_ID,
-                    data: formData
-                })
+                body: formData
             })
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
             .then(data => {
-                if (data.success) {
-                    showStatusMessage("Job posting submitted successfully! Data has been added to the NEJI database.", true);
+                if (data.result === 'success') {
+                    showStatusMessage('Job posting submitted successfully! Your data has been saved to Google Sheets.', 'success');
                     document.getElementById('jobPostingForm').reset();
+                    clearValidationStyling();
                 } else {
-                    showStatusMessage("Error submitting job posting: " + data.error, false);
+                    throw new Error(data.error || 'Unknown error occurred');
                 }
             })
             .catch(error => {
-                console.error('Error submitting form:', error);
-                // For development/demonstration purposes, simulate success
-                simulateSuccessfulSubmission();
+                console.error('Error:', error);
+                let errorMessage = 'Error submitting form: ';
+                
+                if (error.message.includes('HTTP error')) {
+                    errorMessage += 'Server error. Please try again later.';
+                } else if (error.message.includes('Failed to fetch')) {
+                    errorMessage += 'Network error. Please check your connection.';
+                } else {
+                    errorMessage += error.message;
+                }
+                
+                showStatusMessage(errorMessage, 'error');
+            })
+            .finally(() => {
+                // Reset button state
+                submitButton.textContent = originalText;
+                submitButton.disabled = false;
             });
         }
         
-        /**
-         * Simulate successful form submission for demonstration purposes
-         * In a real implementation, this would be replaced with actual server response handling
-         */
-        function simulateSuccessfulSubmission() {
-            // Simulate server processing delay
-            setTimeout(() => {
-                showStatusMessage("Job posting submitted successfully! Your job has been added to the NEJI database.", true);
-                document.getElementById('jobPostingForm').reset();
-            }, 1500);
+        function resetForm() {
+            document.getElementById('jobPostingForm').reset();
+            clearValidationStyling();
+            // Hide status message
+            document.getElementById('statusMessage').style.display = 'none';
         }
         
-        /**
-         * Display status message
-         */
-        function showStatusMessage(message, isSuccess) {
-            const statusElement = document.getElementById('statusMessage');
-            statusElement.textContent = message;
-            statusElement.className = isSuccess ? 'success' : 'error';
-            statusElement.style.display = 'block';
-            
-            // Automatically hide the message after 5 seconds
-            setTimeout(() => {
-                statusElement.style.display = 'none';
-            }, 5000);
+        function clearValidationStyling() {
+            // Reset any validation styling
+            const fields = document.querySelectorAll('input, textarea, select');
+            fields.forEach(field => {
+                field.classList.remove('form-field-error', 'form-field-valid');
+            });
         }
+        
+        function showStatusMessage(message, type) {
+            const statusDiv = document.getElementById('statusMessage');
+            statusDiv.textContent = message;
+            statusDiv.className = type;
+            statusDiv.style.display = 'block';
+            
+            // Auto-hide success and loading messages after 5 seconds
+            if (type === 'success' || type === 'loading') {
+                setTimeout(() => {
+                    statusDiv.style.display = 'none';
+                }, 5000);
+            }
+            
+            // Scroll to status message
+            statusDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+        
+        // Add real-time validation feedback
+        document.querySelectorAll('input, textarea, select').forEach(field => {
+            field.addEventListener('blur', function() {
+                if (this.hasAttribute('required') && !this.value.trim()) {
+                    this.classList.add('form-field-error');
+                } else {
+                    this.classList.remove('form-field-error');
+                    if (this.value.trim()) {
+                        this.classList.add('form-field-valid');
+                    }
+                }
+            });
+            
+            field.addEventListener('input', function() {
+                if (this.classList.contains('form-field-error') && this.value.trim()) {
+                    this.classList.remove('form-field-error');
+                    this.classList.add('form-field-valid');
+                }
+            });
+        });
     </script>
 </body>
 </html>
