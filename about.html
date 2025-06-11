@@ -104,6 +104,137 @@
     text-decoration: underline;
 }
 
+.about-content {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+.about-text {
+    background-color: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    padding: 30px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.about-text p {
+    font-size: 16px;
+    line-height: 1.6;
+    color: #333;
+    margin: 0;
+}
+
+.about-text a {
+    color: #0a2f66;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.about-text a:hover {
+    text-decoration: underline;
+}
+
+.footer-panel {
+    background-color: #0a2f66;
+    color: white;
+    padding: 15px 20px;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    box-sizing: border-box;
+    text-align: center;
+    z-index: 100;
+}
+
+.footer-content {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.footer-title {
+    font-size: 10pt;
+    font-weight: 500;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.developer-info {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.developer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+
+.developer-name {
+    font-size: 10pt;
+    font-weight: 500;
+    margin-bottom: 3px;
+}
+
+.social-links {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.social-link {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    color: white;
+    text-decoration: none;
+    font-size: 10pt;
+    transition: opacity 0.3s ease;
+}
+
+.social-link:hover {
+    opacity: 0.8;
+    text-decoration: underline;
+}
+
+.social-icon {
+    width: 14px;
+    height: 14px;
+}
+
+@media (max-width: 600px) {
+    .developer-info {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .social-links {
+        justify-content: center;
+    }
+    
+    .footer-title {
+        font-size: 9pt;
+    }
+    
+    .developer-name {
+        font-size: 9pt;
+    }
+    
+    .social-link {
+        font-size: 9pt;
+    }
+}
+
+/* Add bottom padding to body to prevent content from being hidden behind fixed footer */
+body {
+    padding-bottom: 80px;
+}
 
     </style>
 </head>
@@ -132,6 +263,41 @@ function toggleMenu() {
         <a href="./about.html">Who are we?</a>
     </div>
 </div>
+</div>
+
+<div class="about-content">
+    <div class="about-text">
+        <p>This website was created to simplify the often tedious process of searching for academic and research positions across all tiers. Inspired in part by resources like the <a href="https://maillists.reading.ac.uk/scripts/wa-READING.exe?A0=MET-JOBS" target="_blank">MetJobs mailing list</a>, it aims to provide a more accessible and organized platform for finding relevant opportunities. Your feedback is welcome—feel free to reach out at <strong>ranzan.ocean at gmail.com</strong>.</p>
+    </div>
+</div>
+
+<div class="footer-panel">
+    <div class="footer-content">
+        <div class="footer-title">Developed and Maintained by</div>
+        <div class="developer-info">
+            <div class="developer">
+                <div class="developer-name">Ranjan Kumar Sahu</div>
+                <div class="social-links">
+                    <a href="https://www.linkedin.com/in/sahuranzan/" target="_blank" class="social-link">
+                        <svg class="social-icon" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                        </svg>
+                        LinkedIn
+                    </a>
+                    <a href="https://www.researchgate.net/profile/Ranjan-Sahu-8" target="_blank" class="social-link">
+                        <svg class="social-icon" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M19.586 0c-.818 0-1.508.19-2.073.565-.563.377-.97.936-1.213 1.68-.242.744-.364 1.618-.364 2.624 0 .608.056 1.178.169 1.71.113.532.282 1.021.507 1.467.225.446.507.848.848 1.205.34.357.747.67 1.222.936L19.586 24c.818 0 1.508-.19 2.073-.565.563-.377.97-.936 1.213-1.68.242-.744.364-1.618.364-2.624 0-.608-.056-1.178-.169-1.71-.113-.532-.282-1.021-.507-1.467-.225-.446-.507-.848-.848-1.205-.34-.357-.747-.67-1.222-.936L19.586 0zM8.217 5.836c0-1.377.209-2.551.627-3.523.418-.972 1.002-1.694 1.754-2.165C11.35.677 12.297.441 13.444.441c.906 0 1.705.144 2.395.431.69.287 1.274.701 1.754 1.241.479.54.852 1.194 1.117 1.963.266.769.398 1.647.398 2.634 0 .906-.12 1.754-.36 2.544-.24.79-.598 1.495-1.076 2.115-.479.62-1.076 1.117-1.794 1.492-.718.375-1.557.563-2.519.563-.906 0-1.705-.144-2.395-.431-.69-.287-1.274-.701-1.754-1.242-.479-.54-.852-1.194-1.117-1.962C8.337 8.02 8.217 7.142 8.217 5.836zm11.369 0c0-1.377.209-2.551.627-3.523.418-.972 1.002-1.694 1.754-2.165C22.719.677 23.666.441 24.813.441c.906 0 1.705.144 2.395.431.69.287 1.274.701 1.754 1.241.479.54.852 1.194 1.117 1.963.266.769.398 1.647.398 2.634 0 .906-.12 1.754-.36 2.544-.24.79-.598 1.495-1.076 2.115-.479.62-1.076 1.117-1.794 1.492-.718.375-1.557.563-2.519.563-.906 0-1.705-.144-2.395-.431-.69-.287-1.274-.701-1.754-1.242-.479-.54-.852-1.194-1.117-1.962-.264-.769-.384-1.647-.384-2.953z"/>
+                        </svg>
+                        ResearchGate
+                    </a>
+                </div>
+            </div>
+            <div class="developer">
+                <div class="developer-name">Claude</div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 </body>

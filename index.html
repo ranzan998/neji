@@ -295,203 +295,80 @@ function showJobDetail(jobData) {
     const modal = document.getElementById('jobDetailModal');
     const content = document.getElementById('jobDetailContent');
     
-    // Helper function to safely display data
-    function displayField(value, defaultText = 'Not specified') {
-        return value && value.trim() !== '' ? value : defaultText;
-    }
-    
-    // Helper function to format text with line breaks
-    function formatText(text) {
-        if (!text || text.trim() === '') return 'Not specified';
-        return text.replace(/\n/g, '<br>');
-    }
-    
-    // Populate modal with comprehensive job data
+    // Populate modal with job data
     content.innerHTML = `
         <span class="close-btn" onclick="closeJobDetail()">&times;</span>
-        <h2 class="job-detail-title">${displayField(jobData.jobTitle, 'Job Position')}</h2>
+        <h2 class="job-detail-title">${jobData.jobTitle || 'Job Position'}</h2>
         
-        <!-- Basic Information -->
         <div class="job-detail-section">
             <div class="job-detail-label">Organization:</div>
-            <div class="job-detail-value">${displayField(jobData.affiliation)}</div>
+            <div class="job-detail-value">${[jobData.affiliation, jobData.department].filter(Boolean).join(', ') || 'Not specified'}</div>
         </div>
         
         <div class="job-detail-section">
             <div class="job-detail-label">Location:</div>
-            <div class="job-detail-value">${displayField(jobData.location)}</div>
+            <div class="job-detail-value">${jobData.location || 'Not specified'}</div>
         </div>
+        <div class="job-detail-section">
+            <div class="job-detail-label">Task:</div>
+            <div class="job-detail-value">${jobData.jobDescription || 'Not specified'}
+            </div>
+        </div>        
+        
         
         <div class="job-detail-section">
             <div class="job-detail-label">Posted Date:</div>
-            <div class="job-detail-value">${displayField(jobData.timestamp)}</div>
+            <div class="job-detail-value">${jobData.timestamp || 'Not specified'}</div>
         </div>
         
-        <!-- Job Details -->
-        ${jobData.jobType ? `
+        ${jobData.essentialQualities ? `
         <div class="job-detail-section">
-            <div class="job-detail-label">Job Type:</div>
-            <div class="job-detail-value">${jobData.jobType}</div>
+            <div class="job-detail-label">Qualification:</div>
+            <div class="job-detail-value">${jobData.essentialQualities}</div>
         </div>
         ` : ''}
         
-        ${jobData.department ? `
+        ${jobData.desirableQualities ? `
         <div class="job-detail-section">
-            <div class="job-detail-label">Department:</div>
-            <div class="job-detail-value">${jobData.department}</div>
+            <div class="job-detail-label">Desirables:</div>
+            <div class="job-detail-value">${jobData.desirableQualities}</div>
         </div>
         ` : ''}
         
-        ${jobData.description ? `
-        <div class="job-detail-section">
-            <div class="job-detail-label">Job Description:</div>
-            <div class="job-detail-value">${formatText(jobData.description)}</div>
-        </div>
-        ` : ''}
-        
-        ${jobData.responsibilities ? `
-        <div class="job-detail-section">
-            <div class="job-detail-label">Key Responsibilities:</div>
-            <div class="job-detail-value">${formatText(jobData.responsibilities)}</div>
-        </div>
-        ` : ''}
-        
-        ${jobData.requirements ? `
-        <div class="job-detail-section">
-            <div class="job-detail-label">Requirements & Qualifications:</div>
-            <div class="job-detail-value">${formatText(jobData.requirements)}</div>
-        </div>
-        ` : ''}
-        
-        ${jobData.qualifications ? `
-        <div class="job-detail-section">
-            <div class="job-detail-label">Educational Qualifications:</div>
-            <div class="job-detail-value">${formatText(jobData.qualifications)}</div>
-        </div>
-        ` : ''}
-        
-        ${jobData.experience ? `
-        <div class="job-detail-section">
-            <div class="job-detail-label">Experience Required:</div>
-            <div class="job-detail-value">${displayField(jobData.experience)}</div>
-        </div>
-        ` : ''}
-        
-        ${jobData.skills ? `
-        <div class="job-detail-section">
-            <div class="job-detail-label">Required Skills:</div>
-            <div class="job-detail-value">${formatText(jobData.skills)}</div>
-        </div>
-        ` : ''}
-        
-        <!-- Compensation & Benefits -->
         ${jobData.salary ? `
         <div class="job-detail-section">
             <div class="job-detail-label">Salary/Compensation:</div>
-            <div class="job-detail-value">${displayField(jobData.salary)}</div>
+            <div class="job-detail-value">${jobData.salary}</div>
         </div>
         ` : ''}
         
-        ${jobData.benefits ? `
+        ${jobData.email ? `
         <div class="job-detail-section">
-            <div class="job-detail-label">Benefits:</div>
-            <div class="job-detail-value">${formatText(jobData.benefits)}</div>
+            <div class="job-detail-label">Contact:</div>
+            <div class="job-detail-value">
+                <a href="mailto:${jobData.email}" style="color: #0066cc;">${jobData.email}</a>
+            </div>
         </div>
         ` : ''}
         
-        ${jobData.workType ? `
-        <div class="job-detail-section">
-            <div class="job-detail-label">Work Type:</div>
-            <div class="job-detail-value">${displayField(jobData.workType)}</div>
-        </div>
-        ` : ''}
-        
-        <!-- Application Information -->
         ${jobData.deadline ? `
         <div class="job-detail-section">
             <div class="job-detail-label">Application Deadline:</div>
-            <div class="job-detail-value">${displayField(jobData.deadline)}</div>
+            <div class="job-detail-value">${jobData.deadline}</div>
         </div>
         ` : ''}
         
-        ${jobData.applicationProcess ? `
-        <div class="job-detail-section">
-            <div class="job-detail-label">Application Process:</div>
-            <div class="job-detail-value">${formatText(jobData.applicationProcess)}</div>
-        </div>
-        ` : ''}
-        
-        ${jobData.requiredDocuments ? `
-        <div class="job-detail-section">
-            <div class="job-detail-label">Required Documents:</div>
-            <div class="job-detail-value">${formatText(jobData.requiredDocuments)}</div>
-        </div>
-        ` : ''}
-        
-        <!-- Contact Information -->
-        ${jobData.contactPerson ? `
-        <div class="job-detail-section">
-            <div class="job-detail-label">Contact Person:</div>
-            <div class="job-detail-value">${displayField(jobData.contactPerson)}</div>
-        </div>
-        ` : ''}
-        
-        ${jobData.contactEmail ? `
-        <div class="job-detail-section">
-            <div class="job-detail-label">Contact Email:</div>
-            <div class="job-detail-value">
-                <a href="mailto:${jobData.contactEmail}" style="color: #0066cc;">${jobData.contactEmail}</a>
-            </div>
-        </div>
-        ` : ''}
-        
-        ${jobData.contactPhone ? `
-        <div class="job-detail-section">
-            <div class="job-detail-label">Contact Phone:</div>
-            <div class="job-detail-value">
-                <a href="tel:${jobData.contactPhone}" style="color: #0066cc;">${jobData.contactPhone}</a>
-            </div>
-        </div>
-        ` : ''}
-        
-        ${jobData.websiteUrl ? `
-        <div class="job-detail-section">
-            <div class="job-detail-label">Organization Website:</div>
-            <div class="job-detail-value">
-                <a href="${jobData.websiteUrl}" target="_blank" rel="noopener noreferrer" style="color: #0066cc;">${jobData.websiteUrl} 🔗</a>
-            </div>
-        </div>
-        ` : ''}
-        
-        <!-- Additional Information -->
-        ${jobData.additionalInfo ? `
-        <div class="job-detail-section">
-            <div class="job-detail-label">Additional Information:</div>
-            <div class="job-detail-value">${formatText(jobData.additionalInfo)}</div>
-        </div>
-        ` : ''}
-        
-        ${jobData.notes ? `
-        <div class="job-detail-section">
-            <div class="job-detail-label">Additional Notes:</div>
-            <div class="job-detail-value">${formatText(jobData.notes)}</div>
-        </div>
-        ` : ''}
-        
-        ${jobData.tags ? `
-        <div class="job-detail-section">
-            <div class="job-detail-label">Tags/Keywords:</div>
-            <div class="job-detail-value">${displayField(jobData.tags)}</div>
-        </div>
-        ` : ''}
-        
-        <!-- Footer -->
-        <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee; color: #666; font-size: 14px;">
-            <p><strong>Interested in this position?</strong> Please contact the organization directly using the information provided above.</p>
-            ${!jobData.contactEmail && !jobData.contactPhone ? `
-            <p><em>Contact information not provided. You may need to visit the organization's website or search for their contact details online.</em></p>
-            ` : ''}
-        </div>
+${jobData.link ? `
+  <div class="job-detail-section">
+    <div class="job-detail-label">Additional Information:</div>
+    <div class="job-detail-value">
+      <a href="${jobData.link}" target="_blank" rel="noopener noreferrer">
+        ${jobData.link}
+      </a>
+    </div>
+  </div>
+` : ''}
+
     `;
     
     modal.style.display = 'block';
@@ -566,7 +443,7 @@ document.addEventListener('keydown', function(event) {
         </div>
     </div>
 
-    <script>
+<script>
         // Store job data globally for modal access
         let jobsData = [];
         
@@ -575,7 +452,6 @@ document.addEventListener('keydown', function(event) {
             
             // Configure which columns to display - easily changeable
             const columnsToShow = ['jobTitle', 'affiliation', 'location', 'timestamp'];
-
             fetch(webAppUrl)
                 .then(response => response.json())
                 .then(data => {
@@ -606,17 +482,40 @@ document.addEventListener('keydown', function(event) {
                         tableBody.appendChild(tr);
                     });
                     
-                    // Initialize DataTable with responsive options
-                    $('#dataTable').DataTable({
-                        responsive: true,
+                    // Initialize DataTable with fixed header alignment
+                    const table = $('#dataTable').DataTable({
+                        responsive: {
+                            details: {
+                                type: 'column',
+                                target: 'tr'
+                            }
+                        },
                         autoWidth: false,
-                        scrollX: true,
+                        scrollX: false, // Disable horizontal scroll to prevent header detachment
+                        scrollCollapse: true,
+                        fixedHeader: false, // Disable fixed header to prevent conflicts
                         columnDefs: [
-                            { width: "35%", targets: 0 },
-                            { width: "30%", targets: 1 },
-                            { width: "20%", targets: 2 },
-                            { width: "15%", targets: 3 }
-                        ]
+                            { width: "35%", targets: 0, className: "text-wrap" },
+                            { width: "30%", targets: 1, className: "text-wrap" },
+                            { width: "20%", targets: 2, className: "text-wrap" },
+                            { width: "15%", targets: 3, className: "text-wrap" }
+                        ],
+                        drawCallback: function() {
+                            // Ensure header and body alignment after each redraw
+                            this.api().columns.adjust();
+                        },
+                        initComplete: function() {
+                            // Force column adjustment after initialization
+                            this.api().columns.adjust();
+                            
+                            // Add window resize handler to maintain alignment
+                            $(window).on('resize', () => {
+                                clearTimeout(window.resizeTimer);
+                                window.resizeTimer = setTimeout(() => {
+                                    this.api().columns.adjust();
+                                }, 250);
+                            });
+                        }
                     });
                 })
                 .catch(error => console.error('Error fetching data:', error));
