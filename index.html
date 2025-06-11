@@ -64,11 +64,10 @@
         table {
             width: 100% !important;
             border-collapse: collapse;
-            table-layout: auto; /* Changed from fixed to auto */
+            table-layout: auto;
             min-width: 100%;
         }
         
-        /* DataTables wrapper styling */
         .dataTables_wrapper {
             width: 100%;
         }
@@ -88,27 +87,26 @@
         td, th {
             padding: 12px 15px;
             word-wrap: break-word;
-            white-space: normal; /* Allow text wrapping */
+            white-space: normal;
             vertical-align: top;
         }
         
-        /* Column width distribution */
-        th:nth-child(1), td:nth-child(1) { /* Job position */
+        th:nth-child(1), td:nth-child(1) {
             width: 35%;
             min-width: 200px;
         }
         
-        th:nth-child(2), td:nth-child(2) { /* Organization */
+        th:nth-child(2), td:nth-child(2) {
             width: 30%;
             min-width: 150px;
         }
         
-        th:nth-child(3), td:nth-child(3) { /* Location */
+        th:nth-child(3), td:nth-child(3) {
             width: 20%;
             min-width: 120px;
         }
         
-        th:nth-child(4), td:nth-child(4) { /* Posted date */
+        th:nth-child(4), td:nth-child(4) {
             width: 15%;
             min-width: 100px;
         }
@@ -119,7 +117,7 @@
         
         th {
             font-weight: bold;
-            color: #0a2f66; /* dark blue */
+            color: #0a2f66;
             background-color: #eef3fb;
             text-align: left;
         }
@@ -160,7 +158,78 @@
             text-decoration: underline;
         }
         
-        /* Responsive adjustments */
+        /* Job detail modal/page styles */
+        .job-detail-modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            overflow-y: auto;
+        }
+        
+        .job-detail-content {
+            background-color: #fefefe;
+            margin: 2% auto;
+            padding: 30px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 800px;
+            position: relative;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+        
+        .close-btn {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            position: absolute;
+            right: 20px;
+            top: 15px;
+        }
+        
+        .close-btn:hover {
+            color: #000;
+        }
+        
+        .job-detail-title {
+            color: #0a2f66;
+            margin-bottom: 20px;
+            padding-right: 40px;
+        }
+        
+        .job-detail-section {
+            margin-bottom: 20px;
+        }
+        
+        .job-detail-label {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        
+        .job-detail-value {
+            color: #666;
+            line-height: 1.6;
+            white-space: pre-wrap;
+        }
+        
+        .virtual-link {
+            color: #0066cc;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        
+        .virtual-link:hover {
+            text-decoration: underline;
+            color: #004499;
+        }
+        
         @media (max-width: 768px) {
             .container {
                 padding: 0 10px;
@@ -181,6 +250,12 @@
             
             .small-neji {
                 font-size: 14px;
+            }
+            
+            .job-detail-content {
+                width: 95%;
+                margin: 5% auto;
+                padding: 20px;
             }
         }
         
@@ -214,6 +289,235 @@ function toggleMenu() {
     const menu = document.getElementById("menuLinks");
     menu.style.display = (menu.style.display === "flex") ? "none" : "flex";
 }
+
+// Job detail modal functions
+function showJobDetail(jobData) {
+    const modal = document.getElementById('jobDetailModal');
+    const content = document.getElementById('jobDetailContent');
+    
+    // Helper function to safely display data
+    function displayField(value, defaultText = 'Not specified') {
+        return value && value.trim() !== '' ? value : defaultText;
+    }
+    
+    // Helper function to format text with line breaks
+    function formatText(text) {
+        if (!text || text.trim() === '') return 'Not specified';
+        return text.replace(/\n/g, '<br>');
+    }
+    
+    // Populate modal with comprehensive job data
+    content.innerHTML = `
+        <span class="close-btn" onclick="closeJobDetail()">&times;</span>
+        <h2 class="job-detail-title">${displayField(jobData.jobTitle, 'Job Position')}</h2>
+        
+        <!-- Basic Information -->
+        <div class="job-detail-section">
+            <div class="job-detail-label">Organization:</div>
+            <div class="job-detail-value">${displayField(jobData.affiliation)}</div>
+        </div>
+        
+        <div class="job-detail-section">
+            <div class="job-detail-label">Location:</div>
+            <div class="job-detail-value">${displayField(jobData.location)}</div>
+        </div>
+        
+        <div class="job-detail-section">
+            <div class="job-detail-label">Posted Date:</div>
+            <div class="job-detail-value">${displayField(jobData.timestamp)}</div>
+        </div>
+        
+        <!-- Job Details -->
+        ${jobData.jobType ? `
+        <div class="job-detail-section">
+            <div class="job-detail-label">Job Type:</div>
+            <div class="job-detail-value">${jobData.jobType}</div>
+        </div>
+        ` : ''}
+        
+        ${jobData.department ? `
+        <div class="job-detail-section">
+            <div class="job-detail-label">Department:</div>
+            <div class="job-detail-value">${jobData.department}</div>
+        </div>
+        ` : ''}
+        
+        ${jobData.description ? `
+        <div class="job-detail-section">
+            <div class="job-detail-label">Job Description:</div>
+            <div class="job-detail-value">${formatText(jobData.description)}</div>
+        </div>
+        ` : ''}
+        
+        ${jobData.responsibilities ? `
+        <div class="job-detail-section">
+            <div class="job-detail-label">Key Responsibilities:</div>
+            <div class="job-detail-value">${formatText(jobData.responsibilities)}</div>
+        </div>
+        ` : ''}
+        
+        ${jobData.requirements ? `
+        <div class="job-detail-section">
+            <div class="job-detail-label">Requirements & Qualifications:</div>
+            <div class="job-detail-value">${formatText(jobData.requirements)}</div>
+        </div>
+        ` : ''}
+        
+        ${jobData.qualifications ? `
+        <div class="job-detail-section">
+            <div class="job-detail-label">Educational Qualifications:</div>
+            <div class="job-detail-value">${formatText(jobData.qualifications)}</div>
+        </div>
+        ` : ''}
+        
+        ${jobData.experience ? `
+        <div class="job-detail-section">
+            <div class="job-detail-label">Experience Required:</div>
+            <div class="job-detail-value">${displayField(jobData.experience)}</div>
+        </div>
+        ` : ''}
+        
+        ${jobData.skills ? `
+        <div class="job-detail-section">
+            <div class="job-detail-label">Required Skills:</div>
+            <div class="job-detail-value">${formatText(jobData.skills)}</div>
+        </div>
+        ` : ''}
+        
+        <!-- Compensation & Benefits -->
+        ${jobData.salary ? `
+        <div class="job-detail-section">
+            <div class="job-detail-label">Salary/Compensation:</div>
+            <div class="job-detail-value">${displayField(jobData.salary)}</div>
+        </div>
+        ` : ''}
+        
+        ${jobData.benefits ? `
+        <div class="job-detail-section">
+            <div class="job-detail-label">Benefits:</div>
+            <div class="job-detail-value">${formatText(jobData.benefits)}</div>
+        </div>
+        ` : ''}
+        
+        ${jobData.workType ? `
+        <div class="job-detail-section">
+            <div class="job-detail-label">Work Type:</div>
+            <div class="job-detail-value">${displayField(jobData.workType)}</div>
+        </div>
+        ` : ''}
+        
+        <!-- Application Information -->
+        ${jobData.deadline ? `
+        <div class="job-detail-section">
+            <div class="job-detail-label">Application Deadline:</div>
+            <div class="job-detail-value">${displayField(jobData.deadline)}</div>
+        </div>
+        ` : ''}
+        
+        ${jobData.applicationProcess ? `
+        <div class="job-detail-section">
+            <div class="job-detail-label">Application Process:</div>
+            <div class="job-detail-value">${formatText(jobData.applicationProcess)}</div>
+        </div>
+        ` : ''}
+        
+        ${jobData.requiredDocuments ? `
+        <div class="job-detail-section">
+            <div class="job-detail-label">Required Documents:</div>
+            <div class="job-detail-value">${formatText(jobData.requiredDocuments)}</div>
+        </div>
+        ` : ''}
+        
+        <!-- Contact Information -->
+        ${jobData.contactPerson ? `
+        <div class="job-detail-section">
+            <div class="job-detail-label">Contact Person:</div>
+            <div class="job-detail-value">${displayField(jobData.contactPerson)}</div>
+        </div>
+        ` : ''}
+        
+        ${jobData.contactEmail ? `
+        <div class="job-detail-section">
+            <div class="job-detail-label">Contact Email:</div>
+            <div class="job-detail-value">
+                <a href="mailto:${jobData.contactEmail}" style="color: #0066cc;">${jobData.contactEmail}</a>
+            </div>
+        </div>
+        ` : ''}
+        
+        ${jobData.contactPhone ? `
+        <div class="job-detail-section">
+            <div class="job-detail-label">Contact Phone:</div>
+            <div class="job-detail-value">
+                <a href="tel:${jobData.contactPhone}" style="color: #0066cc;">${jobData.contactPhone}</a>
+            </div>
+        </div>
+        ` : ''}
+        
+        ${jobData.websiteUrl ? `
+        <div class="job-detail-section">
+            <div class="job-detail-label">Organization Website:</div>
+            <div class="job-detail-value">
+                <a href="${jobData.websiteUrl}" target="_blank" rel="noopener noreferrer" style="color: #0066cc;">${jobData.websiteUrl} 🔗</a>
+            </div>
+        </div>
+        ` : ''}
+        
+        <!-- Additional Information -->
+        ${jobData.additionalInfo ? `
+        <div class="job-detail-section">
+            <div class="job-detail-label">Additional Information:</div>
+            <div class="job-detail-value">${formatText(jobData.additionalInfo)}</div>
+        </div>
+        ` : ''}
+        
+        ${jobData.notes ? `
+        <div class="job-detail-section">
+            <div class="job-detail-label">Additional Notes:</div>
+            <div class="job-detail-value">${formatText(jobData.notes)}</div>
+        </div>
+        ` : ''}
+        
+        ${jobData.tags ? `
+        <div class="job-detail-section">
+            <div class="job-detail-label">Tags/Keywords:</div>
+            <div class="job-detail-value">${displayField(jobData.tags)}</div>
+        </div>
+        ` : ''}
+        
+        <!-- Footer -->
+        <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee; color: #666; font-size: 14px;">
+            <p><strong>Interested in this position?</strong> Please contact the organization directly using the information provided above.</p>
+            ${!jobData.contactEmail && !jobData.contactPhone ? `
+            <p><em>Contact information not provided. You may need to visit the organization's website or search for their contact details online.</em></p>
+            ` : ''}
+        </div>
+    `;
+    
+    modal.style.display = 'block';
+    document.body.style.overflow = 'hidden'; // Prevent background scrolling
+}
+
+function closeJobDetail() {
+    const modal = document.getElementById('jobDetailModal');
+    modal.style.display = 'none';
+    document.body.style.overflow = 'auto'; // Restore background scrolling
+}
+
+// Close modal when clicking outside of it
+window.onclick = function(event) {
+    const modal = document.getElementById('jobDetailModal');
+    if (event.target == modal) {
+        closeJobDetail();
+    }
+}
+
+// Close modal with Escape key
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape') {
+        closeJobDetail();
+    }
+});
 </script>
 
 <body>
@@ -255,7 +559,17 @@ function toggleMenu() {
         </div>
     </div>
 
+    <!-- Job Detail Modal -->
+    <div id="jobDetailModal" class="job-detail-modal">
+        <div class="job-detail-content" id="jobDetailContent">
+            <!-- Content will be dynamically populated -->
+        </div>
+    </div>
+
     <script>
+        // Store job data globally for modal access
+        let jobsData = [];
+        
         document.addEventListener('DOMContentLoaded', function() {
             const webAppUrl = 'https://script.google.com/macros/s/AKfycbxjjgXGVAXyLBDQqHbnFssoNMw86pzPNBVdno66pjt5svrAQUOkufI0CQpMw5yniEMe/exec';
             
@@ -265,19 +579,23 @@ function toggleMenu() {
             fetch(webAppUrl)
                 .then(response => response.json())
                 .then(data => {
+                    jobsData = data; // Store data globally
                     const tableBody = document.getElementById('tableBody');
-                    data.forEach(row => {
+                    
+                    data.forEach((row, index) => {
                         let tr = document.createElement('tr');
                         let cellsHtml = '';
                         
                         // Build cells based on columnsToShow array
                         columnsToShow.forEach(column => {
                             if (column === 'jobTitle') {
-                                // Check if link exists for this job title
+                                // Check if external link exists
                                 if (row['link'] && row['link'].trim() !== '') {
+                                    // External link exists - use it
                                     cellsHtml += `<td><a href="${row['link']}" target="_blank" rel="noopener noreferrer">${row[column] || ''} 🔗</a></td>`;
                                 } else {
-                                    cellsHtml += `<td>${row[column] || ''}</td>`;
+                                    // No external link - create virtual page link
+                                    cellsHtml += `<td><a href="#" class="virtual-link" onclick="showJobDetail(jobsData[${index}]); return false;">${row[column] || ''} 📄</a></td>`;
                                 }
                             } else {
                                 cellsHtml += `<td>${row[column] || ''}</td>`;
