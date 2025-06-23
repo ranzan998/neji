@@ -42,33 +42,6 @@
         .container {
             width: 100%;
         }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            table-layout: fixed;
-        }
-        tr {
-            border-bottom: 1px solid #ddd;
-        }
-        td {
-            padding: 12px 15px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-        .table-container {
-            overflow-x: auto;
-        }
-
-        tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-        th {
-            font-weight: bold;
-            color: #0a2f66; /* dark blue */
-            background-color: #eef3fb;
-            text-align: left;
-        }
         .menu-container {
             text-align: right;
             z-index: 1000;
@@ -134,6 +107,10 @@
         .form-group {
             flex: 1 1 300px;
             margin-bottom: 10px;
+        }
+
+        .form-group.full-width {
+            flex: 1 1 100%;
         }
 
         label {
@@ -231,6 +208,19 @@
             border: 1px solid #bee5eb;
         }
 
+        .optional-section {
+            border: 1px dashed #ccc;
+            padding: 15px;
+            margin-top: 15px;
+            background-color: #fafafa;
+        }
+
+        .optional-section h4 {
+            margin-top: 0;
+            color: #666;
+            font-size: 14px;
+        }
+
         @media (max-width: 768px) {
             .form-row {
                 flex-direction: column;
@@ -264,93 +254,51 @@
 
     <div class="container">
         <h2>Post a new job</h2>
-        <p>Use this form to submit a new job posting to the NEJI network. Fields marked with * are required.</p>
+        <p>Quick job posting form - only essential fields marked with * are required.</p>
         
         <div id="statusMessage"></div>
         
         <form id="jobPostingForm" class="job-form">
             <div class="form-section">
-                <h3>Contact Information</h3>
-                <div class="form-row">
-                     <div class="form-group">
-                        <label for="fullName">Full Name*</label>
-                        <input type="text" id="fullName" name="fullName" required>
-                    </div>
-                </div>
+                <h3>Contact & Basic Details</h3>
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="email">Email*</label>
+                        <label for="email">Your Email*</label>
                         <input type="email" id="email" name="email" required>
                     </div>
                     <div class="form-group">
-                        <label for="phone">Phone</label>
-                        <input type="text" id="phone" name="phone">
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="affiliation">Affiliation/Institute*</label>
+                        <label for="affiliation">Institute/Organization*</label>
                         <input type="text" id="affiliation" name="affiliation" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="department">Department</label>
-                        <input type="text" id="department" name="department">
                     </div>
                 </div>
             </div>
             
             <div class="form-section">
-                <h3>Job Details</h3>
+                <h3>Job Information</h3>
                 <div class="form-row">
-
                     <div class="form-group">
-                        <label for="jobType">Job Type*</label>
+                        <label for="jobType">Position Type*</label>
                         <select id="jobType" name="jobType" required>
-                            <option value="">Select Job Type</option>
+                            <option value="">Select Position Type</option>
                             <option value="phd">PhD Position</option>
-                            <option value="postdoc">Postdoctoral Fellowship</option>
-                            <option value="faculty">Faculty Position</option>
-                            <option value="researcher">Researcher</option>
-                            <option value="technician">Technician</option>
+                            <option value="postdoc">Postdoc</option>
+                            <option value="faculty">Faculty</option>
+                            <option value="researcher">Research Scientist</option>
+                            <option value="technician">Technical Staff</option>
                             <option value="other">Other</option>
                         </select>
                     </div>
-                   <div class="form-group">
-                        <label for="jobTitle">other</label>
-                        <input type="text" id="jobTitle" name="jobTitle">
-                    </div>
-                </div>
-                
-                <div class="form-row">
                     <div class="form-group">
                         <label for="location">Location*</label>
-                        <input type="text" id="location" name="location" required>
+                        <input type="text" id="location" name="location" placeholder="City, State/Country" required>
                     </div>
-                    <div class="form-group">
-                        <label for="duration">Duration*</label>
-                        <input type="text" id="duration" name="duration" placeholder="e.g., 2 years, Permanent" required>
-                    </div>
-                </div>
-                
-                <div class="form-group">
-                    <label for="jobDescription">Short Description of the Job*</label>
-                    <textarea id="jobDescription" name="jobDescription" placeholder="Briefly describe the job role and responsibilities" required></textarea>
-                </div>
-            </div>
-            
-            <div class="form-section">
-                <h3>Requirements</h3>
-                <div class="form-group">
-                    <label for="essentialQualities">Essential Qualities*</label>
-                    <textarea id="essentialQualities" name="essentialQualities" placeholder="List essential qualities and skills required for this position" required></textarea>
-                </div>
-                
-                <div class="form-group">
-                    <label for="desirableQualities">Desirable Qualities</label>
-                    <textarea id="desirableQualities" name="desirableQualities" placeholder="List qualities and skills that would be advantageous but not essential"></textarea>
                 </div>
                 
                 <div class="form-row">
+                    <div class="form-group">
+                        <label for="deadline">Application Deadline*</label>
+                        <input type="date" id="deadline" name="deadline" required>
+                    </div>
                     <div class="form-group">
                         <label for="minQualification">Minimum Qualification*</label>
                         <select id="minQualification" name="minQualification" required>
@@ -358,53 +306,53 @@
                             <option value="bachelor">Bachelor's Degree</option>
                             <option value="master">Master's Degree</option>
                             <option value="phd">PhD</option>
-                            <option value="other">Other</option>
                         </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="experience">Experience Required (years)*</label>
-                        <input type="number" id="experience" name="experience" min="0" max="30" required>
                     </div>
                 </div>
                 
-                <div class="form-group">
-                    <label for="otherRequirements">Other Requirements</label>
-                    <textarea id="otherRequirements" name="otherRequirements" placeholder="Any other requirements or information"></textarea>
+                <div class="form-group full-width">
+                    <label for="jobDescription">Job Description*</label>
+                    <textarea id="jobDescription" name="jobDescription" placeholder="Brief description of the position, research area, and key responsibilities" required></textarea>
+                </div>
+                
+                <div class="form-group full-width">
+                    <label for="applicationProcess">How to Apply*</label>
+                    <textarea id="applicationProcess" name="applicationProcess" placeholder="Email address to send applications, required documents, etc." required></textarea>
                 </div>
             </div>
             
-            <div class="form-section">
-                <h3>Additional Information</h3>
+            <div class="optional-section">
+                <h4>Optional Details </h4>
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="salary">Salary/Stipend (optional)</label>
-                        <input type="text" id="salary" name="salary" placeholder="e.g., ₹30,000 per month, As per institute norms">
+                        <label for="duration">Duration</label>
+                        <input type="text" id="duration" name="duration" placeholder="e.g., 2 years, Permanent">
                     </div>
                     <div class="form-group">
-                        <label for="deadline">Application Deadline*</label>
-                        <input type="date" id="deadline" name="deadline" required>
+                        <label for="salary">Salary/Stipend</label>
+                        <input type="text" id="salary" name="salary" placeholder="e.g., ₹30,000/month">
                     </div>
                 </div>
                 
                 <div class="form-group">
-                    <label for="applicationProcess">How to Apply*</label>
-                    <textarea id="applicationProcess" name="applicationProcess" placeholder="Describe the application process" required></textarea>
+                    <label for="requirements">Specific Requirements</label>
+                    <textarea id="requirements" name="requirements" placeholder="Any specific skills, experience, or qualifications beyond the minimum"></textarea>
                 </div>
+                
                 <div class="form-group">
-                    <label for="link">link</label>
-                    <textarea id="link" name="link" placeholder="please provide link of advt if available" required></textarea>
+                    <label for="link">Advertisement Link</label>
+                    <input type="text" id="link" name="link" placeholder="Link to official job posting (if available)">
                 </div>
             </div>
             
             <div class="button-group">
-                <button type="button" class="button-cancel" onclick="resetForm()">Cancel</button>
-                <button type="submit" id="submitButton">Submit Job Posting</button>
+                <button type="button" class="button-cancel" onclick="resetForm()">Clear</button>
+                <button type="submit" id="submitButton">Post Job</button>
             </div>
         </form>
     </div>
 
     <script>
-        // Replace this URL with your Google Apps Script Web App URL after deployment
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxjjgXGVAXyLBDQqHbnFssoNMw86pzPNBVdno66pjt5svrAQUOkufI0CQpMw5yniEMe/exec';
         
         function toggleMenu() {
@@ -412,15 +360,12 @@
             menu.style.display = (menu.style.display === "flex") ? "none" : "flex";
         }
         
-        // Form submission handler
         document.getElementById('jobPostingForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
             if (!validateForm()) {
                 return;
             }
-            
-            // URL validation removed - using configured Google Apps Script URL
             
             submitToGoogleSheets();
         });
@@ -429,7 +374,6 @@
             const requiredFields = document.querySelectorAll('[required]');
             let isValid = true;
             
-            // Clear previous validation styling
             document.querySelectorAll('.form-field-error').forEach(field => {
                 field.classList.remove('form-field-error');
             });
@@ -453,7 +397,7 @@
                 showStatusMessage('Please enter a valid email address.', 'error');
             }
             
-            // Date validation (deadline should be in the future)
+            // Date validation
             const deadlineField = document.getElementById('deadline');
             if (deadlineField.value) {
                 const selectedDate = new Date(deadlineField.value);
@@ -478,34 +422,24 @@
             const submitButton = document.getElementById('submitButton');
             const originalText = submitButton.textContent;
             
-            // Show loading state
-            submitButton.textContent = 'Submitting...';
+            submitButton.textContent = 'Posting...';
             submitButton.disabled = true;
             showStatusMessage('Submitting your job posting...', 'loading');
             
-            // Collect form data
             const formData = new FormData();
-            
-            // Add timestamp
             formData.append('timestamp', new Date().toLocaleString());
             
-            // Add all form fields
             const formFields = [
-                'fullName', 'email', 'phone', 'affiliation', 'department',
-                'jobTitle', 'jobType', 'location', 'duration', 'jobDescription',
-                'essentialQualities', 'desirableQualities', 'minQualification',
-                'experience', 'otherRequirements', 'salary', 'deadline', 'applicationProcess','link'
+                'email', 'affiliation', 'jobType', 'location', 'deadline', 
+                'minQualification', 'jobDescription', 'applicationProcess',
+                'duration', 'salary', 'requirements', 'link'
             ];
             
             formFields.forEach(fieldName => {
                 const field = document.getElementById(fieldName);
-                let value = field.value || '';
-                
-                // Use the actual value for data consistency
-                formData.append(fieldName, value);
+                formData.append(fieldName, field ? field.value : '');
             });
             
-            // Submit to Google Apps Script
             fetch(SCRIPT_URL, {
                 method: 'POST',
                 body: formData
@@ -518,7 +452,7 @@
             })
             .then(data => {
                 if (data.result === 'success') {
-                    showStatusMessage('Job posting submitted successfully! Your data has been saved to Google Sheets.', 'success');
+                    showStatusMessage('Job posted successfully!', 'success');
                     document.getElementById('jobPostingForm').reset();
                     clearValidationStyling();
                 } else {
@@ -540,7 +474,6 @@
                 showStatusMessage(errorMessage, 'error');
             })
             .finally(() => {
-                // Reset button state
                 submitButton.textContent = originalText;
                 submitButton.disabled = false;
             });
@@ -549,12 +482,10 @@
         function resetForm() {
             document.getElementById('jobPostingForm').reset();
             clearValidationStyling();
-            // Hide status message
             document.getElementById('statusMessage').style.display = 'none';
         }
         
         function clearValidationStyling() {
-            // Reset any validation styling
             const fields = document.querySelectorAll('input, textarea, select');
             fields.forEach(field => {
                 field.classList.remove('form-field-error', 'form-field-valid');
@@ -567,18 +498,15 @@
             statusDiv.className = type;
             statusDiv.style.display = 'block';
             
-            // Auto-hide success and loading messages after 5 seconds
             if (type === 'success' || type === 'loading') {
                 setTimeout(() => {
                     statusDiv.style.display = 'none';
                 }, 5000);
             }
             
-            // Scroll to status message
             statusDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
         
-        // Add real-time validation feedback
         document.querySelectorAll('input, textarea, select').forEach(field => {
             field.addEventListener('blur', function() {
                 if (this.hasAttribute('required') && !this.value.trim()) {
