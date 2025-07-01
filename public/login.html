@@ -1,0 +1,1009 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=2.0">
+    <title>Ocean and Earth science Jobs</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&display=swap');
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 0;
+        }
+        .header {
+            display: flex;
+            margin-bottom: 20px;
+            position: relative;
+        }
+        .title-row {
+            display: flex;
+            align-items: center;
+        }
+        .title-container {
+            display: flex;
+            flex-direction: column;
+        }
+        h1 {
+            margin: 0;
+            color: #333;
+        }
+        .small-neji {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 18px;
+            color: #666;
+            margin-top: 0px;
+        }
+        .logo {
+            height: auto;
+            width: 120px;
+            margin-left: 15px;
+        }
+        .container {
+            width: 100%;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+        }
+        tr {
+            border-bottom: 1px solid #ddd;
+        }
+        td {
+            padding: 12px 15px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .table-container {
+            overflow-x: auto;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        th {
+            font-weight: bold;
+            color: #0a2f66;
+            background-color: #eef3fb;
+            text-align: left;
+        }
+        
+        /* Menu Styles */
+        .menu-container {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            text-align: right;
+            z-index: 1000;
+        }
+
+        .menu-icon {
+            font-size: 28px;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .menu-links {
+            display: none;
+            flex-direction: column;
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-top: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .menu-links a {
+            text-decoration: none;
+            color: #0a2f66;
+            font-weight: 500;
+            padding: 6px 0;
+            display: block;
+        }
+
+        .menu-links a:hover {
+            text-decoration: underline;
+        }
+
+        /* Authentication Styles */
+        .auth-container {
+            position: absolute;
+            top: 0;
+            right: 160px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .auth-status {
+            font-size: 14px;
+            color: #0a2f66;
+        }
+
+        .auth-button {
+            background-color: #0a2f66;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .auth-button:hover {
+            background-color: #083a7a;
+        }
+
+        .auth-button.logout {
+            background-color: #dc3545;
+        }
+
+        .auth-button.logout:hover {
+            background-color: #c82333;
+        }
+
+        .auth-button.register {
+            background-color: #28a745;
+            margin-left: 8px;
+        }
+
+        .auth-button.register:hover {
+            background-color: #218838;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 30px;
+            border: none;
+            border-radius: 8px;
+            width: 450px;
+            max-width: 90%;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        .close:hover {
+            color: #000;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: #0a2f66;
+        }
+
+        .submit-button {
+            background-color: #0a2f66;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+            font-weight: 500;
+        }
+
+        .submit-button:hover {
+            background-color: #083a7a;
+        }
+
+        .submit-button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        .submit-button.register {
+            background-color: #28a745;
+        }
+
+        .submit-button.register:hover {
+            background-color: #218838;
+        }
+
+        .error-message {
+            color: #dc3545;
+            font-size: 14px;
+            margin-top: 10px;
+            display: none;
+        }
+
+        .success-message {
+            color: #28a745;
+            font-size: 14px;
+            margin-top: 10px;
+            display: none;
+        }
+
+        .protected-content {
+            display: none;
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #0a2f66;
+        }
+
+        .public-content {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #e9ecef;
+            border-radius: 8px;
+        }
+
+        .toggle-link {
+            color: #0a2f66;
+            cursor: pointer;
+            text-decoration: underline;
+            font-size: 14px;
+            margin-top: 15px;
+            display: block;
+        }
+
+        .toggle-link:hover {
+            color: #083a7a;
+        }
+
+        .password-strength {
+            font-size: 12px;
+            margin-top: 5px;
+            padding: 5px;
+            border-radius: 3px;
+        }
+
+        .strength-weak {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        .strength-medium {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+
+        .strength-strong {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .google-sheets-status {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .status-connected {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .status-error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        @media (max-width: 768px) {
+            .auth-container {
+                position: static;
+                margin-top: 15px;
+                justify-content: flex-end;
+            }
+            
+            .menu-container {
+                position: static;
+                margin-top: 10px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <div class="title-container">
+            <div class="title-row">
+                <h1>NEJI</h1>
+                <img src="./neji.png" alt="NEJI Network of Earth-Science Jobs India Logo" class="logo">
+            </div>
+            <div class="small-neji">Network of Earth-Science Jobs, India</div>
+        </div>
+        
+        <!-- Authentication Section -->
+        <div class="auth-container">
+            <div class="auth-status" id="authStatus">Not logged in</div>
+            <button class="auth-button" id="authButton" onclick="showLogin()">Login</button>
+            <button class="auth-button register" id="registerButton" onclick="showRegister()">Register</button>
+        </div>
+        
+        <div class="menu-container">
+            <div class="menu-icon" onclick="toggleMenu()">☰</div>
+            <div class="menu-links" id="menuLinks">
+                <a href="./index.html">Home</a>
+                <a href="./institutes.html">Institutes</a>
+                <a href="./about.html">Who are we?</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeLogin()">&times;</span>
+            <h2 style="margin-top: 0; color: #0a2f66;">Login to NEJI</h2>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="loginUsername">Username or Email:</label>
+                    <input type="text" id="loginUsername" name="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Password:</label>
+                    <input type="password" id="loginPassword" name="password" required>
+                </div>
+                <button type="submit" class="submit-button" id="loginSubmit">Login</button>
+                <div class="error-message" id="loginErrorMessage"></div>
+                <div class="success-message" id="loginSuccessMessage"></div>
+            </form>
+            <span class="toggle-link" onclick="switchToRegister()">Don't have an account? Register here</span>
+        </div>
+    </div>
+
+    <!-- Registration Modal -->
+    <div id="registerModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeRegister()">&times;</span>
+            <h2 style="margin-top: 0; color: #0a2f66;">Register for NEJI</h2>
+            <form id="registerForm">
+                <div class="form-group">
+                    <label for="regFullName">Full Name:</label>
+                    <input type="text" id="regFullName" name="fullName" required>
+                </div>
+                <div class="form-group">
+                    <label for="regEmail">Email:</label>
+                    <input type="email" id="regEmail" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="regUsername">Username:</label>
+                    <input type="text" id="regUsername" name="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="regPassword">Password:</label>
+                    <input type="password" id="regPassword" name="password" required>
+                    <div class="password-strength" id="passwordStrength" style="display: none;"></div>
+                </div>
+                <div class="form-group">
+                    <label for="regConfirmPassword">Confirm Password:</label>
+                    <input type="password" id="regConfirmPassword" name="confirmPassword" required>
+                </div>
+                <div class="form-group">
+                    <label for="regInstitution">Institution/Organization:</label>
+                    <input type="text" id="regInstitution" name="institution">
+                </div>
+                <div class="form-group">
+                    <label for="regSpecialization">Specialization:</label>
+                    <select id="regSpecialization" name="specialization">
+                        <option value="">Select Specialization</option>
+                        <option value="oceanography">Oceanography</option>
+                        <option value="geology">Geology</option>
+                        <option value="geophysics">Geophysics</option>
+                        <option value="atmospheric-science">Atmospheric Science</option>
+                        <option value="environmental-science">Environmental Science</option>
+                        <option value="marine-biology">Marine Biology</option>
+                        <option value="climate-science">Climate Science</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="regExperience">Experience Level:</label>
+                    <select id="regExperience" name="experience">
+                        <option value="">Select Experience</option>
+                        <option value="student">Student</option>
+                        <option value="entry-level">Entry Level (0-2 years)</option>
+                        <option value="mid-level">Mid Level (3-7 years)</option>
+                        <option value="senior-level">Senior Level (8+ years)</option>
+                        <option value="professor">Professor/Academic</option>
+                    </select>
+                </div>
+                <button type="submit" class="submit-button register" id="registerSubmit">Register</button>
+                <div class="error-message" id="registerErrorMessage"></div>
+                <div class="success-message" id="registerSuccessMessage"></div>
+            </form>
+            <span class="toggle-link" onclick="switchToLogin()">Already have an account? Login here</span>
+        </div>
+    </div>
+
+    <!-- Sample Content -->
+    <div class="container">
+        <div class="public-content">
+            <h3>Public Content</h3>
+            <p>This content is visible to all visitors. Welcome to NEJI - Network of Earth-Science Jobs, India!</p>
+        </div>
+        
+        <div class="protected-content" id="protectedContent">
+            <h3>Protected Content</h3>
+            <p>This content is only visible to authenticated users. Here you can access exclusive job postings, detailed institute information, and premium resources.</p>
+            
+            <div class="table-container">
+                <table>
+                    <tr>
+                        <th>Institution</th>
+                        <th>Position</th>
+                        <th>Deadline</th>
+                        <th>Contact</th>
+                    </tr>
+                    <tr>
+                        <td>CSIR-NIO</td>
+                        <td>Senior Research Fellow</td>
+                        <td>2025-07-15</td>
+                        <td>hr@nio.org</td>
+                    </tr>
+                    <tr>
+                        <td>IIT Bombay</td>
+                        <td>Assistant Professor</td>
+                        <td>2025-08-01</td>
+                        <td>faculty@iitb.ac.in</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <!-- Google Sheets Status -->
+        <div class="google-sheets-status" id="sheetsStatus" style="display: none;">
+            <strong>Google Sheets Integration:</strong> <span id="sheetsStatusText">Checking connection...</span>
+        </div>
+    </div>
+
+    <script>
+        // Google Sheets Configuration
+        const GOOGLE_SHEETS_CONFIG = {
+            // Replace these with your actual Google Sheets details
+            SHEET_ID: 'your-google-sheet-id-here',
+            WEB_APP_URL: 'https://script.google.com/macros/s/your-deployment-id/exec',
+            API_KEY: 'your-google-api-key-here' // Optional, for read operations
+        };
+
+        // Simple user database (existing users + registered users cache)
+        const users = {
+            'admin': {
+                password: 'admin123',
+                role: 'admin',
+                email: 'admin@neji.org'
+            },
+            'user': {
+                password: 'user123',
+                role: 'user',
+                email: 'user@neji.org'
+            },
+            'neji_admin': {
+                password: 'neji2025!',
+                role: 'admin',
+                email: 'admin@neji.org'
+            }
+        };
+
+        // Session management
+        let currentUser = null;
+        let sessionTimeout = null;
+        const SESSION_DURATION = 30 * 60 * 1000; // 30 minutes
+
+        // Initialize authentication state
+        function initAuth() {
+            const savedSession = JSON.parse(sessionStorage.getItem('neji_session') || 'null');
+            if (savedSession && savedSession.expires > Date.now()) {
+                currentUser = savedSession.user;
+                updateAuthUI();
+                startSessionTimer();
+            }
+            loadRegisteredUsers();
+            checkGoogleSheetsConnection();
+        }
+
+        // Load registered users from localStorage
+        function loadRegisteredUsers() {
+            const registeredUsers = JSON.parse(localStorage.getItem('neji_registered_users') || '{}');
+            Object.assign(users, registeredUsers);
+        }
+
+        // Save registered user to localStorage and Google Sheets
+        async function saveRegisteredUser(userData) {
+            const registeredUsers = JSON.parse(localStorage.getItem('neji_registered_users') || '{}');
+            registeredUsers[userData.username] = {
+                password: userData.password,
+                role: 'user',
+                email: userData.email,
+                fullName: userData.fullName,
+                institution: userData.institution,
+                specialization: userData.specialization,
+                experience: userData.experience,
+                registrationDate: new Date().toISOString()
+            };
+            localStorage.setItem('neji_registered_users', JSON.stringify(registeredUsers));
+            
+            // Also update the main users object
+            users[userData.username] = registeredUsers[userData.username];
+
+            // Save to Google Sheets
+            try {
+                await saveToGoogleSheets(userData);
+                return { success: true };
+            } catch (error) {
+                console.error('Failed to save to Google Sheets:', error);
+                return { success: true, warning: 'Saved locally but failed to sync with Google Sheets' };
+            }
+        }
+
+        // Save data to Google Sheets
+        async function saveToGoogleSheets(userData) {
+            const data = {
+                action: 'addUser',
+                timestamp: new Date().toISOString(),
+                fullName: userData.fullName,
+                email: userData.email,
+                username: userData.username,
+                institution: userData.institution || '',
+                specialization: userData.specialization || '',
+                experience: userData.experience || '',
+                registrationDate: new Date().toISOString()
+            };
+
+            const response = await fetch(GOOGLE_SHEETS_CONFIG.WEB_APP_URL, {
+                method: 'POST',
+                mode: 'cors',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data)
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            return await response.json();
+        }
+
+        // Check Google Sheets connection
+        async function checkGoogleSheetsConnection() {
+            const statusDiv = document.getElementById('sheetsStatus');
+            const statusText = document.getElementById('sheetsStatusText');
+            
+            statusDiv.style.display = 'block';
+            
+            try {
+                const response = await fetch(GOOGLE_SHEETS_CONFIG.WEB_APP_URL + '?action=test', {
+                    method: 'GET',
+                    mode: 'cors'
+                });
+                
+                if (response.ok) {
+                    statusDiv.className = 'google-sheets-status status-connected';
+                    statusText.textContent = 'Connected to Google Sheets ✓';
+                } else {
+                    throw new Error('Connection failed');
+                }
+            } catch (error) {
+                statusDiv.className = 'google-sheets-status status-error';
+                statusText.textContent = 'Google Sheets connection failed - data will be saved locally only';
+            }
+        }
+
+        // Create session
+        function createSession(user) {
+            const session = {
+                user: user,
+                expires: Date.now() + SESSION_DURATION
+            };
+            sessionStorage.setItem('neji_session', JSON.stringify(session));
+            currentUser = user;
+            startSessionTimer();
+        }
+
+        // Start session timeout timer
+        function startSessionTimer() {
+            if (sessionTimeout) clearTimeout(sessionTimeout);
+            sessionTimeout = setTimeout(() => {
+                logout();
+                alert('Session expired. Please login again.');
+            }, SESSION_DURATION);
+        }
+
+        // Update UI based on authentication state
+        function updateAuthUI() {
+            const authStatus = document.getElementById('authStatus');
+            const authButton = document.getElementById('authButton');
+            const registerButton = document.getElementById('registerButton');
+            const protectedContent = document.getElementById('protectedContent');
+
+            if (currentUser) {
+                authStatus.textContent = `Logged in as ${currentUser}`;
+                authButton.textContent = 'Logout';
+                authButton.className = 'auth-button logout';
+                authButton.onclick = logout;
+                registerButton.style.display = 'none';
+                protectedContent.style.display = 'block';
+            } else {
+                authStatus.textContent = 'Not logged in';
+                authButton.textContent = 'Login';
+                authButton.className = 'auth-button';
+                authButton.onclick = showLogin;
+                registerButton.style.display = 'inline-block';
+                protectedContent.style.display = 'none';
+            }
+        }
+
+        // Show login modal
+        function showLogin() {
+            document.getElementById('loginModal').style.display = 'block';
+            document.getElementById('loginUsername').focus();
+        }
+
+        // Show register modal
+        function showRegister() {
+            document.getElementById('registerModal').style.display = 'block';
+            document.getElementById('regFullName').focus();
+        }
+
+        // Close login modal
+        function closeLogin() {
+            document.getElementById('loginModal').style.display = 'none';
+            document.getElementById('loginForm').reset();
+            hideMessages('login');
+        }
+
+        // Close register modal
+        function closeRegister() {
+            document.getElementById('registerModal').style.display = 'none';
+            document.getElementById('registerForm').reset();
+            hideMessages('register');
+            document.getElementById('passwordStrength').style.display = 'none';
+        }
+
+        // Switch between login and register modals
+        function switchToRegister() {
+            closeLogin();
+            showRegister();
+        }
+
+        function switchToLogin() {
+            closeRegister();
+            showLogin();
+        }
+
+        // Password strength checker
+        function checkPasswordStrength(password) {
+            const strengthDiv = document.getElementById('passwordStrength');
+            let strength = 0;
+            let feedback = '';
+
+            if (password.length >= 8) strength += 1;
+            if (/[a-z]/.test(password)) strength += 1;
+            if (/[A-Z]/.test(password)) strength += 1;
+            if (/[0-9]/.test(password)) strength += 1;
+            if (/[^A-Za-z0-9]/.test(password)) strength += 1;
+
+            strengthDiv.style.display = 'block';
+
+            if (strength < 3) {
+                strengthDiv.className = 'password-strength strength-weak';
+                feedback = 'Weak password - add uppercase, lowercase, numbers, and symbols';
+            } else if (strength < 4) {
+                strengthDiv.className = 'password-strength strength-medium';
+                feedback = 'Medium strength - consider adding more complexity';
+            } else {
+                strengthDiv.className = 'password-strength strength-strong';
+                feedback = 'Strong password ✓';
+            }
+
+            strengthDiv.textContent = feedback;
+            return strength >= 3;
+        }
+
+        // Handle password input for strength checking
+        document.getElementById('regPassword').addEventListener('input', function(e) {
+            checkPasswordStrength(e.target.value);
+        });
+
+        // Handle login form submission
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('loginUsername').value.trim();
+            const password = document.getElementById('loginPassword').value;
+            const submitButton = document.getElementById('loginSubmit');
+            
+            submitButton.disabled = true;
+            submitButton.textContent = 'Logging in...';
+            
+            setTimeout(() => {
+                if (authenticateUser(username, password)) {
+                    showSuccess('Login successful!', 'login');
+                    setTimeout(() => {
+                        createSession(username);
+                        updateAuthUI();
+                        closeLogin();
+                    }, 1000);
+                } else {
+                    showError('Invalid username/email or password', 'login');
+                }
+                
+                submitButton.disabled = false;
+                submitButton.textContent = 'Login';
+            }, 500);
+        });
+
+        // Handle registration form submission
+        document.getElementById('registerForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            const userData = Object.fromEntries(formData.entries());
+            const submitButton = document.getElementById('registerSubmit');
+            
+            // Validation
+            if (!validateRegistration(userData)) return;
+            
+            submitButton.disabled = true;
+            submitButton.textContent = 'Creating Account...';
+            
+            try {
+                const result = await saveRegisteredUser(userData);
+                
+                if (result.success) {
+                    let message = 'Registration successful! You can now login.';
+                    if (result.warning) {
+                        message += '\n' + result.warning;
+                    }
+                    showSuccess(message, 'register');
+                    
+                    setTimeout(() => {
+                        closeRegister();
+                        showLogin();
+                    }, 2000);
+                } else {
+                    showError('Registration failed. Please try again.', 'register');
+                }
+            } catch (error) {
+                showError('Registration failed: ' + error.message, 'register');
+            }
+            
+            submitButton.disabled = false;
+            submitButton.textContent = 'Register';
+        });
+
+        // Validate registration data
+        function validateRegistration(userData) {
+            // Check if username already exists
+            if (users[userData.username]) {
+                showError('Username already exists. Please choose a different username.', 'register');
+                return false;
+            }
+
+            // Check if email already exists
+            const existingUser = Object.values(users).find(user => user.email === userData.email);
+            if (existingUser) {
+                showError('Email already registered. Please use a different email.', 'register');
+                return false;
+            }
+
+            // Check password strength
+            if (!checkPasswordStrength(userData.password)) {
+                showError('Password is too weak. Please use a stronger password.', 'register');
+                return false;
+            }
+
+            // Check password confirmation
+            if (userData.password !== userData.confirmPassword) {
+                showError('Passwords do not match.', 'register');
+                return false;
+            }
+
+            return true;
+        }
+
+        // Authenticate user (check both username and email)
+        function authenticateUser(usernameOrEmail, password) {
+            // Try username first
+            let user = users[usernameOrEmail];
+            if (user && user.password === password) {
+                return true;
+            }
+
+            // Try email
+            const userByEmail = Object.entries(users).find(([_, userData]) => 
+                userData.email === usernameOrEmail
+            );
+            if (userByEmail && userByEmail[1].password === password) {
+                return true;
+            }
+
+            return false;
+        }
+
+        // Logout function
+        function logout() {
+            currentUser = null;
+            sessionStorage.removeItem('neji_session');
+            if (sessionTimeout) clearTimeout(sessionTimeout);
+            updateAuthUI();
+        }
+
+        // Show error message
+        function showError(message, type) {
+            const errorDiv = document.getElementById(type + 'ErrorMessage');
+            const successDiv = document.getElementById(type + 'SuccessMessage');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+            successDiv.style.display = 'none';
+        }
+
+        // Show success message
+        function showSuccess(message, type) {
+            const successDiv = document.getElementById(type + 'SuccessMessage');
+            const errorDiv = document.getElementById(type + 'ErrorMessage');
+            successDiv.textContent = message;
+            successDiv.style.display = 'block';
+            errorDiv.style.display = 'none';
+        }
+
+        // Hide messages
+        function hideMessages(type) {
+            document.getElementById(type + 'ErrorMessage').style.display = 'none';
+            document.getElementById(type + 'SuccessMessage').style.display = 'none';
+        }
+
+        // Toggle menu function
+        function toggleMenu() {
+            const menu = document.getElementById("menuLinks");
+            menu.style.display = (menu.style.display === "flex") ? "none" : "flex";
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const loginModal = document.getElementById('loginModal');
+            const registerModal = document.getElementById('registerModal');
+            
+            if (event.target === loginModal) {
+                closeLogin();
+            }
+            if (event.target === registerModal) {
+                closeRegister();
+            }
+        }
+
+        // Initialize authentication on page load
+        document.addEventListener('DOMContentLoaded', initAuth);
+
+        // Handle page visibility change to refresh session
+        document.addEventListener('visibilitychange', function() {
+            if (!document.hidden && currentUser) {
+                const savedSession = JSON.parse(sessionStorage.getItem('neji_session') || 'null');
+                if (!savedSession || savedSession.expires <= Date.now()) {
+                    logout();
+                    alert('Session expired. Please login again.');
+                }
+            }
+        });
+    </script>
+
+    <!-- Instructions for Google Sheets Setup -->
+    <div style="display: none;" id="setup-instructions">
+        <!-- 
+        GOOGLE SHEETS SETUP INSTRUCTIONS:
+        
+        1. Create a new Google Sheet with these column headers in row 1:
+           A: Timestamp | B: Full Name | C: Email | D: Username | E: Institution | F: Specialization | G: Experience | H: Registration Date
+        
+        2. Go to Extensions > Apps Script in your Google Sheet
+        
+        3. Replace the default code with this Google Apps Script:
+        
+        function doPost(e) {
+          try {
+            const data = JSON.parse(e.postData.contents);
+            
+            if (data.action === 'addUser') {
+              const sheet = SpreadsheetApp.getActiveSheet();
+              
+              // Add user data to sheet
+              sheet.appendRow([
+                data.timestamp,
+                data.fullName,
+                data.email,
+                data.username,
+                data.institution,
+                data.specialization,
+                data.experience,
+                data.registrationDate
+              ]);
+              
+              return ContentService
+                .createTextOutput(JSON.stringify({success: true, message: 'User registered successfully'}))
+                .setMimeType(ContentService.MimeType.JSON);
+            }
+            
+            return ContentService
+              .createTextOutput(JSON.stringify({success: false, message: 'Invalid action'}))
+              .setMimeType(ContentService.MimeType.JSON);
+              
+          } catch (error) {
+            return ContentService
+              .createTextOutput(JSON.stringify({success: false, message: error.toString()}))
+              .setMimeType(ContentService.MimeType.JSON);
+          }
+        }
+        
+        function doGet(e) {
+          const action = e.parameter.action;
+          
+          if (action === 'test') {
+            return ContentService
+              .createTextOutput(JSON.stringify({success: true, message: 'Connection successful'}))
+              .setMimeType(ContentService.MimeType.JSON);
+          }
+          
+          return ContentService
+            .createTextOutput(JSON.stringify({success: false, message: 'Invalid request'}))
+            .setMimeType(ContentService.MimeType.JSON);
+        }
+        
+        4. Save the script and deploy it:
+           - Click "Deploy" > "New deployment"
+           - Choose "Web app" as type
+           - Set execute as "Me" and access to "Anyone"
+           - Copy the web app URL
+        
+        5. Update the GOOGLE_SHEETS_CONFIG object in the JavaScript:
+           - Replace 'your-deployment-id' with your actual deployment URL
+           - The SHEET_ID is optional for this setup
+        
+        6. Test the connection - the status will show at the bottom of the page
+        
+        SECURITY NOTE: In production, add proper authentication to your Google Apps Script
+        -->
+    </div>
