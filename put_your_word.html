@@ -113,6 +113,24 @@
             flex: 1 1 100%;
         }
 
+        .form-group.hidden {
+            display: none;
+        }
+
+        .form-group.conditional {
+            opacity: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: opacity 0.3s ease, max-height 0.3s ease;
+            margin-bottom: 0;
+        }
+
+        .form-group.conditional.show {
+            opacity: 1;
+            max-height: 200px;
+            margin-bottom: 10px;
+        }
+
         label {
             display: block;
             margin-bottom: 5px;
@@ -288,25 +306,44 @@
                             <option value="other">Other</option>
                         </select>
                     </div>
-                    <div class="form-group">
-                        <label for="location">Location*</label>
-                        <input type="text" id="location" name="location" placeholder="City, State/Country" required>
+                    <div class="form-group conditional" id="jobTypeOtherGroup">
+                        <label for="jobTypeOther">Other Position Type*</label>
+                        <input type="text" id="jobTypeOther" name="jobTypeOther" placeholder="Please specify the position type">
                     </div>
                 </div>
                 
                 <div class="form-row">
                     <div class="form-group">
+                        <label for="location">Location*</label>
+                        <input type="text" id="location" name="location" placeholder="City, State/Country" required>
+                    </div>
+                    <div class="form-group">
                         <label for="deadline">Application Deadline*</label>
                         <input type="date" id="deadline" name="deadline" required>
                     </div>
+                </div>
+                
+                <div class="form-row">
                     <div class="form-group">
                         <label for="minQualification">Minimum Qualification*</label>
                         <select id="minQualification" name="minQualification" required>
                             <option value="">Select Minimum Qualification</option>
-                            <option value="bachelor">Bachelor's Degree</option>
-                            <option value="master">Master's Degree</option>
+                            <option value="Diploma">Diploma</option>
+                            <option value="bachelor of science">BSc</option>
+                            <option value="bachelor of technology">BTech</option>
+                            <option value="master of science">MSc</option>
+                            <option value="master of technology">MTech</option>
                             <option value="phd">PhD</option>
+                            <option value="other">Other</option>                         
                         </select>
+                    </div>
+                    <div class="form-group conditional" id="minQualificationOtherGroup">
+                        <label for="minQualificationOther">Other Qualification*</label>
+                        <input type="text" id="minQualificationOther" name="minQualificationOther" placeholder="Please specify the qualification">
+                    </div>
+                    <div class="form-group">
+                        <label for="specialisation">Specialisation</label>
+                        <input type="text" id="specialisation" name="specialisation" placeholder="e.g., Marine Biology, Geophysics, Climate Science">
                     </div>
                 </div>
                 
@@ -322,7 +359,7 @@
             </div>
             
             <div class="optional-section">
-                <h4>Optional Details </h4>
+                <h4>Optional Details</h4>
                 <div class="form-row">
                     <div class="form-group">
                         <label for="duration">Duration</label>
@@ -360,6 +397,32 @@
             menu.style.display = (menu.style.display === "flex") ? "none" : "flex";
         }
         
+        // Function to handle conditional field visibility
+        function toggleConditionalField(selectId, conditionalGroupId, conditionalFieldId) {
+            const select = document.getElementById(selectId);
+            const conditionalGroup = document.getElementById(conditionalGroupId);
+            const conditionalField = document.getElementById(conditionalFieldId);
+            
+            if (select.value === 'other') {
+                conditionalGroup.classList.add('show');
+                conditionalField.required = true;
+            } else {
+                conditionalGroup.classList.remove('show');
+                conditionalField.required = false;
+                conditionalField.value = '';
+                conditionalField.classList.remove('form-field-error', 'form-field-valid');
+            }
+        }
+        
+        // Set up event listeners for conditional fields
+        document.getElementById('jobType').addEventListener('change', function() {
+            toggleConditionalField('jobType', 'jobTypeOtherGroup', 'jobTypeOther');
+        });
+        
+        document.getElementById('minQualification').addEventListener('change', function() {
+            toggleConditionalField('minQualification', 'minQualificationOtherGroup', 'minQualificationOther');
+        });
+        
         document.getElementById('jobPostingForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
@@ -379,6 +442,12 @@
             });
             
             requiredFields.forEach(field => {
+                // Skip validation for hidden conditional fields
+                const parentGroup = field.closest('.form-group');
+                if (parentGroup && parentGroup.classList.contains('conditional') && !parentGroup.classList.contains('show')) {
+                    return;
+                }
+                
                 if (!field.value.trim()) {
                     field.classList.add('form-field-error');
                     isValid = false;
@@ -429,9 +498,23 @@
             const formData = new FormData();
             formData.append('timestamp', new Date().toLocaleString());
             
+            // Collect form data, handling conditional fields
+            const jobType = document.getElementById('jobType').value;
+            const jobTypeOther = document.getElementById('jobTypeOther').value;
+            const finalJobType = jobType === 'other' ? jobTypeOther : jobType;
+            
+            const minQualification = document.getElementById('minQualification').value;
+            const minQualificationOther = document.getElementById('minQualificationOther').value;
+            const finalMinQualification = minQualification === 'other' ? minQualificationOther : minQualification;
+            
+            // Append the final values
+            formData.append('jobType', finalJobType);
+            formData.append('minQualification', finalMinQualification);
+            
+            // Append other form fields
             const formFields = [
-                'email', 'affiliation', 'jobType', 'location', 'deadline', 
-                'minQualification', 'jobDescription', 'applicationProcess',
+                'email', 'affiliation', 'location', 'deadline', 
+                'specialisation', 'jobDescription', 'applicationProcess',
                 'duration', 'salary', 'requirements', 'link'
             ];
             
@@ -455,6 +538,10 @@
                     showStatusMessage('Job posted successfully!', 'success');
                     document.getElementById('jobPostingForm').reset();
                     clearValidationStyling();
+                    // Hide conditional fields after reset
+                    document.querySelectorAll('.conditional').forEach(group => {
+                        group.classList.remove('show');
+                    });
                 } else {
                     throw new Error(data.error || 'Unknown error occurred');
                 }
@@ -483,6 +570,16 @@
             document.getElementById('jobPostingForm').reset();
             clearValidationStyling();
             document.getElementById('statusMessage').style.display = 'none';
+            
+            // Hide conditional fields
+            document.querySelectorAll('.conditional').forEach(group => {
+                group.classList.remove('show');
+            });
+            
+            // Remove required attribute from conditional fields
+            document.querySelectorAll('.conditional input').forEach(field => {
+                field.required = false;
+            });
         }
         
         function clearValidationStyling() {
@@ -509,6 +606,12 @@
         
         document.querySelectorAll('input, textarea, select').forEach(field => {
             field.addEventListener('blur', function() {
+                // Skip validation for hidden conditional fields
+                const parentGroup = this.closest('.form-group');
+                if (parentGroup && parentGroup.classList.contains('conditional') && !parentGroup.classList.contains('show')) {
+                    return;
+                }
+                
                 if (this.hasAttribute('required') && !this.value.trim()) {
                     this.classList.add('form-field-error');
                 } else {
