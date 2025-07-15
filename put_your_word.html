@@ -76,6 +76,48 @@
         .menu-links a:hover {
             text-decoration: underline;
         }
+
+        /* Tab styles */
+        .tab-container {
+            margin-bottom: 20px;
+        }
+
+        .tab-buttons {
+            display: flex;
+            border-bottom: 2px solid #e0e0e0;
+            margin-bottom: 20px;
+        }
+
+        .tab-button {
+            background: none;
+            border: none;
+            padding: 12px 24px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            color: #666;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .tab-button:hover {
+            color: #0a2f66;
+            background-color: #f8f9fa;
+        }
+
+        .tab-button.active {
+            color: #0a2f66;
+            border-bottom-color: #0a2f66;
+            background-color: #f8f9fa;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
         
         /* Form styles */
         .job-form {
@@ -142,6 +184,7 @@
         input[type="email"],
         input[type="number"],
         input[type="date"],
+        input[type="url"],
         textarea,
         select {
             width: 100%;
@@ -200,7 +243,7 @@
             background-color: #5a6268;
         }
         
-        #statusMessage {
+        #statusMessage, #eventStatusMessage {
             margin-top: 20px;
             padding: 15px;
             border-radius: 5px;
@@ -247,6 +290,16 @@
             .form-group {
                 flex: 1 1 100%;
             }
+            .tab-buttons {
+                flex-direction: column;
+            }
+            .tab-button {
+                border-bottom: 1px solid #e0e0e0;
+                border-right: none;
+            }
+            .tab-button.active {
+                border-bottom-color: #0a2f66;
+            }
         }
     </style>
 </head>
@@ -271,130 +324,297 @@
     </div>
 
     <div class="container">
-        <h2>Post a new job</h2>
-        <p>Quick job posting form - only essential fields marked with * are required.</p>
-        
-        <div id="statusMessage"></div>
-        
-        <form id="jobPostingForm" class="job-form">
-            <div class="form-section">
-                <h3>Contact & Basic Details</h3>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="email">Your Email*</label>
-                        <input type="email" id="email" name="email" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="affiliation">Institute/Organization*</label>
-                        <input type="text" id="affiliation" name="affiliation" required>
-                    </div>
-                </div>
+        <div class="tab-container">
+            <div class="tab-buttons">
+                <button class="tab-button active" onclick="switchTab('listing')">Listing</button>
+                <button class="tab-button" onclick="switchTab('events')">Events</button>
             </div>
-            
-            <div class="form-section">
-                <h3>Job Information</h3>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="jobType">Position Type*</label>
-                        <select id="jobType" name="jobType" required>
-                            <option value="">Select Position Type</option>
-                            <option value="phd">PhD Position</option>
-                            <option value="postdoc">Postdoc</option>
-                            <option value="faculty">Faculty</option>
-                            <option value="researcher">Research Scientist</option>
-                            <option value="technician">Technical Staff</option>
-                            <option value="other">Other</option>
-                        </select>
-                    </div>
-                    <div class="form-group conditional" id="jobTypeOtherGroup">
-                        <label for="jobTypeOther">Other Position Type*</label>
-                        <input type="text" id="jobTypeOther" name="jobTypeOther" placeholder="Please specify the position type">
-                    </div>
-                </div>
+
+            <!-- Listing Tab Content -->
+            <div id="listing" class="tab-content active">
+                <h2>Post a new job</h2>
+                <p>Quick job posting form - essential fields marked with * are required.</p>
                 
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="location">Location*</label>
-                        <input type="text" id="location" name="location" placeholder="City, State/Country" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="deadline">Application Deadline*</label>
-                        <input type="date" id="deadline" name="deadline" required>
-                    </div>
-                </div>
+                <div id="statusMessage"></div>
                 
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="minQualification">Minimum Qualification*</label>
-                        <select id="minQualification" name="minQualification" required>
-                            <option value="">Select Minimum Qualification</option>
-                            <option value="Diploma">Diploma</option>
-                            <option value="bachelor of science">BSc</option>
-                            <option value="bachelor of technology">BTech</option>
-                            <option value="master of science">MSc</option>
-                            <option value="master of technology">MTech</option>
-                            <option value="phd">PhD</option>
-                            <option value="other">Other</option>                         
-                        </select>
+                <form id="jobPostingForm" class="job-form">
+                    <div class="form-section">
+                        <h3>Contact & Basic Details</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="email">Your Email*</label>
+                                <input type="email" id="email" name="email" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="affiliation">Institute/Organization*</label>
+                                <input type="text" id="affiliation" name="affiliation" required>
+                            </div>
+                        </div>
                     </div>
-                    <div class="form-group conditional" id="minQualificationOtherGroup">
-                        <label for="minQualificationOther">Other Qualification*</label>
-                        <input type="text" id="minQualificationOther" name="minQualificationOther" placeholder="Please specify the qualification">
+                    
+                    <div class="form-section">
+                        <h3>Job Information</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="jobType">Position Type*</label>
+                                <select id="jobType" name="jobType" required>
+                                    <option value="">Select Position Type</option>
+                                    <option value="Phd">PhD Position</option>
+                                    <option value="Postdoc">Postdoc</option>
+                                    <option value="Faculty">Faculty</option>
+                                    <option value="Scientist">Scientist</option>
+                                    <option value="Technical staff">Technical Staff</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                            <div class="form-group conditional" id="jobTypeOtherGroup">
+                                <label for="jobTypeOther">Other Position Type*</label>
+                                <input type="text" id="jobTypeOther" name="jobTypeOther" placeholder="Please specify the position type">
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="location">Location*</label>
+                                <input type="text" id="location" name="location" placeholder="City, State/Country" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="deadline">Application Deadline*</label>
+                                <input type="date" id="deadline" name="deadline" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="minQualification">Minimum Qualification*</label>
+                                <select id="minQualification" name="minQualification" required>
+                                    <option value="">Select Minimum Qualification</option>
+                                    <option value="Diploma">Diploma</option>
+                                    <option value="bachelor of science">BSc</option>
+                                    <option value="bachelor of technology">BTech</option>
+                                    <option value="master of science">MSc</option>
+                                    <option value="master of technology">MTech</option>
+                                    <option value="phd">PhD</option>
+                                    <option value="other">Other</option>                         
+                                </select>
+                            </div>
+                            <div class="form-group conditional" id="minQualificationOtherGroup">
+                                <label for="minQualificationOther">Other Qualification*</label>
+                                <input type="text" id="minQualificationOther" name="minQualificationOther" placeholder="Please specify the qualification">
+                            </div>
+                            <div class="form-group">
+                                <label for="specialisation">Specialisation</label>
+                                <input type="text" id="specialisation" name="specialisation" placeholder="e.g., Marine Biology, Geophysics, Climate Science">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group full-width">
+                            <label for="jobDescription">Job Description*</label>
+                            <textarea id="jobDescription" name="jobDescription" placeholder="Brief description of the position, research area, and key responsibilities" required></textarea>
+                        </div>
+                        
+                        <div class="form-group full-width">
+                            <label for="applicationProcess">How to Apply*</label>
+                            <textarea id="applicationProcess" name="applicationProcess" placeholder="Email address to send applications, required documents, etc." required></textarea>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label for="specialisation">Specialisation</label>
-                        <input type="text" id="specialisation" name="specialisation" placeholder="e.g., Marine Biology, Geophysics, Climate Science">
+                    
+                    <div class="optional-section">
+                        <h4>Optional Details</h4>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="duration">Duration</label>
+                                <input type="text" id="duration" name="duration" placeholder="e.g., 2 years, Permanent">
+                            </div>
+                            <div class="form-group">
+                                <label for="salary">Salary/Stipend</label>
+                                <input type="text" id="salary" name="salary" placeholder="e.g., ₹30,000/month">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="requirements">Specific Requirements</label>
+                            <textarea id="requirements" name="requirements" placeholder="Any specific skills, experience, or qualifications beyond the minimum"></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="link">Advertisement Link</label>
+                            <input type="url" id="link" name="link" placeholder="Link to official job posting (if available)">
+                        </div>
                     </div>
-                </div>
-                
-                <div class="form-group full-width">
-                    <label for="jobDescription">Job Description*</label>
-                    <textarea id="jobDescription" name="jobDescription" placeholder="Brief description of the position, research area, and key responsibilities" required></textarea>
-                </div>
-                
-                <div class="form-group full-width">
-                    <label for="applicationProcess">How to Apply*</label>
-                    <textarea id="applicationProcess" name="applicationProcess" placeholder="Email address to send applications, required documents, etc." required></textarea>
-                </div>
+                    
+                    <div class="button-group">
+                        <button type="button" class="button-cancel" onclick="resetForm('jobPostingForm')">Clear</button>
+                        <button type="submit" id="submitButton">Post Job</button>
+                    </div>
+                </form>
             </div>
-            
-            <div class="optional-section">
-                <h4>Optional Details</h4>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="duration">Duration</label>
-                        <input type="text" id="duration" name="duration" placeholder="e.g., 2 years, Permanent">
-                    </div>
-                    <div class="form-group">
-                        <label for="salary">Salary/Stipend</label>
-                        <input type="text" id="salary" name="salary" placeholder="e.g., ₹30,000/month">
-                    </div>
-                </div>
+
+            <!-- Events Tab Content -->
+            <div id="events" class="tab-content">
+                <h2>Post Workshop/Conference</h2>
+                <p>Submit information about upcoming workshops, conferences, and other events - only essential fields marked with * are required.</p>
                 
-                <div class="form-group">
-                    <label for="requirements">Specific Requirements</label>
-                    <textarea id="requirements" name="requirements" placeholder="Any specific skills, experience, or qualifications beyond the minimum"></textarea>
-                </div>
+                <div id="eventStatusMessage"></div>
                 
-                <div class="form-group">
-                    <label for="link">Advertisement Link</label>
-                    <input type="text" id="link" name="link" placeholder="Link to official job posting (if available)">
-                </div>
+                <form id="eventPostingForm" class="job-form">
+                    <div class="form-section">
+                        <h3>Contact & Basic Details</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="eventEmail">Your Email*</label>
+                                <input type="email" id="eventEmail" name="eventEmail" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="eventOrganizer">Organizing Institute/Organization*</label>
+                                <input type="text" id="eventOrganizer" name="eventOrganizer" required>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-section">
+                        <h3>Event Information</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="eventType">Event Type*</label>
+                                <select id="eventType" name="eventType" required>
+                                    <option value="">Select Event Type</option>
+                                    <option value="Workshop">Workshop</option>
+                                    <option value="Conference">Conference</option>
+                                    <option value="Symposium">Symposium</option>
+                                    <option value="Seminar">Seminar</option>
+                                    <option value="Training Program">Training Program</option>
+                                    <option value="Field Trip">Field Trip</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                            <div class="form-group conditional" id="eventTypeOtherGroup">
+                                <label for="eventTypeOther">Other Event Type*</label>
+                                <input type="text" id="eventTypeOther" name="eventTypeOther" placeholder="Please specify the event type">
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="eventTitle">Event Title*</label>
+                                <input type="text" id="eventTitle" name="eventTitle" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="eventLocation">Location*</label>
+                                <input type="text" id="eventLocation" name="eventLocation" placeholder="City, State/Country or Online" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="eventStartDate">Start Date*</label>
+                                <input type="date" id="eventStartDate" name="eventStartDate" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="eventEndDate">End Date*</label>
+                                <input type="date" id="eventEndDate" name="eventEndDate" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="registrationDeadline">Registration Deadline*</label>
+                                <input type="date" id="registrationDeadline" name="registrationDeadline" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="eventTarget">Target Audience</label>
+                                <input type="text" id="eventTarget" name="eventTarget" placeholder="e.g., PhD Students, Postdocs, Faculty">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group full-width">
+                            <label for="eventDescription">Event Description*</label>
+                            <textarea id="eventDescription" name="eventDescription" placeholder="Brief description of the event, topics to be covered, and objectives" required></textarea>
+                        </div>
+                        
+                        <div class="form-group full-width">
+                            <label for="registrationProcess">How to Register*</label>
+                            <textarea id="registrationProcess" name="registrationProcess" placeholder="Registration website, email address, or process details" required></textarea>
+                        </div>
+                    </div>
+                    
+                    <div class="optional-section">
+                        <h4>Optional Details</h4>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="eventFees">Registration Fees</label>
+                                <input type="text" id="eventFees" name="eventFees" placeholder="e.g., ₹2000 for students, ₹5000 for professionals">
+                            </div>
+                            <div class="form-group">
+                                <label for="eventCapacity">Maximum Participants</label>
+                                <input type="number" id="eventCapacity" name="eventCapacity" placeholder="e.g., 50">
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="eventSpeakers">Key Speakers</label>
+                                <textarea id="eventSpeakers" name="eventSpeakers" placeholder="Names and affiliations of key speakers/instructors"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="eventTopics">Topics/Themes</label>
+                                <textarea id="eventTopics" name="eventTopics" placeholder="Main topics, themes, or subject areas to be covered"></textarea>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="eventWebsite">Event Website</label>
+                                <input type="url" id="eventWebsite" name="eventWebsite" placeholder="https://example.com/event">
+                            </div>
+                            <div class="form-group">
+                                <label for="eventContact">Contact Information</label>
+                                <input type="text" id="eventContact" name="eventContact" placeholder="Contact person, phone number, etc.">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="eventRequirements">Prerequisites</label>
+                            <textarea id="eventRequirements" name="eventRequirements" placeholder="Any specific qualifications, knowledge, or materials participants should have"></textarea>
+                        </div>
+                    </div>
+                    
+                    <div class="button-group">
+                        <button type="button" class="button-cancel" onclick="resetForm('eventPostingForm')">Clear</button>
+                        <button type="submit" id="eventSubmitButton">Post Event</button>
+                    </div>
+                </form>
             </div>
-            
-            <div class="button-group">
-                <button type="button" class="button-cancel" onclick="resetForm()">Clear</button>
-                <button type="submit" id="submitButton">Post Job</button>
-            </div>
-        </form>
+        </div>
     </div>
 
     <script>
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxjjgXGVAXyLBDQqHbnFssoNMw86pzPNBVdno66pjt5svrAQUOkufI0CQpMw5yniEMe/exec';
+        const EVENT_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxjjgXGVAXyLBDQqHbnFssoNMw86pzPNBVdno66pjt5svrAQUOkufI0CQpMw5yniEMe/exec'; // Replace with actual event script URL
         
         function toggleMenu() {
             const menu = document.getElementById("menuLinks");
             menu.style.display = (menu.style.display === "flex") ? "none" : "flex";
+        }
+        
+        function switchTab(tabName) {
+            // Hide all tab contents
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabContents.forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Remove active class from all tab buttons
+            const tabButtons = document.querySelectorAll('.tab-button');
+            tabButtons.forEach(button => {
+                button.classList.remove('active');
+            });
+            
+            // Show selected tab content
+            document.getElementById(tabName).classList.add('active');
+            
+            // Add active class to clicked button
+            event.target.classList.add('active');
         }
         
         // Function to handle conditional field visibility
@@ -403,7 +623,7 @@
             const conditionalGroup = document.getElementById(conditionalGroupId);
             const conditionalField = document.getElementById(conditionalFieldId);
             
-            if (select.value === 'other') {
+            if (select.value === 'other' || select.value === 'Other') {
                 conditionalGroup.classList.add('show');
                 conditionalField.required = true;
             } else {
@@ -423,21 +643,38 @@
             toggleConditionalField('minQualification', 'minQualificationOtherGroup', 'minQualificationOther');
         });
         
+        document.getElementById('eventType').addEventListener('change', function() {
+            toggleConditionalField('eventType', 'eventTypeOtherGroup', 'eventTypeOther');
+        });
+        
+        // Job posting form submission
         document.getElementById('jobPostingForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
-            if (!validateForm()) {
+            if (!validateForm('jobPostingForm')) {
                 return;
             }
             
-            submitToGoogleSheets();
+            submitJobToGoogleSheets();
         });
         
-        function validateForm() {
-            const requiredFields = document.querySelectorAll('[required]');
+        // Event posting form submission
+        document.getElementById('eventPostingForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            if (!validateForm('eventPostingForm')) {
+                return;
+            }
+            
+            submitEventToGoogleSheets();
+        });
+        
+        function validateForm(formId) {
+            const form = document.getElementById(formId);
+            const requiredFields = form.querySelectorAll('[required]');
             let isValid = true;
             
-            document.querySelectorAll('.form-field-error').forEach(field => {
+            form.querySelectorAll('.form-field-error').forEach(field => {
                 field.classList.remove('form-field-error');
             });
             
@@ -458,50 +695,75 @@
             });
             
             // Email validation
-            const emailField = document.getElementById('email');
+            const emailFields = form.querySelectorAll('input[type="email"]');
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (emailField.value && !emailRegex.test(emailField.value)) {
-                emailField.classList.add('form-field-error');
-                isValid = false;
-                showStatusMessage('Please enter a valid email address.', 'error');
-            }
+            emailFields.forEach(emailField => {
+                if (emailField.value && !emailRegex.test(emailField.value)) {
+                    emailField.classList.add('form-field-error');
+                    isValid = false;
+                    const statusDiv = formId === 'jobPostingForm' ? 'statusMessage' : 'eventStatusMessage';
+                    showStatusMessage('Please enter a valid email address.', 'error', statusDiv);
+                }
+            });
             
             // Date validation
-            const deadlineField = document.getElementById('deadline');
-            if (deadlineField.value) {
-                const selectedDate = new Date(deadlineField.value);
-                const today = new Date();
-                today.setHours(0, 0, 0, 0);
+            const dateFields = form.querySelectorAll('input[type="date"]');
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            
+            dateFields.forEach(dateField => {
+                if (dateField.value) {
+                    const selectedDate = new Date(dateField.value);
+                    if (selectedDate < today) {
+                        dateField.classList.add('form-field-error');
+                        isValid = false;
+                        const statusDiv = formId === 'jobPostingForm' ? 'statusMessage' : 'eventStatusMessage';
+                        showStatusMessage('Dates should be in the future.', 'error', statusDiv);
+                    }
+                }
+            });
+            
+            // Event-specific validation
+            if (formId === 'eventPostingForm') {
+                const startDate = document.getElementById('eventStartDate').value;
+                const endDate = document.getElementById('eventEndDate').value;
                 
-                if (selectedDate < today) {
-                    deadlineField.classList.add('form-field-error');
-                    isValid = false;
-                    showStatusMessage('Application deadline should be in the future.', 'error');
+                if (startDate && endDate) {
+                    const start = new Date(startDate);
+                    const end = new Date(endDate);
+                    
+                    if (end < start) {
+                        document.getElementById('eventEndDate').classList.add('form-field-error');
+                        isValid = false;
+                        showStatusMessage('End date should be after start date.', 'error', 'eventStatusMessage');
+                    }
                 }
             }
             
-            if (!isValid && !document.querySelector('.error')) {
-                showStatusMessage('Please fill in all required fields correctly.', 'error');
+            if (!isValid && !form.querySelector('.error')) {
+                const statusDiv = formId === 'jobPostingForm' ? 'statusMessage' : 'eventStatusMessage';
+                showStatusMessage('Please fill in all required fields correctly.', 'error', statusDiv);
             }
             
             return isValid;
         }
         
-        function submitToGoogleSheets() {
+        function submitJobToGoogleSheets() {
             const submitButton = document.getElementById('submitButton');
             const originalText = submitButton.textContent;
             
             submitButton.textContent = 'Posting...';
             submitButton.disabled = true;
-            showStatusMessage('Submitting your job posting...', 'loading');
+            showStatusMessage('Submitting your job posting...', 'loading', 'statusMessage');
             
             const formData = new FormData();
             formData.append('timestamp', new Date().toLocaleString());
+            formData.append('type', 'job');
             
             // Collect form data, handling conditional fields
             const jobType = document.getElementById('jobType').value;
             const jobTypeOther = document.getElementById('jobTypeOther').value;
-            const finalJobType = jobType === 'other' ? jobTypeOther : jobType;
+            const finalJobType = jobType === 'Other' ? jobTypeOther : jobType;
             
             const minQualification = document.getElementById('minQualification').value;
             const minQualificationOther = document.getElementById('minQualificationOther').value;
@@ -523,7 +785,47 @@
                 formData.append(fieldName, field ? field.value : '');
             });
             
-            fetch(SCRIPT_URL, {
+            submitToServer(formData, SCRIPT_URL, submitButton, originalText, 'jobPostingForm', 'statusMessage');
+        }
+        
+        function submitEventToGoogleSheets() {
+            const submitButton = document.getElementById('eventSubmitButton');
+            const originalText = submitButton.textContent;
+            
+            submitButton.textContent = 'Posting...';
+            submitButton.disabled = true;
+            showStatusMessage('Submitting your event posting...', 'loading', 'eventStatusMessage');
+            
+            const formData = new FormData();
+            formData.append('timestamp', new Date().toLocaleString());
+            formData.append('type', 'event');
+            
+            // Collect form data, handling conditional fields
+            const eventType = document.getElementById('eventType').value;
+            const eventTypeOther = document.getElementById('eventTypeOther').value;
+            const finalEventType = eventType === 'Other' ? eventTypeOther : eventType;
+            
+            // Append the final values
+            formData.append('eventType', finalEventType);
+            
+            // Append other form fields
+            const formFields = [
+                'eventEmail', 'eventOrganizer', 'eventTitle', 'eventLocation', 
+                'eventStartDate', 'eventEndDate', 'registrationDeadline', 'eventTarget',
+                'eventDescription', 'registrationProcess', 'eventFees', 'eventCapacity',
+                'eventSpeakers', 'eventTopics', 'eventWebsite', 'eventContact', 'eventRequirements'
+            ];
+            
+            formFields.forEach(fieldName => {
+                const field = document.getElementById(fieldName);
+                formData.append(fieldName, field ? field.value : '');
+            });
+            
+            submitToServer(formData, EVENT_SCRIPT_URL, submitButton, originalText, 'eventPostingForm', 'eventStatusMessage');
+        }
+        
+        function submitToServer(formData, scriptUrl, submitButton, originalText, formId, statusMessageId) {
+            fetch(scriptUrl, {
                 method: 'POST',
                 body: formData
             })
@@ -535,8 +837,9 @@
             })
             .then(data => {
                 if (data.result === 'success') {
-                    showStatusMessage('Job posted successfully!', 'success');
-                    document.getElementById('jobPostingForm').reset();
+                    const successMessage = formId === 'jobPostingForm' ? 'Job posted successfully!' : 'Event posted successfully!';
+                    showStatusMessage(successMessage, 'success', statusMessageId);
+                    document.getElementById(formId).reset();
                     clearValidationStyling();
                     // Hide conditional fields after reset
                     document.querySelectorAll('.conditional').forEach(group => {
@@ -558,7 +861,7 @@
                     errorMessage += error.message;
                 }
                 
-                showStatusMessage(errorMessage, 'error');
+                showStatusMessage(errorMessage, 'error', statusMessageId);
             })
             .finally(() => {
                 submitButton.textContent = originalText;
@@ -566,10 +869,11 @@
             });
         }
         
-        function resetForm() {
-            document.getElementById('jobPostingForm').reset();
+        function resetForm(formId) {
+            document.getElementById(formId).reset();
             clearValidationStyling();
-            document.getElementById('statusMessage').style.display = 'none';
+            const statusMessageId = formId === 'jobPostingForm' ? 'statusMessage' : 'eventStatusMessage';
+            document.getElementById(statusMessageId).style.display = 'none';
             
             // Hide conditional fields
             document.querySelectorAll('.conditional').forEach(group => {
@@ -589,8 +893,8 @@
             });
         }
         
-        function showStatusMessage(message, type) {
-            const statusDiv = document.getElementById('statusMessage');
+        function showStatusMessage(message, type, statusMessageId) {
+            const statusDiv = document.getElementById(statusMessageId);
             statusDiv.textContent = message;
             statusDiv.className = type;
             statusDiv.style.display = 'block';
@@ -604,6 +908,7 @@
             statusDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
         
+        // Add event listeners for form validation
         document.querySelectorAll('input, textarea, select').forEach(field => {
             field.addEventListener('blur', function() {
                 // Skip validation for hidden conditional fields
