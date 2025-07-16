@@ -472,7 +472,7 @@
                         </div>
                     </div>
                     
-                    <div class="form-section">
+<div class="form-section">
                         <h3>Event Information</h3>
                         <div class="form-row">
                             <div class="form-group">
@@ -529,55 +529,26 @@
                         
                         <div class="form-group full-width">
                             <label for="eventDescription">Event Description*</label>
-                            <textarea id="eventDescription" name="eventDescription" placeholder="Brief description of the event, topics to be covered, and objectives" required></textarea>
+                            <textarea id="eventDescription" name="eventDescription" placeholder="Brief description of the event, topics to be covered, and objectives"></textarea>
                         </div>
                         
                         <div class="form-group full-width">
                             <label for="registrationProcess">How to Register*</label>
                             <textarea id="registrationProcess" name="registrationProcess" placeholder="Registration website, email address, or process details" required></textarea>
                         </div>
-                    </div>
-                    
-                    <div class="optional-section">
-                        <h4>Optional Details</h4>
+                        
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="eventFees">Registration Fees</label>
                                 <input type="text" id="eventFees" name="eventFees" placeholder="e.g., ₹2000 for students, ₹5000 for professionals">
                             </div>
                             <div class="form-group">
-                                <label for="eventCapacity">Maximum Participants</label>
-                                <input type="number" id="eventCapacity" name="eventCapacity" placeholder="e.g., 50">
-                            </div>
-                        </div>
-                        
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="eventSpeakers">Key Speakers</label>
-                                <textarea id="eventSpeakers" name="eventSpeakers" placeholder="Names and affiliations of key speakers/instructors"></textarea>
-                            </div>
-                            <div class="form-group">
-                                <label for="eventTopics">Topics/Themes</label>
-                                <textarea id="eventTopics" name="eventTopics" placeholder="Main topics, themes, or subject areas to be covered"></textarea>
-                            </div>
-                        </div>
-                        
-                        <div class="form-row">
-                            <div class="form-group">
                                 <label for="eventWebsite">Event Website</label>
                                 <input type="url" id="eventWebsite" name="eventWebsite" placeholder="https://example.com/event">
                             </div>
-                            <div class="form-group">
-                                <label for="eventContact">Contact Information</label>
-                                <input type="text" id="eventContact" name="eventContact" placeholder="Contact person, phone number, etc.">
-                            </div>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="eventRequirements">Prerequisites</label>
-                            <textarea id="eventRequirements" name="eventRequirements" placeholder="Any specific qualifications, knowledge, or materials participants should have"></textarea>
                         </div>
                     </div>
+                    
                     
                     <div class="button-group">
                         <button type="button" class="button-cancel" onclick="resetForm('eventPostingForm')">Clear</button>
@@ -590,7 +561,7 @@
 
     <script>
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxjjgXGVAXyLBDQqHbnFssoNMw86pzPNBVdno66pjt5svrAQUOkufI0CQpMw5yniEMe/exec';
-        const EVENT_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxjjgXGVAXyLBDQqHbnFssoNMw86pzPNBVdno66pjt5svrAQUOkufI0CQpMw5yniEMe/exec'; // Replace with actual event script URL
+        const EVENT_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzSnhbnF5bVLYHMcHhFBBR4Y_3H0ibHxv37iWCu2ZcC0-cdBgqfXcPvtGLRo2vn1woo/exec'; // Replace with actual event script URL
         
         function toggleMenu() {
             const menu = document.getElementById("menuLinks");
