@@ -55,6 +55,49 @@
             padding: 0 15px;
         }
         
+        /* Tab styling */
+        .tab-container {
+            margin-bottom: 20px;
+        }
+        
+        .tab-buttons {
+            display: flex;
+            border-bottom: 2px solid #ddd;
+            margin-bottom: 20px;
+        }
+        
+        .tab-button {
+            background-color: #f8f9fa;
+            border: none;
+            padding: 12px 24px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            color: #666;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+            margin-right: 4px;
+        }
+        
+        .tab-button:hover {
+            background-color: #e9ecef;
+            color: #0a2f66;
+        }
+        
+        .tab-button.active {
+            background-color: #fff;
+            color: #0a2f66;
+            border-bottom-color: #0a2f66;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
         /* Responsive table styling */
         .table-container {
             width: 100%;
@@ -91,22 +134,49 @@
             vertical-align: top;
         }
         
-        th:nth-child(1), td:nth-child(1) {
+        /* Jobs table column widths */
+        .jobs-table th:nth-child(1), .jobs-table td:nth-child(1) {
             width: 35%;
             min-width: 200px;
         }
         
-        th:nth-child(2), td:nth-child(2) {
+        .jobs-table th:nth-child(2), .jobs-table td:nth-child(2) {
             width: 30%;
             min-width: 150px;
         }
         
-        th:nth-child(3), td:nth-child(3) {
+        .jobs-table th:nth-child(3), .jobs-table td:nth-child(3) {
             width: 20%;
             min-width: 120px;
         }
         
-        th:nth-child(4), td:nth-child(4) {
+        .jobs-table th:nth-child(4), .jobs-table td:nth-child(4) {
+            width: 15%;
+            min-width: 100px;
+        }
+        
+        /* Conferences table column widths */
+        .conferences-table th:nth-child(1), .conferences-table td:nth-child(1) {
+            width: 30%;
+            min-width: 200px;
+        }
+        
+        .conferences-table th:nth-child(2), .conferences-table td:nth-child(2) {
+            width: 25%;
+            min-width: 150px;
+        }
+        
+        .conferences-table th:nth-child(3), .conferences-table td:nth-child(3) {
+            width: 15%;
+            min-width: 100px;
+        }
+        
+        .conferences-table th:nth-child(4), .conferences-table td:nth-child(4) {
+            width: 15%;
+            min-width: 100px;
+        }
+        
+        .conferences-table th:nth-child(5), .conferences-table td:nth-child(5) {
             width: 15%;
             min-width: 100px;
         }
@@ -230,11 +300,20 @@
             color: #004499;
         }
 
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+        }
 
-        
         @media (max-width: 768px) {
             .container {
                 padding: 0 10px;
+            }
+            
+            .tab-button {
+                padding: 10px 16px;
+                font-size: 14px;
             }
             
             th, td {
@@ -262,25 +341,45 @@
         }
         
         @media (max-width: 480px) {
+            .tab-buttons {
+                flex-direction: column;
+            }
+            
+            .tab-button {
+                margin-right: 0;
+                margin-bottom: 2px;
+                border-bottom: none;
+                border-left: 3px solid transparent;
+            }
+            
+            .tab-button.active {
+                border-bottom: none;
+                border-left-color: #0a2f66;
+            }
+            
             th, td {
                 padding: 6px 8px;
                 font-size: 12px;
             }
             
-            th:nth-child(1), td:nth-child(1) {
+            .jobs-table th:nth-child(1), .jobs-table td:nth-child(1) {
                 min-width: 150px;
             }
             
-            th:nth-child(2), td:nth-child(2) {
+            .jobs-table th:nth-child(2), .jobs-table td:nth-child(2) {
                 min-width: 120px;
             }
             
-            th:nth-child(3), td:nth-child(3) {
+            .jobs-table th:nth-child(3), .jobs-table td:nth-child(3) {
                 min-width: 100px;
             }
             
-            th:nth-child(4), td:nth-child(4) {
+            .jobs-table th:nth-child(4), .jobs-table td:nth-child(4) {
                 min-width: 80px;
+            }
+            
+            .conferences-table th, .conferences-table td {
+                min-width: 90px;
             }
         }
     </style>
@@ -290,6 +389,32 @@
 function toggleMenu() {
     const menu = document.getElementById("menuLinks");
     menu.style.display = (menu.style.display === "flex") ? "none" : "flex";
+}
+
+// Tab functionality
+function showTab(tabName) {
+    // Hide all tab contents
+    const tabContents = document.querySelectorAll('.tab-content');
+    tabContents.forEach(content => {
+        content.classList.remove('active');
+    });
+    
+    // Remove active class from all tab buttons
+    const tabButtons = document.querySelectorAll('.tab-button');
+    tabButtons.forEach(button => {
+        button.classList.remove('active');
+    });
+    
+    // Show the selected tab content
+    document.getElementById(tabName).classList.add('active');
+    
+    // Add active class to the clicked button
+    event.target.classList.add('active');
+    
+    // Initialize DataTable for conferences if not already done
+    if (tabName === 'conferences' && !window.conferencesTableInitialized) {
+        loadConferencesData();
+    }
 }
 
 // Job detail modal functions
@@ -440,6 +565,121 @@ function applySorting(table, sortOrder) {
         table.order([3, sortOrder]).draw();
     }
 }
+
+// Global variables
+let jobsData = [];
+let conferencesData = [];
+let dataTable; // Store DataTable instance globally
+let conferencesTable;
+window.conferencesTableInitialized = false;
+
+// Load conferences data
+function loadConferencesData() {
+    const conferencesUrl = 'https://script.google.com/macros/s/AKfycbzSnhbnF5bVLYHMcHhFBBR4Y_3H0ibHxv37iWCu2ZcC0-cdBgqfXcPvtGLRo2vn1woo/exec';
+    const conferencesTableBody = document.getElementById('conferencesTableBody');
+    
+    // Show loading message
+    conferencesTableBody.innerHTML = '<tr><td colspan="5" class="loading">Loading conferences...</td></tr>';
+    
+    fetch(conferencesUrl)
+        .then(response => {
+            console.log('Conferences response status:', response.status);
+            
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            
+            return response.json(); // Use json() directly like in jobs data
+        })
+        .then(data => {
+            console.log('Conferences parsed data:', data);
+            console.log('Conferences data type:', typeof data);
+            console.log('Conferences is array:', Array.isArray(data));
+            
+            // Handle different possible response formats
+            let processedData;
+            if (Array.isArray(data)) {
+                processedData = data;
+            } else if (data && typeof data === 'object') {
+                // If it's an object, check if it has a data property or similar
+                if (Array.isArray(data.data)) {
+                    processedData = data.data;
+                } else if (Array.isArray(data.rows)) {
+                    processedData = data.rows;
+                } else if (Array.isArray(data.conferences)) {
+                    processedData = data.conferences;
+                } else {
+                    // Try to convert object to array
+                    processedData = Object.values(data);
+                }
+            } else {
+                throw new Error('Invalid data format received');
+            }
+            
+            if (!Array.isArray(processedData)) {
+                throw new Error('Unable to process data into array format');
+            }
+            
+            conferencesData = processedData;
+            conferencesTableBody.innerHTML = '';
+            
+            if (processedData.length === 0) {
+                conferencesTableBody.innerHTML = '<tr><td colspan="5" class="loading">No conferences found.</td></tr>';
+                return;
+            }
+            
+            processedData.forEach((row, index) => {
+                console.log(`Conference row ${index}:`, row);
+                let tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${row.eventTitle || ''}</td>
+                    <td>${row.eventLocation || ''}</td>
+                    <td>${row.eventStartDate || ''}</td>
+                    <td>${row.eventEndDate || ''}</td>
+                    <td>${row.registrationDeadline || ''}</td>
+                `;
+                conferencesTableBody.appendChild(tr);
+            });
+            
+            // Initialize DataTable for conferences
+            if (conferencesTable) {
+                conferencesTable.destroy();
+            }
+            
+            conferencesTable = $('#conferencesTable').DataTable({
+                responsive: {
+                    details: {
+                        type: 'column',
+                        target: 'tr'
+                    }
+                },
+                autoWidth: false,
+                scrollX: false,
+                scrollCollapse: true,
+                fixedHeader: false,
+                order: [[2, 'desc']], // Default sort by start date
+                columnDefs: [
+                    { width: "30%", targets: 0, className: "text-wrap" },
+                    { width: "25%", targets: 1, className: "text-wrap" },
+                    { width: "15%", targets: 2, className: "text-wrap" },
+                    { width: "15%", targets: 3, className: "text-wrap" },
+                    { width: "15%", targets: 4, className: "text-wrap" }
+                ],
+                drawCallback: function() {
+                    this.api().columns.adjust();
+                },
+                initComplete: function() {
+                    this.api().columns.adjust();
+                }
+            });
+            
+            window.conferencesTableInitialized = true;
+        })
+        .catch(error => {
+            console.error('Error fetching conferences data:', error);
+            conferencesTableBody.innerHTML = `<tr><td colspan="5" class="loading">Error loading conferences data: ${error.message}</td></tr>`;
+        });
+}
 </script>
 
 <body>
@@ -463,22 +703,52 @@ function applySorting(table, sortOrder) {
     </div>
 
     <div class="container mt-5">
-        <h2 class="mb-4">Listings</h2>
-        
-        <div class="table-container">
-            <table id="dataTable" class="table table-striped table-bordered">
-                <thead>
-                    <tr>
-                        <th>Position</th>
-                        <th>Organization name</th>
-                        <th>Location</th>
-                        <th>Posted date</th>
-                    </tr>
-                </thead>
-                <tbody id="tableBody">
-                    <!-- Data will be dynamically loaded here -->
-                </tbody>
-            </table>
+        <div class="tab-container">
+            <div class="tab-buttons">
+                <button class="tab-button active" onclick="showTab('jobs')">Job Listings</button>
+                <button class="tab-button" onclick="showTab('conferences')">Conferences</button>
+            </div>
+            
+            <!-- Jobs Tab Content -->
+            <div id="jobs" class="tab-content active">
+                <h2 class="mb-4">Job Listings</h2>
+                <div class="table-container">
+                    <table id="dataTable" class="table table-striped table-bordered jobs-table">
+                        <thead>
+                            <tr>
+                                <th>Position</th>
+                                <th>Organization name</th>
+                                <th>Location</th>
+                                <th>Posted date</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody">
+                            <!-- Data will be dynamically loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- Conferences Tab Content -->
+            <div id="conferences" class="tab-content">
+                <h2 class="mb-4">Conferences</h2>
+                <div class="table-container">
+                    <table id="conferencesTable" class="table table-striped table-bordered conferences-table">
+                        <thead>
+                            <tr>
+                                <th>Event Title</th>
+                                <th>Location</th>
+                                <th>Start Date</th>
+                                <th>End Date</th>
+                                <th>Registration Deadline</th>
+                            </tr>
+                        </thead>
+                        <tbody id="conferencesTableBody">
+                            <!-- Data will be dynamically loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -490,10 +760,6 @@ function applySorting(table, sortOrder) {
     </div>
 
 <script>
-        // Store job data globally for modal access
-        let jobsData = [];
-        let dataTable; // Store DataTable instance globally
-        
         document.addEventListener('DOMContentLoaded', function() {
             const webAppUrl = 'https://script.google.com/macros/s/AKfycbxjjgXGVAXyLBDQqHbnFssoNMw86pzPNBVdno66pjt5svrAQUOkufI0CQpMw5yniEMe/exec';
             
