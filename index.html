@@ -84,11 +84,11 @@
             color: #0a2f66;
         }
         
-        .tab-button.active {
-            background-color: #fff;
-            color: #0a2f66;
-            border-bottom-color: #0a2f66;
-        }
+	.tab-button.active {
+ 	    background-color: #0a2f66;
+	    color: white;
+	    border-bottom-color: #0a2f66;
+	}
         
         .tab-content {
             display: none;
@@ -201,7 +201,7 @@
         }
 
         .menu-icon {
-            font-size: 28px;
+            font-size:36px;
             cursor: pointer;
             user-select: none;
         }
@@ -252,6 +252,30 @@
             box-shadow: 0 4px 20px rgba(0,0,0,0.3);
         }
         
+        /* Conference detail modal/page styles */
+        .conference-detail-modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            overflow-y: auto;
+        }
+        
+        .conference-detail-content {
+            background-color: #fefefe;
+            margin: 2% auto;
+            padding: 30px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 800px;
+            position: relative;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+        
         .close-btn {
             color: #aaa;
             float: right;
@@ -267,23 +291,23 @@
             color: #000;
         }
         
-        .job-detail-title {
+        .job-detail-title, .conference-detail-title {
             color: #0a2f66;
             margin-bottom: 20px;
             padding-right: 40px;
         }
         
-        .job-detail-section {
+        .job-detail-section, .conference-detail-section {
             margin-bottom: 20px;
         }
         
-        .job-detail-label {
+        .job-detail-label, .conference-detail-label {
             font-weight: bold;
             color: #333;
             margin-bottom: 5px;
         }
         
-        .job-detail-value {
+        .job-detail-value, .conference-detail-value {
             color: #666;
             line-height: 1.6;
             white-space: pre-wrap;
@@ -333,7 +357,7 @@
                 font-size: 14px;
             }
             
-            .job-detail-content {
+            .job-detail-content, .conference-detail-content {
                 width: 95%;
                 margin: 5% auto;
                 padding: 20px;
@@ -381,9 +405,94 @@
             .conferences-table th, .conferences-table td {
                 min-width: 90px;
             }
+            
         }
     </style>
 </head>
+
+<body>
+    <div class="header">
+        <div class="title-container">
+            <div class="title-row">
+                <h1>NEJI</h1>
+                <img src="./neji.png" alt="NEJI Network of Earth-Science Jobs India Logo" class="logo">
+            </div>
+            <div class="small-neji">Network of Earth-Science Jobs, India</div>
+        </div>
+        <div class="menu-container">
+            <div class="menu-icon" onclick="toggleMenu()">☰</div>
+            <div class="menu-links" id="menuLinks">
+                <a href="./index.html">Home</a>
+                <a href="./institutes.html">Institutes</a>
+                <a href="./put_your_word.html">Put your word out</a>
+                <a href="./about.html">Who are we?</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mt-5">
+        <div class="tab-container">
+            <div class="tab-buttons">
+                <button class="tab-button active" onclick="showTab('jobs')">Listings</button>
+                <button class="tab-button" onclick="showTab('conferences')">Conferences</button>
+            </div>
+            
+            <!-- Jobs Tab Content -->
+            <div id="jobs" class="tab-content active">
+                <h2 class="mb-4">Listings</h2>
+                <div class="table-container">
+                    <table id="dataTable" class="table table-striped table-bordered jobs-table">
+                        <thead>
+                            <tr>
+                                <th>Position</th>
+                                <th>Organization name</th>
+                                <th>Location</th>
+                                <th>Posted date</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody">
+                            <!-- Data will be dynamically loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- Conferences Tab Content -->
+            <div id="conferences" class="tab-content">
+                <h2 class="mb-4">Conferences</h2>
+                <div class="table-container">
+                    <table id="conferencesTable" class="table table-striped table-bordered conferences-table">
+                        <thead>
+                            <tr>
+                                <th>Event Title</th>
+                                <th>Location</th>
+                                <th>Start Date</th>
+                                <th>End Date</th>
+                                <th>Registration Deadline</th>
+                            </tr>
+                        </thead>
+                        <tbody id="conferencesTableBody">
+                            <!-- Data will be dynamically loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Job Detail Modal -->
+    <div id="jobDetailModal" class="job-detail-modal">
+        <div class="job-detail-content" id="jobDetailContent">
+            <!-- Content will be dynamically populated -->
+        </div>
+    </div>
+
+    <!-- Conference Detail Modal -->
+    <div id="conferenceDetailModal" class="conference-detail-modal">
+        <div class="conference-detail-content" id="conferenceDetailContent">
+            <!-- Content will be dynamically populated -->
+        </div>
+    </div>
 
 <script>
 function toggleMenu() {
@@ -417,10 +526,49 @@ function showTab(tabName) {
     }
 }
 
+// Function to format date to IST (date only, no time)
+function formatDateToIST(dateStr) {
+    if (!dateStr || dateStr.trim() === '') return '';
+    
+    try {
+        let date = new Date(dateStr);
+        
+        // If initial parsing fails, try different formats
+        if (isNaN(date.getTime())) {
+            // Try DD/MM/YYYY or DD-MM-YYYY format
+            const ddmmyyyy = dateStr.match(/(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})/);
+            if (ddmmyyyy) {
+                const day = parseInt(ddmmyyyy[1]);
+                const month = parseInt(ddmmyyyy[2]) - 1; // Month is 0-indexed
+                const year = parseInt(ddmmyyyy[3]);
+                date = new Date(year, month, day);
+            }
+        }
+        
+        if (isNaN(date.getTime())) {
+            return dateStr; // Return original if can't parse
+        }
+        
+        // Format to IST date (DD/MM/YYYY)
+        const istDate = new Date(date.toLocaleString("en-US", {timeZone: "Asia/Kolkata"}));
+        const day = istDate.getDate().toString().padStart(2, '0');
+        const month = (istDate.getMonth() + 1).toString().padStart(2, '0');
+        const year = istDate.getFullYear();
+        
+        return `${day}/${month}/${year}`;
+    } catch (error) {
+        console.error('Error formatting date:', error);
+        return dateStr;
+    }
+}
+
 // Job detail modal functions
 function showJobDetail(jobData) {
     const modal = document.getElementById('jobDetailModal');
     const content = document.getElementById('jobDetailContent');
+    
+    // Format job posted date
+    const formattedJobDate = formatDateToIST(jobData.timestamp);
     
     // Populate modal with job data
     content.innerHTML = `
@@ -445,7 +593,7 @@ function showJobDetail(jobData) {
         
         <div class="job-detail-section">
             <div class="job-detail-label">Posted Date:</div>
-            <div class="job-detail-value">${jobData.timestamp || 'Not specified'}</div>
+            <div class="job-detail-value">${formattedJobDate || 'Not specified'}</div>
         </div>
         
         ${jobData.essentialQualities ? `
@@ -469,19 +617,19 @@ function showJobDetail(jobData) {
         </div>
         ` : ''}
         
-        ${jobData.email ? `
-        <div class="job-detail-section">
-            <div class="job-detail-label">Contact:</div>
-            <div class="job-detail-value">
-                <a href="mailto:${jobData.email}" style="color: #0066cc;">${jobData.email}</a>
-            </div>
-        </div>
-        ` : ''}
+	${jobData.email && !jobData.email.endsWith('@gmail.com') ? `
+	<div class="job-detail-section">
+	    <div class="job-detail-label">Contact Email:</div>
+	    <div class="job-detail-value">
+	        <a href="mailto:${jobData.email}" style="color: #0066cc;">${jobData.email}</a>
+	    </div>
+	</div>
+	` : ''}
         
         ${jobData.deadline ? `
         <div class="job-detail-section">
             <div class="job-detail-label">Application Deadline:</div>
-            <div class="job-detail-value">${jobData.deadline}</div>
+            <div class="job-detail-value">${formatDateToIST(jobData.deadline)}</div>
         </div>
         ` : ''}
         
@@ -508,11 +656,84 @@ function closeJobDetail() {
     document.body.style.overflow = 'auto'; // Restore background scrolling
 }
 
+// Conference detail modal functions
+function showConferenceDetail(conferenceData) {
+    const modal = document.getElementById('conferenceDetailModal');
+    const content = document.getElementById('conferenceDetailContent');
+    
+    // Format all dates to IST
+    const formattedStartDate = formatDateToIST(conferenceData.eventStartDate);
+    const formattedEndDate = formatDateToIST(conferenceData.eventEndDate);
+    const formattedRegDeadline = formatDateToIST(conferenceData.registrationDeadline);
+    const formattedAbstractDeadline = formatDateToIST(conferenceData.abstractDeadline);
+    
+    // Build the content dynamically based on available data
+    let contentHTML = `
+        <span class="close-btn" onclick="closeConferenceDetail()">&times;</span>
+        <h2 class="conference-detail-title">${conferenceData.eventTitle || 'Conference Event'}</h2>
+    `;
+    
+    // Add all possible fields from the Google Sheet
+    const fieldsToShow = [
+        { key: 'eventType', label: 'Event type' },
+        { key: 'eventLocation', label: 'Event Location' },
+        { key: 'eventStartDate', label: 'Start Date', value: formattedStartDate },
+        { key: 'eventEndDate', label: 'End Date', value: formattedEndDate },
+        { key: 'registrationDeadline', label: 'Registration Deadline', value: formattedRegDeadline },
+        { key: 'eventDescription', label: 'Description' },
+        { key: 'organizer', label: 'Organizer' },
+        { key: 'contactEmail', label: 'Contact Email', isEmail: true },
+        { key: 'abstractDeadline', label: 'Abstract Submission Deadline', value: formattedAbstractDeadline },
+        { key: 'accommodation', label: 'Accommodation' },
+        { key: 'transportation', label: 'Transportation' },
+        { key: 'specialInstructions', label: 'Special Instructions' },
+        { key: 'additionalInfo', label: 'Additional Information' },
+        { key: 'eventWebsite', label: 'eventWebsite', isLink: true }
+    ];
+    
+    // Add sections for each field that has data
+    fieldsToShow.forEach(field => {
+        const value = field.value || conferenceData[field.key];
+        if (value && value.toString().trim() !== '') {
+            contentHTML += `
+                <div class="conference-detail-section">
+                    <div class="conference-detail-label">${field.label}:</div>
+                    <div class="conference-detail-value">`;
+            
+            if (field.isEmail) {
+                contentHTML += `<a href="mailto:${value}" style="color: #0066cc;">${value}</a>`;
+            } else if (field.isLink) {
+                contentHTML += `<a href="${value}" target="_blank" rel="noopener noreferrer">${value}</a>`;
+            } else {
+                contentHTML += value;
+            }
+            
+            contentHTML += `</div>
+                </div>`;
+        }
+    });
+    
+    content.innerHTML = contentHTML;
+    modal.style.display = 'block';
+    document.body.style.overflow = 'hidden'; // Prevent background scrolling
+}
+
+function closeConferenceDetail() {
+    const modal = document.getElementById('conferenceDetailModal');
+    modal.style.display = 'none';
+    document.body.style.overflow = 'auto'; // Restore background scrolling
+}
+
 // Close modal when clicking outside of it
 window.onclick = function(event) {
-    const modal = document.getElementById('jobDetailModal');
-    if (event.target == modal) {
+    const jobModal = document.getElementById('jobDetailModal');
+    const conferenceModal = document.getElementById('conferenceDetailModal');
+    
+    if (event.target == jobModal) {
         closeJobDetail();
+    }
+    if (event.target == conferenceModal) {
+        closeConferenceDetail();
     }
 }
 
@@ -520,6 +741,7 @@ window.onclick = function(event) {
 document.addEventListener('keydown', function(event) {
     if (event.key === 'Escape') {
         closeJobDetail();
+        closeConferenceDetail();
     }
 });
 
@@ -620,7 +842,7 @@ function loadConferencesData() {
                 throw new Error('Unable to process data into array format');
             }
             
-            conferencesData = processedData;
+            conferencesData = processedData; // Store data globally for virtual pages
             conferencesTableBody.innerHTML = '';
             
             if (processedData.length === 0) {
@@ -631,13 +853,33 @@ function loadConferencesData() {
             processedData.forEach((row, index) => {
                 console.log(`Conference row ${index}:`, row);
                 let tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td>${row.eventTitle || ''}</td>
-                    <td>${row.eventLocation || ''}</td>
-                    <td>${row.eventStartDate || ''}</td>
-                    <td>${row.eventEndDate || ''}</td>
-                    <td>${row.registrationDeadline || ''}</td>
-                `;
+                
+                // Format dates for display
+                const formattedStartDate = formatDateToIST(row.eventStartDate);
+                const formattedEndDate = formatDateToIST(row.eventEndDate);
+                const formattedRegDeadline = formatDateToIST(row.registrationDeadline);
+                
+                // Check if external link/website exists
+// Always create virtual page for event title
+let titleCell = `<td><a href="#" class="virtual-link" onclick="showConferenceDetail(conferencesData[${index}]); return false;">${row.eventTitle || ''} 📄 </a></td>`;
+
+// Check if external link exists for registration deadline
+let regDeadlineCell;
+if (row.eventWebsite && row.eventWebsite.trim() !== '') {
+    // External link exists - embed in registration deadline
+    regDeadlineCell = `<td><a href="${row.eventWebsite}" target="_blank" rel="noopener noreferrer">${formattedRegDeadline} 🔗</a></td>`;
+} else {
+    // No external link - just show deadline
+    regDeadlineCell = `<td>${formattedRegDeadline}</td>`;
+}
+
+tr.innerHTML = `
+    ${titleCell}
+    <td>${row.eventLocation || ''}</td>
+    <td>${formattedStartDate}</td>
+    <td>${formattedEndDate}</td>
+    ${regDeadlineCell}
+`;
                 conferencesTableBody.appendChild(tr);
             });
             
@@ -657,7 +899,7 @@ function loadConferencesData() {
                 scrollX: false,
                 scrollCollapse: true,
                 fixedHeader: false,
-                order: [[2, 'desc']], // Default sort by start date
+                order: [[4, 'desc']], // Default sort by start date
                 columnDefs: [
                     { width: "30%", targets: 0, className: "text-wrap" },
                     { width: "25%", targets: 1, className: "text-wrap" },
@@ -680,179 +922,109 @@ function loadConferencesData() {
             conferencesTableBody.innerHTML = `<tr><td colspan="5" class="loading">Error loading conferences data: ${error.message}</td></tr>`;
         });
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+    const webAppUrl = 'https://script.google.com/macros/s/AKfycbxjjgXGVAXyLBDQqHbnFssoNMw86pzPNBVdno66pjt5svrAQUOkufI0CQpMw5yniEMe/exec';
+    
+    // Configure which columns to display - easily changeable
+    const columnsToShow = ['jobType', 'affiliation', 'location', 'timestamp'];
+    fetch(webAppUrl)
+        .then(response => response.json())
+        .then(data => {
+            jobsData = data; // Store data globally
+            const tableBody = document.getElementById('tableBody');
+            
+            data.forEach((row, index) => {
+                let tr = document.createElement('tr');
+                let cellsHtml = '';
+                
+                // Build cells based on columnsToShow array
+columnsToShow.forEach(column => {
+    if (column === 'jobType') {
+        // Always create virtual page for job title
+        cellsHtml += `<td><a href="#" class="virtual-link" onclick="showJobDetail(jobsData[${index}]); return false;">${row[column] || ''} 📄</a></td>`;
+    } else if (column === 'timestamp') {
+        // Format job posted date to IST and check for external link
+        const formattedDate = formatDateToIST(row[column]);
+        if (row['link'] && row['link'].trim() !== '') {
+            // External link exists - embed in timestamp
+            cellsHtml += `<td><a href="${row['link']}" target="_blank" rel="noopener noreferrer">${formattedDate} 🔗</a></td>`;
+        } else {
+            // No external link - just show date
+            cellsHtml += `<td>${formattedDate}</td>`;
+        }
+    } else {
+        cellsHtml += `<td>${row[column] || ''}</td>`;
+    }
+});
+                
+                tr.innerHTML = cellsHtml;
+                tableBody.appendChild(tr);
+            });
+            
+            // First, let's add timestamps to our data for proper sorting
+            console.log('Sample data for debugging:', data.slice(0, 3));
+            data.forEach(row => {
+                row.sortableDate = parseDate(row.timestamp);
+                console.log('Date:', row.timestamp, '-> Sortable:', row.sortableDate, '-> Readable:', new Date(row.sortableDate));
+            });
+            
+            // Initialize DataTable with custom date sorting
+            dataTable = $('#dataTable').DataTable({
+                responsive: {
+                    details: {
+                        type: 'column',
+                        target: 'tr'
+                    }
+                },
+                autoWidth: false,
+                scrollX: false,
+                scrollCollapse: true,
+                fixedHeader: false,
+                order: [[3, 'desc']], // Default sort by date column (newest first)
+                columnDefs: [
+                    { width: "35%", targets: 0, className: "text-wrap" },
+                    { width: "30%", targets: 1, className: "text-wrap" },
+                    { width: "20%", targets: 2, className: "text-wrap" },
+                    { 
+                        width: "15%", 
+                        targets: 3, 
+                        className: "text-wrap",
+                        render: function(data, type, row, meta) {
+                            if (type === 'sort' || type === 'type') {
+                                // Use the pre-calculated sortable date
+                                return jobsData[meta.row] ? jobsData[meta.row].sortableDate : 0;
+                            }
+                            return data; // Return original data for display
+                        }
+                    }
+                ],
+                drawCallback: function() {
+                    // Ensure header and body alignment after each redraw
+                    this.api().columns.adjust();
+                },
+                initComplete: function() {
+                    // Force column adjustment after initialization
+                    this.api().columns.adjust();
+                    
+                    // Add window resize handler to maintain alignment
+                    $(window).on('resize', () => {
+                        clearTimeout(window.resizeTimer);
+                        window.resizeTimer = setTimeout(() => {
+                            this.api().columns.adjust();
+                        }, 250);
+                    });
+                }
+            });
+            setTimeout(() => {
+                if (!window.conferencesTableInitialized) {
+                    loadConferencesData();
+                }
+            }, 200);
+        })
+        .catch(error => console.error('Error fetching data:', error));
+});
 </script>
 
-<body>
-    <div class="header">
-        <div class="title-container">
-            <div class="title-row">
-                <h1>NEJI</h1>
-                <img src="./neji.png" alt="NEJI Network of Earth-Science Jobs India Logo" class="logo">
-            </div>
-            <div class="small-neji">Network of Earth-Science Jobs, India</div>
-        </div>
-        <div class="menu-container">
-            <div class="menu-icon" onclick="toggleMenu()">☰</div>
-            <div class="menu-links" id="menuLinks">
-                <a href="./index.html">Home</a>
-                <a href="./institutes.html">Institutes</a>
-                <a href="./put_your_word.html">Put your word out</a>
-                <a href="./about.html">Who are we?</a>
-            </div>
-        </div>
-    </div>
-
-    <div class="container mt-5">
-        <div class="tab-container">
-            <div class="tab-buttons">
-                <button class="tab-button active" onclick="showTab('jobs')">Job Listings</button>
-                <button class="tab-button" onclick="showTab('conferences')">Conferences</button>
-            </div>
-            
-            <!-- Jobs Tab Content -->
-            <div id="jobs" class="tab-content active">
-                <h2 class="mb-4">Job Listings</h2>
-                <div class="table-container">
-                    <table id="dataTable" class="table table-striped table-bordered jobs-table">
-                        <thead>
-                            <tr>
-                                <th>Position</th>
-                                <th>Organization name</th>
-                                <th>Location</th>
-                                <th>Posted date</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tableBody">
-                            <!-- Data will be dynamically loaded here -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            
-            <!-- Conferences Tab Content -->
-            <div id="conferences" class="tab-content">
-                <h2 class="mb-4">Conferences</h2>
-                <div class="table-container">
-                    <table id="conferencesTable" class="table table-striped table-bordered conferences-table">
-                        <thead>
-                            <tr>
-                                <th>Event Title</th>
-                                <th>Location</th>
-                                <th>Start Date</th>
-                                <th>End Date</th>
-                                <th>Registration Deadline</th>
-                            </tr>
-                        </thead>
-                        <tbody id="conferencesTableBody">
-                            <!-- Data will be dynamically loaded here -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Job Detail Modal -->
-    <div id="jobDetailModal" class="job-detail-modal">
-        <div class="job-detail-content" id="jobDetailContent">
-            <!-- Content will be dynamically populated -->
-        </div>
-    </div>
-
-<script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const webAppUrl = 'https://script.google.com/macros/s/AKfycbxjjgXGVAXyLBDQqHbnFssoNMw86pzPNBVdno66pjt5svrAQUOkufI0CQpMw5yniEMe/exec';
-            
-            // Configure which columns to display - easily changeable
-            const columnsToShow = ['jobType', 'affiliation', 'location', 'timestamp'];
-            fetch(webAppUrl)
-                .then(response => response.json())
-                .then(data => {
-                    jobsData = data; // Store data globally
-                    const tableBody = document.getElementById('tableBody');
-                    
-                    data.forEach((row, index) => {
-                        let tr = document.createElement('tr');
-                        let cellsHtml = '';
-                        
-                        // Build cells based on columnsToShow array
-                        columnsToShow.forEach(column => {
-                            if (column === 'jobType') {
-                                // Check if external link exists
-                                if (row['link'] && row['link'].trim() !== '') {
-                                    // External link exists - use it
-                                    cellsHtml += `<td><a href="${row['link']}" target="_blank" rel="noopener noreferrer">${row[column] || ''} 🔗</a></td>`;
-                                } else {
-                                    // No external link - create virtual page link
-                                    cellsHtml += `<td><a href="#" class="virtual-link" onclick="showJobDetail(jobsData[${index}]); return false;">${row[column] || ''} 📄</a></td>`;
-                                }
-                            } else {
-                                cellsHtml += `<td>${row[column] || ''}</td>`;
-                            }
-                        });
-                        
-                        tr.innerHTML = cellsHtml;
-                        tableBody.appendChild(tr);
-                    });
-                    
-                    // First, let's add timestamps to our data for proper sorting
-                    console.log('Sample data for debugging:', data.slice(0, 3));
-                    data.forEach(row => {
-                        row.sortableDate = parseDate(row.timestamp);
-                        console.log('Date:', row.timestamp, '-> Sortable:', row.sortableDate, '-> Readable:', new Date(row.sortableDate));
-                    });
-                    
-                    // Initialize DataTable with custom date sorting
-                    dataTable = $('#dataTable').DataTable({
-                        responsive: {
-                            details: {
-                                type: 'column',
-                                target: 'tr'
-                            }
-                        },
-                        autoWidth: false,
-                        scrollX: false,
-                        scrollCollapse: true,
-                        fixedHeader: false,
-                        order: [[3, 'desc']], // Default sort by date column (newest first)
-                        columnDefs: [
-                            { width: "35%", targets: 0, className: "text-wrap" },
-                            { width: "30%", targets: 1, className: "text-wrap" },
-                            { width: "20%", targets: 2, className: "text-wrap" },
-                            { 
-                                width: "15%", 
-                                targets: 3, 
-                                className: "text-wrap",
-                                render: function(data, type, row, meta) {
-                                    if (type === 'sort' || type === 'type') {
-                                        // Use the pre-calculated sortable date
-                                        return jobsData[meta.row] ? jobsData[meta.row].sortableDate : 0;
-                                    }
-                                    return data; // Return original data for display
-                                }
-                            }
-                        ],
-                        drawCallback: function() {
-                            // Ensure header and body alignment after each redraw
-                            this.api().columns.adjust();
-                        },
-                        initComplete: function() {
-                            // Force column adjustment after initialization
-                            this.api().columns.adjust();
-                            
-                            // Add window resize handler to maintain alignment
-                            $(window).on('resize', () => {
-                                clearTimeout(window.resizeTimer);
-                                window.resizeTimer = setTimeout(() => {
-                                    this.api().columns.adjust();
-                                }, 250);
-                            });
-                        }
-                    });
-                })
-                .catch(error => console.error('Error fetching data:', error));
-        });
-    </script>
-    
 </body>
 </html>
