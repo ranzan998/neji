@@ -350,6 +350,12 @@
                                 <input type="text" id="affiliation" name="affiliation" required>
                             </div>
                         </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="vacancyNumber">Vacancy No*</label>
+                                <input type="text" id="vacancyNumber" name="vacancyNumber" placeholder="e.g., IITB/2025/001, NIO/VAC/25/03" required>
+                            </div>
+                        </div>
                     </div>
                     
                     <div class="form-section">
@@ -500,8 +506,19 @@
                                 <input type="text" id="eventTitle" name="eventTitle" required>
                             </div>
                             <div class="form-group">
+                                <label for="eventAbbreviation">Event Abbreviation*</label>
+                                <input type="text" id="eventAbbreviation" name="eventAbbreviation" placeholder="e.g., OSICON25, NCPS23 (include 2-digit year, no spaces)" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
                                 <label for="eventLocation">Location*</label>
                                 <input type="text" id="eventLocation" name="eventLocation" placeholder="City, State/Country or Online" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="eventWebsite">Event Website</label>
+                                <input type="url" id="eventWebsite" name="eventWebsite" placeholder="https://example.com/event">
                             </div>
                         </div>
                         
@@ -521,15 +538,11 @@
                                 <label for="registrationDeadline">Registration Deadline*</label>
                                 <input type="date" id="registrationDeadline" name="registrationDeadline" required>
                             </div>
-                            <div class="form-group">
-                                <label for="eventWebsite">Event Website</label>
-                                <input type="url" id="eventWebsite" name="eventWebsite" placeholder="https://example.com/event">
-                            </div>
                         </div>
                         
                         <div class="form-group full-width">
                             <label for="eventDescription">Event Description*</label>
-                            <textarea id="eventDescription" name="eventDescription" placeholder="Brief description of the event, topics to be covered, and objectives"></textarea>
+                            <textarea id="eventDescription" name="eventDescription" placeholder="Brief description of the event, topics to be covered, and objectives" required></textarea>
                         </div>
                     </div>
                     
@@ -544,8 +557,8 @@
     
     
     <script>
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxjjgXGVAXyLBDQqHbnFssoNMw86pzPNBVdno66pjt5svrAQUOkufI0CQpMw5yniEMe/exec';
-        const EVENT_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzSnhbnF5bVLYHMcHhFBBR4Y_3H0ibHxv37iWCu2ZcC0-cdBgqfXcPvtGLRo2vn1woo/exec'; // Replace with actual event script URL
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby9t5U6MiQG3DalmYfZ1psQzqPHPSTUBmLAvkVlj9ExJaeLJybaJw6C6HmfVPhRxQne/exec';
+        const EVENT_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzSnhbnF5bVLYHMcHhFBBR4Y_3H0ibHxv37iWCu2ZcC0-cdBgqfXcPvtGLRo2vn1woo/exec';
         
         function toggleMenu() {
             const menu = document.getElementById("menuLinks");
@@ -649,6 +662,26 @@
                 }
             });
             
+            // Event abbreviation validation
+            if (formId === 'eventPostingForm') {
+                const eventAbbr = document.getElementById('eventAbbreviation');
+                if (eventAbbr.value) {
+                    // Check for spaces
+                    if (eventAbbr.value.includes(' ')) {
+                        eventAbbr.classList.add('form-field-error');
+                        isValid = false;
+                        showStatusMessage('Event abbreviation should not contain spaces.', 'error', 'eventStatusMessage');
+                    }
+                    // Check for 2-digit year pattern
+                    const yearPattern = /\d{2}/;
+                    if (!yearPattern.test(eventAbbr.value)) {
+                        eventAbbr.classList.add('form-field-error');
+                        isValid = false;
+                        showStatusMessage('Event abbreviation should include 2-digit year (e.g., OSICON25).', 'error', 'eventStatusMessage');
+                    }
+                }
+            }
+            
             // Email validation
             const emailFields = form.querySelectorAll('input[type="email"]');
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -728,9 +761,9 @@
             formData.append('jobType', finalJobType);
             formData.append('minQualification', finalMinQualification);
             
-            // Append other form fields
+            // Append other form fields including vacancyNumber
             const formFields = [
-                'email', 'affiliation', 'location', 'deadline', 
+                'email', 'affiliation', 'vacancyNumber', 'location', 'deadline', 
                 'specialisation', 'jobDescription', 'applicationProcess',
                 'duration', 'salary', 'requirements', 'link'
             ];
@@ -763,9 +796,9 @@
             // Append the final values
             formData.append('eventType', finalEventType);
             
-            // Append other form fields
+            // Append other form fields including eventAbbreviation
             const formFields = [
-                'eventEmail', 'eventOrganizer', 'eventTitle', 'eventLocation', 
+                'eventEmail', 'eventOrganizer', 'eventTitle', 'eventAbbreviation', 'eventLocation', 
                 'eventStartDate', 'eventEndDate', 'registrationDeadline', 'eventTarget',
                 'eventDescription', 'registrationProcess', 'eventFees', 'eventCapacity',
                 'eventSpeakers', 'eventTopics', 'eventWebsite', 'eventContact', 'eventRequirements'
