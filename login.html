@@ -58,7 +58,14 @@
             border: 2px solid #e1e5e9;
             border-radius: 8px;
             font-size: 16px;
+            transition: all 0.3s ease;
             box-sizing: border-box;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: #0a2f66;
+            box-shadow: 0 0 0 3px rgba(10, 47, 102, 0.1);
         }
         
         .btn {
@@ -69,14 +76,29 @@
             font-size: 16px;
             font-weight: 500;
             cursor: pointer;
+            transition: all 0.3s ease;
             margin-bottom: 15px;
+        }
+        
+        .btn-primary {
             background: linear-gradient(135deg, #0a2f66 0%, #1e5091 100%);
             color: white;
         }
         
-        .btn:hover {
+        .btn-primary:hover:not(:disabled) {
             transform: translateY(-2px);
             box-shadow: 0 8px 25px rgba(10, 47, 102, 0.3);
+        }
+        
+        .btn-secondary {
+            background: #28a745;
+            color: white;
+        }
+        
+        .btn-secondary:hover:not(:disabled) {
+            background: #218838;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(40, 167, 69, 0.3);
         }
         
         .btn:disabled {
@@ -85,30 +107,30 @@
             transform: none !important;
         }
         
-        .btn-secondary {
-            background: #28a745 !important;
-        }
-        
         .message {
             padding: 15px;
             border-radius: 8px;
             margin-bottom: 20px;
             text-align: center;
             display: none;
+            font-weight: 500;
         }
         
         .message.success {
             background-color: #d4edda;
+            border: 1px solid #c3e6cb;
             color: #155724;
         }
         
         .message.error {
             background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
             color: #721c24;
         }
         
         .message.info {
             background-color: #d1ecf1;
+            border: 1px solid #bee5eb;
             color: #0c5460;
         }
         
@@ -124,6 +146,11 @@
             color: #0a2f66;
             cursor: pointer;
             text-decoration: underline;
+            font-weight: 500;
+        }
+        
+        .auth-switch a:hover {
+            color: #1e5091;
         }
         
         .back-link {
@@ -134,6 +161,11 @@
         .back-link a {
             color: #0a2f66;
             text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .back-link a:hover {
+            text-decoration: underline;
         }
         
         .form-section-title {
@@ -142,6 +174,48 @@
             margin-bottom: 20px;
             font-size: 20px;
             font-weight: 600;
+        }
+        
+        .verification-notice {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            font-size: 14px;
+            color: #666;
+            border-left: 4px solid #0a2f66;
+        }
+        
+        .verification-notice strong {
+            color: #0a2f66;
+        }
+        
+        .loading-spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid transparent;
+            border-top: 2px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+        
+        .btn.loading .loading-spinner {
+            display: inline-block;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        @media (max-width: 768px) {
+            .login-container {
+                margin: 20px;
+                padding: 30px 20px;
+            }
         }
     </style>
 </head>
@@ -157,21 +231,27 @@
 
         <!-- Sign Up Form -->
         <div id="signup-form">
-            <div class="form-section-title">Create Account (No Email Verification)</div>
+            <div class="form-section-title">Create New Account</div>
             
             <div class="form-group">
                 <label for="signupEmail">Email Address</label>
-                <input type="email" id="signupEmail" placeholder="Enter your email">
+                <input type="email" id="signupEmail" placeholder="Enter your institutional email" required>
             </div>
             
             <div class="form-group">
                 <label for="signupPassword">Create Password</label>
-                <input type="password" id="signupPassword" placeholder="Minimum 6 characters">
+                <input type="password" id="signupPassword" placeholder="Minimum 6 characters" required>
             </div>
             
             <button type="button" class="btn btn-secondary" id="signupBtn">
-                Create Account (Instant Access)
+                <span class="loading-spinner"></span>
+                Create Account & Send Verification
             </button>
+            
+            <div class="verification-notice">
+                📧 <strong>Email Verification Required:</strong><br>
+                After creating your account, we'll send a verification email. You must click the verification link before you can sign in and post jobs.
+            </div>
             
             <div class="auth-switch">
                 Already have an account? <a href="#" id="showSigninLink">Sign In Here</a>
@@ -184,15 +264,16 @@
             
             <div class="form-group">
                 <label for="signinEmail">Email Address</label>
-                <input type="email" id="signinEmail" placeholder="Enter your email">
+                <input type="email" id="signinEmail" placeholder="Enter your email" required>
             </div>
             
             <div class="form-group">
                 <label for="signinPassword">Password</label>
-                <input type="password" id="signinPassword" placeholder="Enter your password">
+                <input type="password" id="signinPassword" placeholder="Enter your password" required>
             </div>
             
-            <button type="button" class="btn" id="signinBtn">
+            <button type="button" class="btn btn-primary" id="signinBtn">
+                <span class="loading-spinner"></span>
                 Sign In
             </button>
             
@@ -217,10 +298,11 @@
             
             <div class="form-group">
                 <label for="resetEmail">Email Address</label>
-                <input type="email" id="resetEmail" placeholder="Enter your email">
+                <input type="email" id="resetEmail" placeholder="Enter your email" required>
             </div>
             
-            <button type="button" class="btn" id="resetBtn" onclick="handlePasswordReset()">
+            <button type="button" class="btn btn-primary" id="resetBtn">
+                <span class="loading-spinner"></span>
                 Send Reset Link
             </button>
             
@@ -251,41 +333,54 @@
                 getAuth, 
                 createUserWithEmailAndPassword,
                 signInWithEmailAndPassword,
-                sendPasswordResetEmail
+                sendPasswordResetEmail,
+                sendEmailVerification,
+                onAuthStateChanged
             } = await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js');
 
             const app = initializeApp(firebaseConfig);
             const auth = getAuth(app);
 
+            // Make Firebase functions globally available
             window.firebaseReady = true;
             window.auth = auth;
             window.createUserWithEmailAndPassword = createUserWithEmailAndPassword;
             window.signInWithEmailAndPassword = signInWithEmailAndPassword;
             window.sendPasswordResetEmail = sendPasswordResetEmail;
+            window.sendEmailVerification = sendEmailVerification;
 
             console.log('✅ Firebase loaded successfully');
+
+            // Listen for auth state changes
+            onAuthStateChanged(auth, (user) => {
+                if (user && user.emailVerified) {
+                    // User is signed in and email is verified
+                    handleSuccessfulAuth(user.email, 'email_password');
+                }
+            });
 
         } catch (error) {
             console.error('❌ Firebase failed to load:', error);
             showMessage('Firebase failed to load. Please refresh the page.', 'error');
         }
 
-        function handleSuccessfulAuth(email) {
+        function handleSuccessfulAuth(email, method) {
             const userData = {
                 email: email,
                 verified: true,
-                loginMethod: 'email_password',
+                loginMethod: method,
                 loginTime: new Date().toISOString()
             };
 
             window.sessionStorage.setItem('neji_user_session', JSON.stringify(userData));
-            showMessage('Login successful! Redirecting to job posting...', 'success');
+            showMessage('Email verified! Redirecting to job posting...', 'success');
             
             setTimeout(() => {
                 window.location.href = './put_your_word.html';
             }, 2000);
         }
 
+        // Make function globally available
         window.handleSuccessfulAuth = handleSuccessfulAuth;
     </script>
 
@@ -314,8 +409,6 @@
             if (resetBtn) {
                 resetBtn.addEventListener('click', handlePasswordReset);
                 console.log('✅ Reset button listener added');
-            } else {
-                console.error('❌ Reset button not found');
             }
             
             if (showSigninLink) {
@@ -335,7 +428,6 @@
             if (forgotPasswordLink) {
                 forgotPasswordLink.addEventListener('click', function(e) {
                     e.preventDefault();
-                    console.log('Forgot password link clicked');
                     showForgotPassword();
                 });
             }
@@ -347,13 +439,18 @@
                 });
             }
 
-            // Also add direct onclick handlers as backup
-            window.handleSignUp = handleSignUp;
-            window.handleSignIn = handleSignIn;
-            window.handlePasswordReset = handlePasswordReset;
-            window.showSignUp = showSignUp;
-            window.showSignIn = showSignIn;
-            window.showForgotPassword = showForgotPassword;
+            // Add Enter key support
+            document.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    if (document.getElementById('signup-form').style.display !== 'none') {
+                        handleSignUp();
+                    } else if (document.getElementById('signin-form').style.display !== 'none') {
+                        handleSignIn();
+                    } else if (document.getElementById('forgot-password-form').style.display !== 'none') {
+                        handlePasswordReset();
+                    }
+                }
+            });
             
             console.log('All event listeners set up');
         });
@@ -399,24 +496,46 @@
                 return;
             }
 
+            if (!isValidEmail(email)) {
+                showMessage('Please enter a valid email address.', 'error');
+                return;
+            }
+
             if (password.length < 6) {
                 showMessage('Password must be at least 6 characters.', 'error');
                 return;
             }
 
             const signupBtn = document.getElementById('signupBtn');
-            signupBtn.disabled = true;
-            signupBtn.textContent = 'Creating Account...';
-            showMessage('Creating account...', 'info');
+            setButtonLoading('signupBtn', true);
+            showMessage('Creating account and sending verification email...', 'info');
 
             window.createUserWithEmailAndPassword(window.auth, email, password)
                 .then((userCredential) => {
                     const user = userCredential.user;
                     console.log('Account created:', user.email);
                     
-                    // Skip email verification - allow immediate access
-                    showMessage('🎉 Account created successfully! Signing you in...', 'success');
-                    window.handleSuccessfulAuth(user.email);
+                    // Send email verification
+                    return window.sendEmailVerification(user);
+                })
+                .then(() => {
+                    console.log('Verification email sent');
+                    showMessage(`🎉 Account created successfully!
+
+✅ A verification email has been sent to: ${email}
+
+📧 Please check your inbox (and spam folder) and click the verification link.
+
+⚠️ You must verify your email before you can sign in and post jobs.
+
+After clicking the verification link, return here and use the "Sign In" option.`, 'success');
+                    
+                    // Switch to sign-in form after delay
+                    setTimeout(() => {
+                        showSignIn();
+                        document.getElementById('signinEmail').value = email;
+                        showMessage('✅ Email verified? Sign in with your credentials!', 'info');
+                    }, 8000);
                 })
                 .catch((error) => {
                     console.error('Signup error:', error);
@@ -446,83 +565,7 @@
                     showMessage(errorMessage, 'error');
                 })
                 .finally(() => {
-                    signupBtn.disabled = false;
-                    signupBtn.textContent = 'Create Account (Instant Access)';
-                });
-        }
-
-        function handlePasswordReset() {
-            console.log('Password reset button clicked!');
-            
-            if (!window.firebaseReady) {
-                showMessage('Firebase is still loading. Please wait.', 'error');
-                return;
-            }
-
-            const email = document.getElementById('resetEmail').value.trim();
-            console.log('Reset email:', email);
-
-            if (!email) {
-                showMessage('Please enter your email address.', 'error');
-                return;
-            }
-
-            if (!isValidEmail(email)) {
-                showMessage('Please enter a valid email address.', 'error');
-                return;
-            }
-
-            const resetBtn = document.getElementById('resetBtn');
-            resetBtn.disabled = true;
-            resetBtn.textContent = 'Sending Reset Link...';
-            showMessage('Sending password reset email...', 'info');
-
-            console.log('Attempting to send password reset email...');
-
-            // Direct Firebase call - this works as proven by debug page
-            window.sendPasswordResetEmail(window.auth, email)
-                .then(() => {
-                    console.log('✅ Password reset email sent successfully');
-                    showMessage(`🎉 Password reset email sent!
-
-Check your email inbox (and spam folder) for the reset link from Firebase.
-
-Click the link in the email to create a new password, then return here to sign in.`, 'success');
-                    
-                    // Switch back to sign-in form after delay
-                    setTimeout(() => {
-                        showSignIn();
-                        document.getElementById('signinEmail').value = email;
-                        showMessage('Ready to sign in with your new password!', 'info');
-                    }, 6000);
-                })
-                .catch((error) => {
-                    console.error('❌ Password reset error:', error);
-                    
-                    let errorMessage = 'Password reset failed: ';
-                    switch (error.code) {
-                        case 'auth/user-not-found':
-                            // Note: This might be a false positive due to privacy settings
-                            errorMessage += 'If you have an account with this email, you will receive a reset link. If not, please create an account first.';
-                            break;
-                        case 'auth/invalid-email':
-                            errorMessage += 'Please enter a valid email address.';
-                            break;
-                        case 'auth/too-many-requests':
-                            errorMessage += 'Too many reset requests. Please wait a few minutes and try again.';
-                            break;
-                        case 'auth/network-request-failed':
-                            errorMessage += 'Network error. Please check your connection and try again.';
-                            break;
-                        default:
-                            errorMessage += error.message;
-                    }
-                    
-                    showMessage(errorMessage, 'error');
-                })
-                .finally(() => {
-                    resetBtn.disabled = false;
-                    resetBtn.textContent = 'Send Reset Link';
+                    setButtonLoading('signupBtn', false);
                 });
         }
 
@@ -540,19 +583,44 @@ Click the link in the email to create a new password, then return here to sign i
                 return;
             }
 
-            const signinBtn = document.getElementById('signinBtn');
-            signinBtn.disabled = true;
-            signinBtn.textContent = 'Signing In...';
+            if (!isValidEmail(email)) {
+                showMessage('Please enter a valid email address.', 'error');
+                return;
+            }
+
+            setButtonLoading('signinBtn', true);
             showMessage('Signing in...', 'info');
 
             window.signInWithEmailAndPassword(window.auth, email, password)
                 .then((userCredential) => {
                     const user = userCredential.user;
                     console.log('User signed in:', user.email);
-                    
-                    // Allow access regardless of email verification
-                    showMessage('✅ Sign in successful! Redirecting...', 'success');
-                    window.handleSuccessfulAuth(user.email);
+
+                    if (!user.emailVerified) {
+                        showMessage(`⚠️ Please verify your email first!
+
+Check your inbox for the verification email and click the link.
+
+Didn't receive the email?`, 'error');
+                        
+                        // Offer to resend verification email
+                        setTimeout(() => {
+                            if (confirm('Send a new verification email?')) {
+                                window.sendEmailVerification(user)
+                                    .then(() => {
+                                        showMessage('✅ New verification email sent! Check your inbox and click the verification link.', 'success');
+                                    })
+                                    .catch((error) => {
+                                        console.error('Error sending verification email:', error);
+                                        showMessage('Failed to send verification email. Please try again.', 'error');
+                                    });
+                            }
+                        }, 3000);
+                    } else {
+                        // Email is verified, proceed to job posting
+                        showMessage('✅ Sign in successful! Email verified. Redirecting...', 'success');
+                        window.handleSuccessfulAuth(user.email, 'email_password');
+                    }
                 })
                 .catch((error) => {
                     console.error('Signin error:', error);
@@ -568,10 +636,13 @@ Click the link in the email to create a new password, then return here to sign i
                             break;
                         case 'auth/wrong-password':
                         case 'auth/invalid-credential':
-                            errorMessage += 'Incorrect email or password. Please try again.';
+                            errorMessage += 'Incorrect email or password. Please try again, or use "Forgot Password" to reset.';
                             break;
                         case 'auth/invalid-email':
                             errorMessage += 'Please enter a valid email address.';
+                            break;
+                        case 'auth/too-many-requests':
+                            errorMessage += 'Too many failed attempts. Please wait a few minutes or reset your password.';
                             break;
                         default:
                             errorMessage += error.message;
@@ -580,14 +651,86 @@ Click the link in the email to create a new password, then return here to sign i
                     showMessage(errorMessage, 'error');
                 })
                 .finally(() => {
-                    signinBtn.disabled = false;
-                    signinBtn.textContent = 'Sign In';
+                    setButtonLoading('signinBtn', false);
                 });
+        }
+
+        function handlePasswordReset() {
+            if (!window.firebaseReady) {
+                showMessage('Firebase is still loading. Please wait.', 'error');
+                return;
+            }
+
+            const email = document.getElementById('resetEmail').value.trim();
+
+            if (!email) {
+                showMessage('Please enter your email address.', 'error');
+                return;
+            }
+
+            if (!isValidEmail(email)) {
+                showMessage('Please enter a valid email address.', 'error');
+                return;
+            }
+
+            setButtonLoading('resetBtn', true);
+            showMessage('Sending password reset email...', 'info');
+
+            window.sendPasswordResetEmail(window.auth, email)
+                .then(() => {
+                    showMessage(`🎉 Password reset email sent!
+
+Check your email inbox (and spam folder) for the reset link from Firebase.
+
+Click the link in the email to create a new password, then return here to sign in.`, 'success');
+                    
+                    // Switch back to sign-in form after delay
+                    setTimeout(() => {
+                        showSignIn();
+                        document.getElementById('signinEmail').value = email;
+                        showMessage('Ready to sign in with your new password!', 'info');
+                    }, 6000);
+                })
+                .catch((error) => {
+                    console.error('Password reset error:', error);
+                    
+                    let errorMessage = 'Password reset failed: ';
+                    switch (error.code) {
+                        case 'auth/user-not-found':
+                            errorMessage += 'If you have an account with this email, you will receive a reset link. If not, please create an account first.';
+                            break;
+                        case 'auth/invalid-email':
+                            errorMessage += 'Please enter a valid email address.';
+                            break;
+                        case 'auth/too-many-requests':
+                            errorMessage += 'Too many reset requests. Please wait a few minutes and try again.';
+                            break;
+                        default:
+                            errorMessage += error.message;
+                    }
+                    
+                    showMessage(errorMessage, 'error');
+                })
+                .finally(() => {
+                    setButtonLoading('resetBtn', false);
+                });
+        }
+
+        function setButtonLoading(buttonId, loading) {
+            const button = document.getElementById(buttonId);
+            
+            if (loading) {
+                button.classList.add('loading');
+                button.disabled = true;
+            } else {
+                button.classList.remove('loading');
+                button.disabled = false;
+            }
         }
 
         function showMessage(text, type) {
             const messageDiv = document.getElementById('message');
-            messageDiv.innerHTML = text.replace(/\n\n/g, '<br><br>'); // Support line breaks
+            messageDiv.innerHTML = text.replace(/\n\n/g, '<br><br>');
             messageDiv.className = `message ${type}`;
             messageDiv.style.display = 'block';
             
@@ -599,6 +742,34 @@ Click the link in the email to create a new password, then return here to sign i
         function hideMessage() {
             document.getElementById('message').style.display = 'none';
         }
+
+        function isValidEmail(email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
+        }
+
+        // Input validation styling
+        document.addEventListener('DOMContentLoaded', function() {
+            const inputs = document.querySelectorAll('input[type="email"], input[type="password"]');
+            
+            inputs.forEach(input => {
+                input.addEventListener('blur', function() {
+                    if (this.type === 'email' && this.value && !isValidEmail(this.value)) {
+                        this.style.borderColor = '#dc3545';
+                    } else if (this.type === 'password' && this.value && this.value.length < 6) {
+                        this.style.borderColor = '#dc3545';
+                    } else if (this.value) {
+                        this.style.borderColor = '#28a745';
+                    } else {
+                        this.style.borderColor = '#e1e5e9';
+                    }
+                });
+
+                input.addEventListener('input', function() {
+                    this.style.borderColor = '#e1e5e9';
+                });
+            });
+        });
     </script>
 </body>
 </html>
