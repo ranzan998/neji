@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ocean and Earth science Jobs</title>
+    <title>Post Jobs & Events - NEJI</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&display=swap');
         body {
@@ -15,6 +15,7 @@
             display: flex;
             margin-bottom: 20px;
             justify-content: space-between;
+            align-items: flex-start;
         }
         .title-row {
             display: flex;
@@ -39,20 +40,105 @@
             width: 120px;
             margin-left: 15px;
         }
-        .container {
-            width: 100%;
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 15px 20px;
+            border-radius: 12px;
+            border: 2px solid #e1e5e9;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #0a2f66 0%, #1e5091 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 16px;
+        }
+        .user-details {
+            display: flex;
+            flex-direction: column;
+        }
+        .user-email {
+            font-weight: 600;
+            color: #333;
+            margin: 0;
+        }
+        .user-status {
+            font-size: 12px;
+            color: #28a745;
+            margin: 2px 0 0 0;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .logout-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        .logout-btn:hover {
+            background: #c82333;
+            transform: translateY(-1px);
+        }
+        .access-denied {
+            max-width: 600px;
+            margin: 50px auto;
+            text-align: center;
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+        }
+        .access-denied h2 {
+            color: #dc3545;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+        .access-denied p {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+        .verify-btn {
+            background: linear-gradient(135deg, #0a2f66 0%, #1e5091 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .verify-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(10, 47, 102, 0.3);
         }
         .menu-container {
             text-align: right;
             z-index: 1000;
         }
-
         .menu-icon {
             font-size: 28px;
             cursor: pointer;
             user-select: none;
         }
-
         .menu-links {
             display: none;
             flex-direction: column;
@@ -64,7 +150,6 @@
             position: absolute;
             right: 20px;
         }
-
         .menu-links a {
             text-decoration: none;
             color: #0a2f66;
@@ -72,22 +157,23 @@
             padding: 6px 0;
             display: block;
         }
-
         .menu-links a:hover {
             text-decoration: underline;
         }
-
+        .container {
+            width: 100%;
+        }
+        /* ... (rest of your existing CSS remains the same) ... */
+        
         /* Tab styles */
         .tab-container {
             margin-bottom: 20px;
         }
-
         .tab-buttons {
             display: flex;
             border-bottom: 2px solid #e0e0e0;
             margin-bottom: 20px;
         }
-
         .tab-button {
             background: none;
             border: none;
@@ -99,22 +185,18 @@
             border-bottom: 3px solid transparent;
             transition: all 0.3s ease;
         }
-
         .tab-button:hover {
             color: #0a2f66;
             background-color: #f8f9fa;
         }
-
         .tab-button.active {
             color: #0a2f66;
             border-bottom-color: #0a2f66;
             background-color: #f8f9fa;
         }
-
         .tab-content {
             display: none;
         }
-
         .tab-content.active {
             display: block;
         }
@@ -127,38 +209,31 @@
             margin-top: 20px;
             border: 1px solid #ddd;
         }
-
         .form-section {
             margin-bottom: 25px;
         }
-
         .form-section h3 {
             color: #0a2f66;
             border-bottom: 1px solid #ccc;
             padding-bottom: 8px;
             margin-bottom: 15px;
         }
-
         .form-row {
             display: flex;
             flex-wrap: wrap;
             margin-bottom: 15px;
             gap: 20px;
         }
-
         .form-group {
             flex: 1 1 300px;
             margin-bottom: 10px;
         }
-
         .form-group.full-width {
             flex: 1 1 100%;
         }
-
         .form-group.hidden {
             display: none;
         }
-
         .form-group.conditional {
             opacity: 0;
             max-height: 0;
@@ -166,20 +241,17 @@
             transition: opacity 0.3s ease, max-height 0.3s ease;
             margin-bottom: 0;
         }
-
         .form-group.conditional.show {
             opacity: 1;
             max-height: 200px;
             margin-bottom: 10px;
         }
-
         label {
             display: block;
             margin-bottom: 5px;
             font-weight: 500;
             color: #333;
         }
-
         input[type="text"],
         input[type="email"],
         input[type="number"],
@@ -194,20 +266,16 @@
             box-sizing: border-box;
             font-family: inherit;
         }
-
         .form-field-error {
             border-color: #dc3545 !important;
         }
-
         .form-field-valid {
             border-color: #28a745;
         }
-
         textarea {
             height: 100px;
             resize: vertical;
         }
-
         button {
             background-color: #0a2f66;
             color: white;
@@ -219,30 +287,24 @@
             font-weight: 500;
             transition: background-color 0.3s;
         }
-
         button:hover {
             background-color: #084083;
         }
-
         button:disabled {
             background-color: #6c757d;
             cursor: not-allowed;
         }
-
         .button-group {
             display: flex;
             justify-content: flex-end;
             gap: 10px;
         }
-
         .button-cancel {
             background-color: #6c757d;
         }
-
         .button-cancel:hover {
             background-color: #5a6268;
         }
-        
         #statusMessage, #eventStatusMessage {
             margin-top: 20px;
             padding: 15px;
@@ -250,39 +312,40 @@
             text-align: center;
             display: none;
         }
-        
         .success {
             background-color: #d4edda;
             color: #155724;
             border: 1px solid #c3e6cb;
         }
-        
         .error {
             background-color: #f8d7da;
             color: #721c24;
             border: 1px solid #f5c6cb;
         }
-        
         .loading {
             background-color: #d1ecf1;
             color: #0c5460;
             border: 1px solid #bee5eb;
         }
-
         .optional-section {
             border: 1px dashed #ccc;
             padding: 15px;
             margin-top: 15px;
             background-color: #fafafa;
         }
-
         .optional-section h4 {
             margin-top: 0;
             color: #666;
             font-size: 14px;
         }
-
         @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                gap: 15px;
+            }
+            .user-info {
+                order: -1;
+            }
             .form-row {
                 flex-direction: column;
                 gap: 10px;
@@ -304,261 +367,385 @@
     </style>
 </head>
 <body>
-    <div class="header">
-        <div class="title-container">
-            <div class="title-row">
-                <h1>NEJI</h1>
-                <img src="./neji.png" alt="NEJI Network of Earth-Science Jobs India Logo" class="logo" onerror="this.style.display='none'">
-            </div>
-            <div class="small-neji">Network of Earth-Science Jobs, India</div>
-        </div>
-        <div class="menu-container">
-            <div class="menu-icon" onclick="toggleMenu()">☰</div>
-            <div class="menu-links" id="menuLinks">
-          	   <a href="./index.html">Home</a>
-    	 	    <a href="./institutes.html">Institutes</a>
-   	 	    <a href="./put_your_word.html">Put your word out</a>
-   	 	    <a href="./about.html">Who are we?</a>
-             </div>
+    <!-- Access Denied Screen (shown if not verified) -->
+    <div id="accessDenied" class="access-denied" style="display: none;">
+        <h2>🔐 Verification Required</h2>
+        <p>To maintain the quality and authenticity of job postings, we require all users to verify their email address before posting jobs or events.</p>
+        <p>This helps us:</p>
+        <ul style="text-align: left; display: inline-block; margin: 20px 0;">
+            <li>Prevent spam and fake job postings</li>
+            <li>Ensure contact information is valid</li>
+            <li>Maintain trust in our community</li>
+        </ul>
+        <a href="./login.html" class="verify-btn">Verify Your Email</a>
+        <div style="margin-top: 20px;">
+            <a href="./index.html" style="color: #666; text-decoration: none;">← Back to Home</a>
         </div>
     </div>
 
-    <div class="container">
-        <div class="tab-container">
-            <div class="tab-buttons">
-                <button class="tab-button active" onclick="switchTab('listing')">Listing</button>
-                <button class="tab-button" onclick="switchTab('events')">Events</button>
+    <!-- Main Content (shown if verified) -->
+    <div id="mainContent" style="display: none;">
+        <div class="header">
+            <div class="title-container">
+                <div class="title-row">
+                    <h1>NEJI</h1>
+                    <img src="./neji.png" alt="NEJI Network of Earth-Science Jobs India Logo" class="logo" onerror="this.style.display='none'">
+                </div>
+                <div class="small-neji">Network of Earth-Science Jobs, India</div>
             </div>
-
-            <!-- Listing Tab Content -->
-            <div id="listing" class="tab-content active">
-                <h2>Post a new job</h2>
-                <p>Quick job posting form - essential fields marked with * are required.</p>
-                
-                <div id="statusMessage"></div>
-                
-                <form id="jobPostingForm" class="job-form">
-                    <div class="form-section">
-                        <h3>Contact & Basic Details</h3>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="email">Email*</label>
-                                <input type="email" id="email" name="email" placeholder="Please submit organiser contact mail" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="affiliation">Institute/Organization*</label>
-                                <input type="text" id="affiliation" name="affiliation" required>
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="vacancyNumber">Vacancy No*</label>
-                                <input type="text" id="vacancyNumber" name="vacancyNumber" placeholder="e.g., IITB/2025/001, NIO/VAC/25/03" required>
-                            </div>
-                        </div>
+            
+            <!-- User Info Display -->
+            <div class="user-info" id="userInfo">
+                <div class="user-avatar" id="userAvatar">U</div>
+                <div class="user-details">
+                    <div class="user-email" id="userEmail">user@example.com</div>
+                    <div class="user-status">
+                        <span style="color: #28a745;">●</span> Verified Account
                     </div>
-                    
-                    <div class="form-section">
-                        <h3>Job Information</h3>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="jobType">Position Type*</label>
-                                <select id="jobType" name="jobType" required>
-                                    <option value="">Select Position Type</option>
-                                    <option value="Phd">PhD Position</option>
-                                    <option value="Postdoc">Postdoc</option>
-                                    <option value="Faculty">Faculty</option>
-                                    <option value="Scientist">Scientist</option>
-                                    <option value="Technical staff">Technical Staff</option>
-                                    <option value="Other">Other</option>
-                                </select>
-                            </div>
-                            <div class="form-group conditional" id="jobTypeOtherGroup">
-                                <label for="jobTypeOther">Other Position Type*</label>
-                                <input type="text" id="jobTypeOther" name="jobTypeOther" placeholder="Please specify the position type">
-                            </div>
-                        </div>
-                        
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="location">Location*</label>
-                                <input type="text" id="location" name="location" placeholder="City, State/Country" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="deadline">Application Deadline*</label>
-                                <input type="date" id="deadline" name="deadline" required>
-                            </div>
-                        </div>
-                        
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="minQualification">Minimum Qualification*</label>
-                                <select id="minQualification" name="minQualification" required>
-                                    <option value="">Select Minimum Qualification</option>
-                                    <option value="Diploma">Diploma</option>
-                                    <option value="bachelor of science">BSc</option>
-                                    <option value="bachelor of technology">BTech</option>
-                                    <option value="master of science">MSc</option>
-                                    <option value="master of technology">MTech</option>
-                                    <option value="phd">PhD</option>
-                                    <option value="other">Other</option>                         
-                                </select>
-                            </div>
-                            <div class="form-group conditional" id="minQualificationOtherGroup">
-                                <label for="minQualificationOther">Other Qualification*</label>
-                                <input type="text" id="minQualificationOther" name="minQualificationOther" placeholder="Please specify the qualification">
-                            </div>
-                            <div class="form-group">
-                                <label for="specialisation">Specialisation</label>
-                                <input type="text" id="specialisation" name="specialisation" placeholder="e.g., Marine Biology, Geophysics, Climate Science">
-                            </div>
-                        </div>
-                        
-                        <div class="form-group full-width">
-                            <label for="jobDescription">Job Description*</label>
-                            <textarea id="jobDescription" name="jobDescription" placeholder="Brief description of the position, research area, and key responsibilities" required></textarea>
-                        </div>
-                        
-                        <div class="form-group full-width">
-                            <label for="applicationProcess">How to Apply*</label>
-                            <textarea id="applicationProcess" name="applicationProcess" placeholder="Email address to send applications, required documents, etc." required></textarea>
-                        </div>
-                    </div>
-                    
-                    <div class="optional-section">
-                        <h4>Optional Details</h4>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="duration">Duration</label>
-                                <input type="text" id="duration" name="duration" placeholder="e.g., 2 years, Permanent">
-                            </div>
-                            <div class="form-group">
-                                <label for="salary">Salary/Stipend</label>
-                                <input type="text" id="salary" name="salary" placeholder="e.g., ₹30,000/month">
-                            </div>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="requirements">Specific Requirements</label>
-                            <textarea id="requirements" name="requirements" placeholder="Any specific skills, experience, or qualifications beyond the minimum"></textarea>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="link">Advertisement Link</label>
-                            <input type="url" id="link" name="link" placeholder="Link to official job posting (if available)">
-                        </div>
-                    </div>
-                    
-                    <div class="button-group">
-                        <button type="button" class="button-cancel" onclick="resetForm('jobPostingForm')">Clear</button>
-                        <button type="submit" id="submitButton">Post Job</button>
-                    </div>
-                </form>
+                </div>
+                <button class="logout-btn" onclick="logout()">Logout</button>
             </div>
+            
+            <div class="menu-container">
+                <div class="menu-icon" onclick="toggleMenu()">☰</div>
+                <div class="menu-links" id="menuLinks">
+                    <a href="./index.html">Home</a>
+                    <a href="./institutes.html">Institutes</a>
+                    <a href="./put_your_word.html">Put your word out</a>
+                    <a href="./about.html">Who are we?</a>
+                    <a href="#" onclick="logout()">Logout</a> 
+                 </div>
+            </div>
+        </div>
 
-<!-- Events Tab Content -->
-            <div id="events" class="tab-content">
-                <h2>Post Workshop/Conference</h2>
-                <p>Submit information about upcoming workshops, conferences, and other events - only essential fields marked with * are required.</p>
-                
-                <div id="eventStatusMessage"></div>
-                
-                <form id="eventPostingForm" class="job-form">
-                    <div class="form-section">
-                        <h3>Contact & Basic Details</h3>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="eventEmail">Your Email*</label>
-                                <input type="email" id="eventEmail" name="eventEmail" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="eventOrganizer">Organizing Institute/Organization*</label>
-                                <input type="text" id="eventOrganizer" name="eventOrganizer" required>
-                            </div>
-                        </div>
-                    </div>
+        <div class="container">
+            <div class="tab-container">
+                <div class="tab-buttons">
+                    <button class="tab-button active" onclick="switchTab('listing')">Job Listing</button>
+                    <button class="tab-button" onclick="switchTab('events')">Events</button>
+                </div>
+
+                <!-- Listing Tab Content -->
+                <div id="listing" class="tab-content active">
+                    <h2>Post a New Job</h2>
+                    <p>Quick job posting form - essential fields marked with * are required.</p>
                     
-                    <div class="form-section">
-                        <h3>Event Information</h3>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="eventType">Event Type*</label>
-                                <select id="eventType" name="eventType" required>
-                                    <option value="">Select Event Type</option>
-                                    <option value="Workshop">Workshop</option>
-                                    <option value="Conference">Conference</option>
-                                    <option value="Symposium">Symposium</option>
-                                    <option value="Seminar">Seminar</option>
-                                    <option value="Training Program">Training Program</option>
-                                    <option value="Field Trip">Field Trip</option>
-                                    <option value="Other">Other</option>
-                                </select>
-                            </div>
-                            <div class="form-group conditional" id="eventTypeOtherGroup">
-                                <label for="eventTypeOther">Other Event Type*</label>
-                                <input type="text" id="eventTypeOther" name="eventTypeOther" placeholder="Please specify the event type">
-                            </div>
-                        </div>
-                        
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="eventTitle">Event Title*</label>
-                                <input type="text" id="eventTitle" name="eventTitle" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="eventAbbreviation">Event Abbreviation*</label>
-                                <input type="text" id="eventAbbreviation" name="eventAbbreviation" placeholder="e.g., OSICON25, NCPS23 (include 2-digit year, no spaces)" required>
-                            </div>
-                        </div>
-                        
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="eventLocation">Location*</label>
-                                <input type="text" id="eventLocation" name="eventLocation" placeholder="City, State/Country or Online" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="eventWebsite">Event Website</label>
-                                <input type="url" id="eventWebsite" name="eventWebsite" placeholder="https://example.com/event">
-                            </div>
-                        </div>
-                        
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="eventStartDate">Start Date*</label>
-                                <input type="date" id="eventStartDate" name="eventStartDate" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="eventEndDate">End Date*</label>
-                                <input type="date" id="eventEndDate" name="eventEndDate" required>
-                            </div>
-                        </div>
-                        
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="registrationDeadline">Registration Deadline*</label>
-                                <input type="date" id="registrationDeadline" name="registrationDeadline" required>
-                            </div>
-                        </div>
-                        
-                        <div class="form-group full-width">
-                            <label for="eventDescription">Event Description*</label>
-                            <textarea id="eventDescription" name="eventDescription" placeholder="Brief description of the event, topics to be covered, and objectives" required></textarea>
-                        </div>
-                    </div>
+                    <div id="statusMessage"></div>
                     
-                    <div class="button-group">
-                        <button type="button" class="button-cancel" onclick="resetForm('eventPostingForm')">Clear</button>
-                        <button type="submit" id="eventSubmitButton">Post Event</button>
-                    </div>
-                </form>
+                    <form id="jobPostingForm" class="job-form">
+                        <div class="form-section">
+                            <h3>Contact & Basic Details</h3>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="email">Email*</label>
+                                    <input type="email" id="email" name="email" placeholder="Contact email (auto-filled)" readonly>
+                                </div>
+                                <div class="form-group">
+                                    <label for="affiliation">Institute/Organization*</label>
+                                    <input type="text" id="affiliation" name="affiliation" required>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="vacancyNumber">Vacancy No*</label>
+                                    <input type="text" id="vacancyNumber" name="vacancyNumber" placeholder="e.g., IITB/2025/001, NIO/VAC/25/03" required>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-section">
+                            <h3>Job Information</h3>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="jobType">Position Type*</label>
+                                    <select id="jobType" name="jobType" required>
+                                        <option value="">Select Position Type</option>
+                                        <option value="Phd">PhD Position</option>
+                                        <option value="Postdoc">Postdoc</option>
+                                        <option value="Faculty">Faculty</option>
+                                        <option value="Scientist">Scientist</option>
+                                        <option value="Technical staff">Technical Staff</option>
+                                        <option value="Other">Other</option>
+                                    </select>
+                                </div>
+                                <div class="form-group conditional" id="jobTypeOtherGroup">
+                                    <label for="jobTypeOther">Other Position Type*</label>
+                                    <input type="text" id="jobTypeOther" name="jobTypeOther" placeholder="Please specify the position type">
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="location">Location*</label>
+                                    <input type="text" id="location" name="location" placeholder="City, State/Country" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="deadline">Application Deadline*</label>
+                                    <input type="date" id="deadline" name="deadline" required>
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="minQualification">Minimum Qualification*</label>
+                                    <select id="minQualification" name="minQualification" required>
+                                        <option value="">Select Minimum Qualification</option>
+                                        <option value="Diploma">Diploma</option>
+                                        <option value="bachelor of science">BSc</option>
+                                        <option value="bachelor of technology">BTech</option>
+                                        <option value="master of science">MSc</option>
+                                        <option value="master of technology">MTech</option>
+                                        <option value="phd">PhD</option>
+                                        <option value="other">Other</option>                         
+                                    </select>
+                                </div>
+                                <div class="form-group conditional" id="minQualificationOtherGroup">
+                                    <label for="minQualificationOther">Other Qualification*</label>
+                                    <input type="text" id="minQualificationOther" name="minQualificationOther" placeholder="Please specify the qualification">
+                                </div>
+                                <div class="form-group">
+                                    <label for="specialisation">Specialisation</label>
+                                    <input type="text" id="specialisation" name="specialisation" placeholder="e.g., Marine Biology, Geophysics, Climate Science">
+                                </div>
+                            </div>
+                            
+                            <div class="form-group full-width">
+                                <label for="jobDescription">Job Description*</label>
+                                <textarea id="jobDescription" name="jobDescription" placeholder="Brief description of the position, research area, and key responsibilities" required></textarea>
+                            </div>
+                            
+                            <div class="form-group full-width">
+                                <label for="applicationProcess">How to Apply*</label>
+                                <textarea id="applicationProcess" name="applicationProcess" placeholder="Email address to send applications, required documents, etc." required></textarea>
+                            </div>
+                        </div>
+                        
+                        <div class="optional-section">
+                            <h4>Optional Details</h4>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="duration">Duration</label>
+                                    <input type="text" id="duration" name="duration" placeholder="e.g., 2 years, Permanent">
+                                </div>
+                                <div class="form-group">
+                                    <label for="salary">Salary/Stipend</label>
+                                    <input type="text" id="salary" name="salary" placeholder="e.g., ₹30,000/month">
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="requirements">Specific Requirements</label>
+                                <textarea id="requirements" name="requirements" placeholder="Any specific skills, experience, or qualifications beyond the minimum"></textarea>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="link">Advertisement Link</label>
+                                <input type="url" id="link" name="link" placeholder="Link to official job posting (if available)">
+                            </div>
+                        </div>
+                        
+                        <div class="button-group">
+                            <button type="button" class="button-cancel" onclick="resetForm('jobPostingForm')">Clear</button>
+                            <button type="submit" id="submitButton">Post Job</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Events Tab Content -->
+                <div id="events" class="tab-content">
+                    <h2>Post Workshop/Conference</h2>
+                    <p>Submit information about upcoming workshops, conferences, and other events.</p>
+                    
+                    <div id="eventStatusMessage"></div>
+                    
+                    <form id="eventPostingForm" class="job-form">
+                        <div class="form-section">
+                            <h3>Contact & Basic Details</h3>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="eventEmail">Your Email*</label>
+                                    <input type="email" id="eventEmail" name="eventEmail" placeholder="Contact email (auto-filled)" readonly required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="eventOrganizer">Organizing Institute/Organization*</label>
+                                    <input type="text" id="eventOrganizer" name="eventOrganizer" required>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-section">
+                            <h3>Event Information</h3>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="eventType">Event Type*</label>
+                                    <select id="eventType" name="eventType" required>
+                                        <option value="">Select Event Type</option>
+                                        <option value="Workshop">Workshop</option>
+                                        <option value="Conference">Conference</option>
+                                        <option value="Symposium">Symposium</option>
+                                        <option value="Seminar">Seminar</option>
+                                        <option value="Training Program">Training Program</option>
+                                        <option value="Field Trip">Field Trip</option>
+                                        <option value="Other">Other</option>
+                                    </select>
+                                </div>
+                                <div class="form-group conditional" id="eventTypeOtherGroup">
+                                    <label for="eventTypeOther">Other Event Type*</label>
+                                    <input type="text" id="eventTypeOther" name="eventTypeOther" placeholder="Please specify the event type">
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="eventTitle">Event Title*</label>
+                                    <input type="text" id="eventTitle" name="eventTitle" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="eventAbbreviation">Event Abbreviation*</label>
+                                    <input type="text" id="eventAbbreviation" name="eventAbbreviation" placeholder="e.g., OSICON25, NCPS23" required>
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="eventLocation">Location*</label>
+                                    <input type="text" id="eventLocation" name="eventLocation" placeholder="City, State/Country or Online" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="eventWebsite">Event Website</label>
+                                    <input type="url" id="eventWebsite" name="eventWebsite" placeholder="https://example.com/event">
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="eventStartDate">Start Date*</label>
+                                    <input type="date" id="eventStartDate" name="eventStartDate" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="eventEndDate">End Date*</label>
+                                    <input type="date" id="eventEndDate" name="eventEndDate" required>
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="registrationDeadline">Registration Deadline*</label>
+                                    <input type="date" id="registrationDeadline" name="registrationDeadline" required>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group full-width">
+                                <label for="eventDescription">Event Description*</label>
+                                <textarea id="eventDescription" name="eventDescription" placeholder="Brief description of the event, topics to be covered, and objectives" required></textarea>
+                            </div>
+                        </div>
+                        
+                        <div class="button-group">
+                            <button type="button" class="button-cancel" onclick="resetForm('eventPostingForm')">Clear</button>
+                            <button type="submit" id="eventSubmitButton">Post Event</button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
-    
     
     <script>
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby9t5U6MiQG3DalmYfZ1psQzqPHPSTUBmLAvkVlj9ExJaeLJybaJw6C6HmfVPhRxQne/exec';
         const EVENT_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzSnhbnF5bVLYHMcHhFBBR4Y_3H0ibHxv37iWCu2ZcC0-cdBgqfXcPvtGLRo2vn1woo/exec';
+        
+        // Authentication check and user session management
+        function checkUserAuthentication() {
+            const session = window.sessionStorage.getItem('neji_user_session');
+            
+            if (!session) {
+                showAccessDenied();
+                return false;
+            }
+            
+            try {
+                const userData = JSON.parse(session);
+                
+                // Check if session is still valid (within 24 hours)
+                const loginTime = new Date(userData.loginTime);
+                const now = new Date();
+                const hoursDiff = (now - loginTime) / (1000 * 60 * 60);
+                
+                if (hoursDiff > 24 || !userData.verified) {
+                    // Session expired or user not verified
+                    window.sessionStorage.removeItem('neji_user_session');
+                    showAccessDenied();
+                    return false;
+                }
+                
+                // Valid session - show main content and populate user info
+                showMainContent(userData);
+                return true;
+                
+            } catch (error) {
+                console.error('Error parsing user session:', error);
+                window.sessionStorage.removeItem('neji_user_session');
+                showAccessDenied();
+                return false;
+            }
+        }
+        
+        function showAccessDenied() {
+            document.getElementById('accessDenied').style.display = 'block';
+            document.getElementById('mainContent').style.display = 'none';
+        }
+        
+        function showMainContent(userData) {
+            document.getElementById('accessDenied').style.display = 'none';
+            document.getElementById('mainContent').style.display = 'block';
+            
+            // Populate user information
+            const userEmail = document.getElementById('userEmail');
+            const userAvatar = document.getElementById('userAvatar');
+            const emailFields = document.querySelectorAll('#email, #eventEmail');
+            
+            if (userData.email) {
+                userEmail.textContent = userData.email;
+                userAvatar.textContent = userData.email.charAt(0).toUpperCase();
+                
+                // Auto-fill email fields and make them readonly
+                emailFields.forEach(field => {
+                    field.value = userData.email;
+                    field.setAttribute('readonly', true);
+                    field.style.backgroundColor = '#f8f9fa';
+                });
+            }
+            
+            // Add verification method info
+            const statusElement = document.querySelector('.user-status');
+            let methodText = '';
+            switch (userData.loginMethod) {
+                case 'email_otp':
+                    methodText = 'Email Verified';
+                    break;
+                case 'google_oauth':
+                    methodText = 'Google Verified';
+                    break;
+                case 'password':
+                    methodText = 'Password Login';
+                    break;
+                default:
+                    methodText = 'Verified Account';
+            }
+            statusElement.innerHTML = `<span style="color: #28a745;">●</span> ${methodText}`;
+        }
+        
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                // Clear session
+                window.sessionStorage.removeItem('neji_user_session');
+                window.currentUser = null;
+                
+                // Redirect to login page
+                window.location.href = './login.html';
+            }
+        }
         
         function toggleMenu() {
             const menu = document.getElementById("menuLinks");
@@ -603,38 +790,73 @@
         }
         
         // Set up event listeners for conditional fields
-        document.getElementById('jobType').addEventListener('change', function() {
-            toggleConditionalField('jobType', 'jobTypeOtherGroup', 'jobTypeOther');
-        });
-        
-        document.getElementById('minQualification').addEventListener('change', function() {
-            toggleConditionalField('minQualification', 'minQualificationOtherGroup', 'minQualificationOther');
-        });
-        
-        document.getElementById('eventType').addEventListener('change', function() {
-            toggleConditionalField('eventType', 'eventTypeOtherGroup', 'eventTypeOther');
-        });
-        
-        // Job posting form submission
-        document.getElementById('jobPostingForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            if (!validateForm('jobPostingForm')) {
-                return;
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check authentication first
+            if (!checkUserAuthentication()) {
+                return; // Don't set up form listeners if not authenticated
             }
             
-            submitJobToGoogleSheets();
-        });
-        
-        // Event posting form submission
-        document.getElementById('eventPostingForm').addEventListener('submit', function(e) {
-            e.preventDefault();
+            // Set up conditional field listeners
+            document.getElementById('jobType').addEventListener('change', function() {
+                toggleConditionalField('jobType', 'jobTypeOtherGroup', 'jobTypeOther');
+            });
             
-            if (!validateForm('eventPostingForm')) {
-                return;
-            }
+            document.getElementById('minQualification').addEventListener('change', function() {
+                toggleConditionalField('minQualification', 'minQualificationOtherGroup', 'minQualificationOther');
+            });
             
-            submitEventToGoogleSheets();
+            document.getElementById('eventType').addEventListener('change', function() {
+                toggleConditionalField('eventType', 'eventTypeOtherGroup', 'eventTypeOther');
+            });
+            
+            // Job posting form submission
+            document.getElementById('jobPostingForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                if (!validateForm('jobPostingForm')) {
+                    return;
+                }
+                
+                submitJobToGoogleSheets();
+            });
+            
+            // Event posting form submission
+            document.getElementById('eventPostingForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                if (!validateForm('eventPostingForm')) {
+                    return;
+                }
+                
+                submitEventToGoogleSheets();
+            });
+            
+            // Add input validation styling
+            document.querySelectorAll('input, textarea, select').forEach(field => {
+                field.addEventListener('blur', function() {
+                    // Skip validation for hidden conditional fields and readonly fields
+                    const parentGroup = this.closest('.form-group');
+                    if (this.readOnly || (parentGroup && parentGroup.classList.contains('conditional') && !parentGroup.classList.contains('show'))) {
+                        return;
+                    }
+                       
+                    if (this.hasAttribute('required') && !this.value.trim()) {
+                        this.classList.add('form-field-error');
+                    } else {
+                        this.classList.remove('form-field-error');
+                        if (this.value.trim()) {
+                            this.classList.add('form-field-valid');
+                        }
+                    }
+                });
+                
+                field.addEventListener('input', function() {
+                    if (this.classList.contains('form-field-error') && this.value.trim()) {
+                        this.classList.remove('form-field-error');
+                        this.classList.add('form-field-valid');
+                    }
+                });
+            });
         });
         
         function validateForm(formId) {
@@ -647,9 +869,9 @@
             });
             
             requiredFields.forEach(field => {
-                // Skip validation for hidden conditional fields
+                // Skip validation for hidden conditional fields and readonly fields
                 const parentGroup = field.closest('.form-group');
-                if (parentGroup && parentGroup.classList.contains('conditional') && !parentGroup.classList.contains('show')) {
+                if (field.readOnly || (parentGroup && parentGroup.classList.contains('conditional') && !parentGroup.classList.contains('show'))) {
                     return;
                 }
                 
@@ -682,8 +904,8 @@
                 }
             }
             
-            // Email validation
-            const emailFields = form.querySelectorAll('input[type="email"]');
+            // Email validation (skip readonly fields)
+            const emailFields = form.querySelectorAll('input[type="email"]:not([readonly])');
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             emailFields.forEach(emailField => {
                 if (emailField.value && !emailRegex.test(emailField.value)) {
@@ -748,6 +970,11 @@
             formData.append('timestamp', new Date().toLocaleString());
             formData.append('type', 'job');
             
+            // Get user info for audit trail
+            const userSession = JSON.parse(window.sessionStorage.getItem('neji_user_session') || '{}');
+            formData.append('submittedBy', userSession.email || 'unknown');
+            formData.append('verificationMethod', userSession.loginMethod || 'unknown');
+            
             // Collect form data, handling conditional fields
             const jobType = document.getElementById('jobType').value;
             const jobTypeOther = document.getElementById('jobTypeOther').value;
@@ -788,6 +1015,11 @@
             formData.append('timestamp', new Date().toLocaleString());
             formData.append('type', 'event');
             
+            // Get user info for audit trail
+            const userSession = JSON.parse(window.sessionStorage.getItem('neji_user_session') || '{}');
+            formData.append('submittedBy', userSession.email || 'unknown');
+            formData.append('verificationMethod', userSession.loginMethod || 'unknown');
+            
             // Collect form data, handling conditional fields
             const eventType = document.getElementById('eventType').value;
             const eventTypeOther = document.getElementById('eventTypeOther').value;
@@ -825,7 +1057,9 @@
             })
             .then(data => {
                 if (data.result === 'success') {
-                    const successMessage = formId === 'jobPostingForm' ? 'Job posted successfully!' : 'Event posted successfully!';
+                    const successMessage = formId === 'jobPostingForm' ? 
+                        'Job posted successfully! It will be reviewed and published shortly.' : 
+                        'Event posted successfully! It will be reviewed and published shortly.';
                     showStatusMessage(successMessage, 'success', statusMessageId);
                     document.getElementById(formId).reset();
                     clearValidationStyling();
@@ -833,6 +1067,14 @@
                     document.querySelectorAll('.conditional').forEach(group => {
                         group.classList.remove('show');
                     });
+                    // Re-populate email fields after reset
+                    const userSession = JSON.parse(window.sessionStorage.getItem('neji_user_session') || '{}');
+                    if (userSession.email) {
+                        const emailFields = document.querySelectorAll('#email, #eventEmail');
+                        emailFields.forEach(field => {
+                            field.value = userSession.email;
+                        });
+                    }
                 } else {
                     throw new Error(data.error || 'Unknown error occurred');
                 }
@@ -872,6 +1114,15 @@
             document.querySelectorAll('.conditional input').forEach(field => {
                 field.required = false;
             });
+            
+            // Re-populate email fields
+            const userSession = JSON.parse(window.sessionStorage.getItem('neji_user_session') || '{}');
+            if (userSession.email) {
+                const emailFields = document.querySelectorAll('#email, #eventEmail');
+                emailFields.forEach(field => {
+                    field.value = userSession.email;
+                });
+            }
         }
         
         function clearValidationStyling() {
@@ -895,33 +1146,6 @@
             
             statusDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
-        
-        // Add event listeners for form validation
-        document.querySelectorAll('input, textarea, select').forEach(field => {
-            field.addEventListener('blur', function() {
-                // Skip validation for hidden conditional fields
-                const parentGroup = this.closest('.form-group');
-                if (parentGroup && parentGroup.classList.contains('conditional') && !parentGroup.classList.contains('show')) {
-                    return;
-                }
-                   
-                if (this.hasAttribute('required') && !this.value.trim()) {
-                    this.classList.add('form-field-error');
-                } else {
-                    this.classList.remove('form-field-error');
-                    if (this.value.trim()) {
-                        this.classList.add('form-field-valid');
-                    }
-                }
-            });
-            
-            field.addEventListener('input', function() {
-                if (this.classList.contains('form-field-error') && this.value.trim()) {
-                    this.classList.remove('form-field-error');
-                    this.classList.add('form-field-valid');
-                }
-            });
-        });
     </script>
 </body>
 </html>
