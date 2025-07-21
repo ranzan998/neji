@@ -411,10 +411,9 @@
                 <div class="menu-links" id="menuLinks">
                     <a href="./index.html">Home</a>
                     <a href="./institutes.html">Institutes</a>
-                    <a href="./put_your_word.html">Put your word out</a>
+                    <a href="./put_your_word.html">Post Jobs</a>
                     <a href="./about.html">Who are we?</a>
-                    <a href="#" onclick="logout()">Logout</a> 
-                 </div>
+                </div>
             </div>
         </div>
 
@@ -560,15 +559,29 @@
                     
                     <form id="eventPostingForm" class="job-form">
                         <div class="form-section">
-                            <h3>Contact & Basic Details</h3>
+                            <h3>Submitter Details</h3>
                             <div class="form-row">
                                 <div class="form-group">
-                                    <label for="eventEmail">Your Email*</label>
-                                    <input type="email" id="eventEmail" name="eventEmail" placeholder="Contact email (auto-filled)" readonly required>
+                                    <label for="submitterName">Your Name*</label>
+                                    <input type="text" id="submitterName" name="submitterName" placeholder="Full name of person submitting this form" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="submitterEmail">Your Email*</label>
+                                    <input type="email" id="submitterEmail" name="submitterEmail" placeholder="Contact email (auto-filled)" readonly required>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-section">
+                            <h3>Event Organizer Information</h3>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="organizerEmail">Organizer Email*</label>
+                                    <input type="email" id="organizerEmail" name="organizerEmail" placeholder="Official organizer contact email" required>
                                 </div>
                                 <div class="form-group">
                                     <label for="eventOrganizer">Organizing Institute/Organization*</label>
-                                    <input type="text" id="eventOrganizer" name="eventOrganizer" required>
+                                    <input type="text" id="eventOrganizer" name="eventOrganizer" placeholder="e.g., IIT Bombay, NCAOR, IISER Pune" required>
                                 </div>
                             </div>
                         </div>
@@ -598,7 +611,7 @@
                             <div class="form-row">
                                 <div class="form-group">
                                     <label for="eventTitle">Event Title*</label>
-                                    <input type="text" id="eventTitle" name="eventTitle" required>
+                                    <input type="text" id="eventTitle" name="eventTitle" placeholder="Full name of the event" required>
                                 </div>
                                 <div class="form-group">
                                     <label for="eventAbbreviation">Event Abbreviation*</label>
@@ -710,6 +723,7 @@
                 userAvatar.textContent = userData.email.charAt(0).toUpperCase();
                 
                 // Auto-fill email fields and make them readonly
+                const emailFields = document.querySelectorAll('#email, #submitterEmail');
                 emailFields.forEach(field => {
                     field.value = userData.email;
                     field.setAttribute('readonly', true);
@@ -1030,7 +1044,7 @@
             
             // Append other form fields including eventAbbreviation
             const formFields = [
-                'eventEmail', 'eventOrganizer', 'eventTitle', 'eventAbbreviation', 'eventLocation', 
+                'submitterName', 'submitterEmail', 'organizerEmail', 'eventOrganizer', 'eventTitle', 'eventAbbreviation', 'eventLocation', 
                 'eventStartDate', 'eventEndDate', 'registrationDeadline', 'eventTarget',
                 'eventDescription', 'registrationProcess', 'eventFees', 'eventCapacity',
                 'eventSpeakers', 'eventTopics', 'eventWebsite', 'eventContact', 'eventRequirements'
@@ -1070,7 +1084,7 @@
                     // Re-populate email fields after reset
                     const userSession = JSON.parse(window.sessionStorage.getItem('neji_user_session') || '{}');
                     if (userSession.email) {
-                        const emailFields = document.querySelectorAll('#email, #eventEmail');
+                        const emailFields = document.querySelectorAll('#email, #personalEmail');
                         emailFields.forEach(field => {
                             field.value = userSession.email;
                         });
@@ -1118,7 +1132,7 @@
             // Re-populate email fields
             const userSession = JSON.parse(window.sessionStorage.getItem('neji_user_session') || '{}');
             if (userSession.email) {
-                const emailFields = document.querySelectorAll('#email, #eventEmail');
+                const emailFields = document.querySelectorAll('#email, #submitterEmail');
                 emailFields.forEach(field => {
                     field.value = userSession.email;
                 });

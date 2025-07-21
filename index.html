@@ -17,6 +17,8 @@
 
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&display=swap');
+        
         body {
             font-family: Arial, sans-serif;
             margin: 20px;
@@ -311,6 +313,22 @@
             color: #666;
             line-height: 1.6;
             white-space: pre-wrap;
+        }
+        
+        /* Submitter info styling */
+        .submitter-info {
+            font-family: 'Comic Neue', cursive;
+            color: #0a2f66;
+            font-size: 14px;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #ddd;
+            font-weight: 400;
+        }
+        
+        .submitter-label {
+            font-weight: 700;
+            color: #0a2f66;
         }
         
         .virtual-link {
@@ -633,7 +651,7 @@ function showJobDetail(jobData) {
         </div>
         ` : ''}
         
-${jobData.link ? `
+        ${jobData.link ? `
   <div class="job-detail-section">
     <div class="job-detail-label">Additional Information:</div>
     <div class="job-detail-value">
@@ -644,6 +662,9 @@ ${jobData.link ? `
   </div>
 ` : ''}
 
+        <div class="submitter-info">
+            <span class="submitter-label">Submitted by:</span> ${jobData.fullName || 'NEJI Team'}
+        </div>
     `;
     
     modal.style.display = 'block';
@@ -688,7 +709,7 @@ function showConferenceDetail(conferenceData) {
         { key: 'transportation', label: 'Transportation' },
         { key: 'specialInstructions', label: 'Special Instructions' },
         { key: 'additionalInfo', label: 'Additional Information' },
-        { key: 'eventWebsite', label: 'eventWebsite', isLink: true }
+        { key: 'eventWebsite', label: 'Website', isLink: true }
     ];
     
     // Add sections for each field that has data
@@ -712,6 +733,14 @@ function showConferenceDetail(conferenceData) {
                 </div>`;
         }
     });
+    
+    // Add submitter information at the end
+    contentHTML += `<div class="submitter-info">
+        <span class="submitter-label">Submitted by:</span> `;
+    
+    contentHTML += conferenceData.submitterName || 'NEJI Team';
+    
+    contentHTML += `</div>`;
     
     content.innerHTML = contentHTML;
     modal.style.display = 'block';
