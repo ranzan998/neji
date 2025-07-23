@@ -227,10 +227,8 @@
             <p>Network of Earth-Science Jobs, India</p>
         </div>
 
-        <div id="message" class="message"></div>
-
         <!-- Sign Up Form -->
-        <div id="signup-form">
+        <div id="signup-form" style="display: none;">
             <div class="form-section-title">Create New Account</div>
             
             <div class="form-group">
@@ -258,8 +256,10 @@
             </div>
         </div>
 
+        <div id="message" class="message"></div>
+
         <!-- Sign In Form -->
-        <div id="signin-form" style="display: none;">
+        <div id="signin-form">
             <div class="form-section-title">Sign In</div>
             
             <div class="form-group">
@@ -334,8 +334,7 @@
                 createUserWithEmailAndPassword,
                 signInWithEmailAndPassword,
                 sendPasswordResetEmail,
-                sendEmailVerification,
-                onAuthStateChanged
+                sendEmailVerification
             } = await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js');
 
             const app = initializeApp(firebaseConfig);
@@ -350,14 +349,6 @@
             window.sendEmailVerification = sendEmailVerification;
 
             console.log('✅ Firebase loaded successfully');
-
-            // Listen for auth state changes
-            onAuthStateChanged(auth, (user) => {
-                if (user && user.emailVerified) {
-                    // User is signed in and email is verified
-                    handleSuccessfulAuth(user.email, 'email_password');
-                }
-            });
 
         } catch (error) {
             console.error('❌ Firebase failed to load:', error);
@@ -442,10 +433,10 @@
             // Add Enter key support
             document.addEventListener('keypress', function(e) {
                 if (e.key === 'Enter') {
-                    if (document.getElementById('signup-form').style.display !== 'none') {
-                        handleSignUp();
-                    } else if (document.getElementById('signin-form').style.display !== 'none') {
+                    if (document.getElementById('signin-form').style.display !== 'none') {
                         handleSignIn();
+                    } else if (document.getElementById('signup-form').style.display !== 'none') {
+                        handleSignUp();
                     } else if (document.getElementById('forgot-password-form').style.display !== 'none') {
                         handlePasswordReset();
                     }
