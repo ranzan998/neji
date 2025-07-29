@@ -163,7 +163,6 @@
         .container {
             width: 100%;
         }
-        /* ... (rest of your existing CSS remains the same) ... */
         
         /* Tab styles */
         .tab-container {
@@ -436,15 +435,19 @@
                             <h3>Contact & Basic Details</h3>
                             <div class="form-row">
                                 <div class="form-group">
+                                    <label for="fullName">Your Name</label>
+                                    <input type="text" id="fullName" name="fullName" placeholder="Your name (optional)">
+                                </div>
+                                <div class="form-group">
                                     <label for="email">Email*</label>
                                     <input type="email" id="email" name="email" placeholder="Contact email (auto-filled)" readonly>
                                 </div>
+                            </div>
+                            <div class="form-row">
                                 <div class="form-group">
                                     <label for="affiliation">Institute/Organization*</label>
                                     <input type="text" id="affiliation" name="affiliation" required>
                                 </div>
-                            </div>
-                            <div class="form-row">
                                 <div class="form-group">
                                     <label for="vacancyNumber">Vacancy No*</label>
                                     <input type="text" id="vacancyNumber" name="vacancyNumber" placeholder="e.g., IITB/2025/001, NIO/VAC/25/03" required>
@@ -463,7 +466,7 @@
                                         <option value="Postdoc">Postdoc</option>
                                         <option value="Faculty">Faculty</option>
                                         <option value="Scientist">Scientist</option>
-                                        <option value="Technical staff">Technical Staff</option>
+                                        <option value="Technical staff">Technical/Project Staff</option>
                                         <option value="Other">Other</option>
                                     </select>
                                 </div>
@@ -716,7 +719,6 @@
             // Populate user information
             const userEmail = document.getElementById('userEmail');
             const userAvatar = document.getElementById('userAvatar');
-            const emailFields = document.querySelectorAll('#email, #eventEmail');
             
             if (userData.email) {
                 userEmail.textContent = userData.email;
@@ -998,9 +1000,14 @@
             const minQualificationOther = document.getElementById('minQualificationOther').value;
             const finalMinQualification = minQualification === 'other' ? minQualificationOther : minQualification;
             
+            // Handle the fullName field - if empty, default to "NEJI Team"
+            const fullNameField = document.getElementById('fullName');
+            const fullName = fullNameField.value.trim() || 'NEJI Team';
+            
             // Append the final values
             formData.append('jobType', finalJobType);
             formData.append('minQualification', finalMinQualification);
+            formData.append('fullName', fullName);
             
             // Append other form fields including vacancyNumber
             const formFields = [
@@ -1084,7 +1091,7 @@
                     // Re-populate email fields after reset
                     const userSession = JSON.parse(window.sessionStorage.getItem('neji_user_session') || '{}');
                     if (userSession.email) {
-                        const emailFields = document.querySelectorAll('#email, #personalEmail');
+                        const emailFields = document.querySelectorAll('#email, #submitterEmail');
                         emailFields.forEach(field => {
                             field.value = userSession.email;
                         });
