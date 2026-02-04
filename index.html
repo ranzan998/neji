@@ -1022,16 +1022,21 @@ function loadScrapedJobs() {
                 
                 let cellsHtml = '';
                 
-                // Position column with link
-                if (job.details && job.details.trim() !== '') {
-                    cellsHtml += `<td><a href="${job.details}" target="_blank" rel="noopener noreferrer">${truncatedPosition} 🔗</a></td>`;
-                } else {
-                    cellsHtml += `<td>${truncatedPosition}</td>`;
-                }
+                // Position column - no link
+                cellsHtml += `<td>${truncatedPosition}</td>`;
                 
+                // Institute column - plain text
                 cellsHtml += `<td>${job.institute}</td>`;
+                
+                // Location column - plain text
                 cellsHtml += `<td>${job.location}</td>`;
-                cellsHtml += `<td>${formattedDate}</td>`;
+                
+                // Posted date column - with link
+                if (job.details && job.details.trim() !== '') {
+                    cellsHtml += `<td><a href="${job.details}" target="_blank" rel="noopener noreferrer">${formattedDate} 🔗</a></td>`;
+                } else {
+                    cellsHtml += `<td>${formattedDate}</td>`;
+                }
                 
                 tr.innerHTML = cellsHtml;
                 scrapedTableBody.appendChild(tr);
