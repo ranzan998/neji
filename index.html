@@ -952,203 +952,106 @@ tr.innerHTML = `
         });
 }
 
-// Add this configuration at the top of the script section (before DOMContentLoaded)
-const SCRAPED_JOBS_SHEET_ID = '1LVX5zD5odcLlKTERW4TpJuTyhPh3TkkZD1GQsIM0Dww';
-const SCRAPED_JOBS_SHEET_NAME = 'Sheet1';
-
-// Function to truncate position name to first few words
-function truncatePosition(position, maxWords = 6) {
-    if (!position) return '';
-    const words = position.trim().split(/\s+/);
-    if (words.length <= maxWords) return position;
-    return words.slice(0, maxWords).join(' ') + '...';
-}
-
-// Function to parse Google Sheets JSON response
-function parseGoogleSheetsResponse(text) {
-    try {
-        // Remove the Google Visualization API wrapper
-        const jsonString = text.substring(47).slice(0, -2);
-        const data = JSON.parse(jsonString);
-        
-        // Extract rows
-        const rows = data.table.rows;
-        const result = [];
-        
-        // Skip header row (index 0)
-        for (let i = 1; i < rows.length; i++) {
-            const row = rows[i];
-            if (row.c && row.c.length >= 4) {
-                // Extract values, handling hyperlinks
-                let institute = '';
-                let details = '';
-                
-                // Cell 0: Institute (with hyperlink)
-                if (row.c[0] && row.c[0].v) {
-                    const match = row.c[0].v.match(/HYPERLINK\("([^"]+)",\s*"([^"]+)"\)/);
-                    if (match) {
-                        details = match[1];
-                        institute = match[2];
-                    } else {
-                        institute = row.c[0].v;
-                    }
-                }
-                
-                const location = row.c[1] && row.c[1].v ? row.c[1].v : '';
-                const position = row.c[2] && row.c[2].v ? row.c[2].v : '';
-                const postedDate = row.c[3] && row.c[3].v ? row.c[3].v : '';
-                
-                result.push({
-                    institute: institute,
-                    location: location,
-                    position: position,
-                    postedDate: postedDate,
-                    details: details,
-                    source: 'scraped'
-                });
-            }
-        }
-        
-        return result;
-    } catch (error) {
-        console.error('Error parsing Google Sheets response:', error);
-        return [];
-    }
-}
-
-// Update the DOMContentLoaded event listener
 document.addEventListener('DOMContentLoaded', function() {
-    // URLs for both Google Sheets
-    const manualJobsUrl = 'https://script.google.com/macros/s/AKfycbxjjgXGVAXyLBDQqHbnFssoNMw86pzPNBVdno66pjt5svrAQUOkufI0CQpMw5yniEMe/exec';
-    const scrapedJobsUrl = `https://docs.google.com/spreadsheets/d/${SCRAPED_JOBS_SHEET_ID}/gviz/tq?tqx=out:json&sheet=${SCRAPED_JOBS_SHEET_NAME}`;
+    const webAppUrl = 'https://script.google.com/macros/s/AKfycbxjjgXGVAXyLBDQqHbnFssoNMw86pzPNBVdno66pjt5svrAQUOkufI0CQpMw5yniEMe/exec';
     
-    // Fetch both datasets
-    Promise.all([
-        fetch(manualJobsUrl).then(response => response.json()),
-        fetch(scrapedJobsUrl).then(response => response.text()).then(text => parseGoogleSheetsResponse(text))
-    ])
-    .then(([manualJobs, scrapedJobs]) => {
-        console.log('Manual jobs loaded:', manualJobs.length);
-        console.log('Scraped jobs loaded:', scrapedJobs.length);
-        
-        // Transform manual jobs to match scraped format
-        const transformedManualJobs = manualJobs.map(job => ({
-            institute: job.affiliation || '',
-            location: job.location || '',
-            position: job.jobType || '',
-            postedDate: job.timestamp || '',
-            details: job.link || '',
-            source: 'manual',
-            fullData: job // Keep original data for modal
-        }));
-        
-        // Combine both datasets
-        const allJobs = [...transformedManualJobs, ...scrapedJobs];
-        
-        console.log('Total jobs:', allJobs.length);
-        
-        // Add sortable dates
-        allJobs.forEach(job => {
-            job.sortableDate = parseDate(job.postedDate);
-        });
-        
-        // Sort by date (newest first)
-        allJobs.sort((a, b) => b.sortableDate - a.sortableDate);
-        
-        jobsData = allJobs; // Store globally
-        
-        const tableBody = document.getElementById('tableBody');
-        tableBody.innerHTML = ''; // Clear loading message
-        
-        allJobs.forEach((job, index) => {
-            let tr = document.createElement('tr');
+    // Configure which columns to display - easily changeable
+    const columnsToShow = ['jobType', 'affiliation', 'location', 'timestamp'];
+    fetch(webAppUrl)
+        .then(response => response.json())
+        .then(data => {
+            jobsData = data; // Store data globally
+            const tableBody = document.getElementById('tableBody');
             
-            // Truncate position name
-            const truncatedPosition = truncatePosition(job.position);
-            
-            // Create cells
-            let cellsHtml = '';
-            
-            // Position column - with virtual page link for manual jobs only
-            if (job.source === 'manual' && job.fullData) {
-                cellsHtml += `<td><a href="#" class="virtual-link" onclick="showJobDetail(jobsData[${index}].fullData); return false;">${truncatedPosition} 📄</a></td>`;
-            } else {
-                cellsHtml += `<td>${truncatedPosition}</td>`;
-            }
-            
-            // Organization
-            cellsHtml += `<td>${job.institute}</td>`;
-            
-            // Location
-            cellsHtml += `<td>${job.location}</td>`;
-            
-            // Posted date - with link if available
-            const formattedDate = formatDateToIST(job.postedDate);
-            if (job.details && job.details.trim() !== '') {
-                cellsHtml += `<td><a href="${job.details}" target="_blank" rel="noopener noreferrer">${formattedDate} 🔗</a></td>`;
-            } else {
-                cellsHtml += `<td>${formattedDate}</td>`;
-            }
-            
-            tr.innerHTML = cellsHtml;
-            tableBody.appendChild(tr);
-        });
-        
-        // Initialize DataTable
-        dataTable = $('#dataTable').DataTable({
-            responsive: {
-                details: {
-                    type: 'column',
-                    target: 'tr'
-                }
-            },
-            autoWidth: false,
-            scrollX: false,
-            scrollCollapse: true,
-            fixedHeader: false,
-            order: [[3, 'desc']], // Sort by date column (newest first)
-            columnDefs: [
-                { width: "35%", targets: 0, className: "text-wrap" },
-                { width: "30%", targets: 1, className: "text-wrap" },
-                { width: "20%", targets: 2, className: "text-wrap" },
-                { 
-                    width: "15%", 
-                    targets: 3, 
-                    className: "text-wrap",
-                    render: function(data, type, row, meta) {
-                        if (type === 'sort' || type === 'type') {
-                            return jobsData[meta.row] ? jobsData[meta.row].sortableDate : 0;
-                        }
-                        return data;
-                    }
-                }
-            ],
-            drawCallback: function() {
-                this.api().columns.adjust();
-            },
-            initComplete: function() {
-                this.api().columns.adjust();
+            data.forEach((row, index) => {
+                let tr = document.createElement('tr');
+                let cellsHtml = '';
                 
-                $(window).on('resize', () => {
-                    clearTimeout(window.resizeTimer);
-                    window.resizeTimer = setTimeout(() => {
-                        this.api().columns.adjust();
-                    }, 250);
-                });
-            }
-        });
-        
-        // Load conferences after a short delay
-        setTimeout(() => {
-            if (!window.conferencesTableInitialized) {
-                loadConferencesData();
-            }
-        }, 200);
-    })
-    .catch(error => {
-        console.error('Error fetching data:', error);
-        document.getElementById('tableBody').innerHTML = '<tr><td colspan="4" class="loading">Error loading jobs data. Please refresh the page.</td></tr>';
-    });
+                // Build cells based on columnsToShow array
+columnsToShow.forEach(column => {
+    if (column === 'jobType') {
+        // Always create virtual page for job title
+        cellsHtml += `<td><a href="#" class="virtual-link" onclick="showJobDetail(jobsData[${index}]); return false;">${row[column] || ''} 📄</a></td>`;
+    } else if (column === 'timestamp') {
+        // Format job posted date to IST and check for external link
+        const formattedDate = formatDateToIST(row[column]);
+        if (row['link'] && row['link'].trim() !== '') {
+            // External link exists - embed in timestamp
+            cellsHtml += `<td><a href="${row['link']}" target="_blank" rel="noopener noreferrer">${formattedDate} 🔗</a></td>`;
+        } else {
+            // No external link - just show date
+            cellsHtml += `<td>${formattedDate}</td>`;
+        }
+    } else {
+        cellsHtml += `<td>${row[column] || ''}</td>`;
+    }
+});
+                
+                tr.innerHTML = cellsHtml;
+                tableBody.appendChild(tr);
+            });
+            
+            // First, let's add timestamps to our data for proper sorting
+            console.log('Sample data for debugging:', data.slice(0, 3));
+            data.forEach(row => {
+                row.sortableDate = parseDate(row.timestamp);
+                console.log('Date:', row.timestamp, '-> Sortable:', row.sortableDate, '-> Readable:', new Date(row.sortableDate));
+            });
+            
+            // Initialize DataTable with custom date sorting
+            dataTable = $('#dataTable').DataTable({
+                responsive: {
+                    details: {
+                        type: 'column',
+                        target: 'tr'
+                    }
+                },
+                autoWidth: false,
+                scrollX: false,
+                scrollCollapse: true,
+                fixedHeader: false,
+                order: [[3, 'desc']], // Default sort by date column (newest first)
+                columnDefs: [
+                    { width: "35%", targets: 0, className: "text-wrap" },
+                    { width: "30%", targets: 1, className: "text-wrap" },
+                    { width: "20%", targets: 2, className: "text-wrap" },
+                    { 
+                        width: "15%", 
+                        targets: 3, 
+                        className: "text-wrap",
+                        render: function(data, type, row, meta) {
+                            if (type === 'sort' || type === 'type') {
+                                // Use the pre-calculated sortable date
+                                return jobsData[meta.row] ? jobsData[meta.row].sortableDate : 0;
+                            }
+                            return data; // Return original data for display
+                        }
+                    }
+                ],
+                drawCallback: function() {
+                    // Ensure header and body alignment after each redraw
+                    this.api().columns.adjust();
+                },
+                initComplete: function() {
+                    // Force column adjustment after initialization
+                    this.api().columns.adjust();
+                    
+                    // Add window resize handler to maintain alignment
+                    $(window).on('resize', () => {
+                        clearTimeout(window.resizeTimer);
+                        window.resizeTimer = setTimeout(() => {
+                            this.api().columns.adjust();
+                        }, 250);
+                    });
+                }
+            });
+            setTimeout(() => {
+                if (!window.conferencesTableInitialized) {
+                    loadConferencesData();
+                }
+            }, 200);
+        })
+        .catch(error => console.error('Error fetching data:', error));
 });
 </script>
 
