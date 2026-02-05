@@ -1017,7 +1017,17 @@ function loadScrapedJobs() {
             }
             
             // No sorting - data already sorted in Google Sheet
-            jobs.forEach(job => {
+            jobs.forEach((job, index) => {
+                // Debug: Show first 3 jobs
+                if (index < 3) {
+                    console.log(`Job ${index}:`, {
+                        institute: job.institute,
+                        position: job.position.substring(0, 30),
+                        details: job.details,
+                        hasLink: !!job.details
+                    });
+                }
+                
                 let tr = document.createElement('tr');
                 
                 const truncatedPosition = truncatePosition(job.position);
@@ -1038,7 +1048,7 @@ function loadScrapedJobs() {
                 if (job.details && job.details.trim() !== '') {
                     cellsHtml += `<td><a href="${job.details}" target="_blank" rel="noopener noreferrer">${formattedDate} 🔗</a></td>`;
                 } else {
-                    cellsHtml += `<td>${formattedDate}</td>`;
+                    cellsHtml += `<td>${formattedDate} (no link)</td>`;
                 }
                 
                 tr.innerHTML = cellsHtml;
