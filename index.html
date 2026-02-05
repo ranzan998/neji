@@ -1000,13 +1000,16 @@ function loadScrapedJobs() {
                 return;
             }
             
-            // Add sortable dates
+            // Add sortable dates and sort by date (newest first)
             jobs.forEach(job => {
                 job.sortableDate = parseDate(job.postedDate);
             });
             
-            // Sort by date (newest first)
-            jobs.sort((a, b) => b.sortableDate - a.sortableDate);
+            // Sort by date (newest first) - DESCENDING ORDER
+            jobs.sort((a, b) => {
+                // b - a for descending (newest first)
+                return b.sortableDate - a.sortableDate;
+            });
             
             // Build table rows
             jobs.forEach(job => {
@@ -1053,12 +1056,17 @@ function loadScrapedJobs() {
                 scrollX: false,
                 scrollCollapse: true,
                 fixedHeader: false,
-                order: [[3, 'desc']],
+                order: [[3, 'desc']], // Column 3 (Posted Date) descending (newest first)
                 columnDefs: [
                     { width: "35%", targets: 0, className: "text-wrap" },
                     { width: "30%", targets: 1, className: "text-wrap" },
                     { width: "20%", targets: 2, className: "text-wrap" },
-                    { width: "15%", targets: 3, className: "text-wrap" }
+                    { 
+                        width: "15%", 
+                        targets: 3, 
+                        className: "text-wrap",
+                        type: "date" // Ensure proper date sorting
+                    }
                 ],
                 drawCallback: function() {
                     this.api().columns.adjust();
