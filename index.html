@@ -851,15 +851,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const tableBody = document.getElementById('tableBody');
             tableBody.innerHTML = '';
             
-            // Add sortable dates FIRST
-            data.forEach(row => {
-                row.sortableDate = parseDate(row.timestamp);
-            });
-            
-            // Sort by date (newest first)
-            data.sort((a, b) => b.sortableDate - a.sortableDate);
-            
-            // Now build the table with sorted data
+            // No sorting - data comes sorted from AppScript
             data.forEach((row, index) => {
                 let tr = document.createElement('tr');
                 
@@ -891,22 +883,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 scrollX: false,
                 scrollCollapse: true,
                 fixedHeader: false,
-                order: [[3, 'desc']],
+                order: [], // No sorting - keep order from data source
                 columnDefs: [
                     { width: "35%", targets: 0, className: "text-wrap" },
                     { width: "30%", targets: 1, className: "text-wrap" },
                     { width: "20%", targets: 2, className: "text-wrap" },
-                    { 
-                        width: "15%", 
-                        targets: 3, 
-                        className: "text-wrap",
-                        render: function(data, type, row, meta) {
-                            if (type === 'sort' || type === 'type') {
-                                return jobsData[meta.row] ? jobsData[meta.row].sortableDate : 0;
-                            }
-                            return data;
-                        }
-                    }
+                    { width: "15%", targets: 3, className: "text-wrap" }
                 ],
                 drawCallback: function() {
                     this.api().columns.adjust();
@@ -934,6 +916,12 @@ function parseScrapedCSV(text) {
     const lines = text.split('\n');
     const result = [];
     
+    console.log('Parsing CSV, total lines:', lines.length);
+    console.log('First line (header):', lines[0]);
+    if (lines.length > 1) {
+        console.log('Second line (first data row):', lines[1]);
+    }
+    
     for (let i = 1; i < lines.length; i++) {
         const line = lines[i].trim();
         if (!line) continue;
@@ -960,10 +948,26 @@ function parseScrapedCSV(text) {
             let institute = values[0];
             let details = '';
             
-            const hyperlinkMatch = institute.match(/=HYPERLINK\("([^"]+)",\s*"([^"]+)"\)/);
+            console.log('Row', i, 'Institute cell raw:', institute);
+            
+            // Try multiple HYPERLINK patterns
+            let hyperlinkMatch = institute.match(/=HYPERLINK\("([^"]+)",\s*"([^"]+)"\)/);
+            if (!hyperlinkMatch) {
+                // Try without equals sign
+                hyperlinkMatch = institute.match(/HYPERLINK\("([^"]+)",\s*"([^"]+)"\)/);
+            }
+            if (!hyperlinkMatch) {
+                // Try with single quotes
+                hyperlinkMatch = institute.match(/=HYPERLINK\('([^']+)',\s*'([^']+)'\)/);
+            }
+            
             if (hyperlinkMatch) {
                 details = hyperlinkMatch[1];
                 institute = hyperlinkMatch[2];
+                console.log('  Extracted link:', details);
+                console.log('  Extracted institute:', institute);
+            } else {
+                console.log('  No HYPERLINK formula found');
             }
             
             result.push({
@@ -974,6 +978,11 @@ function parseScrapedCSV(text) {
                 details: details
             });
         }
+    }
+    
+    console.log('Total jobs parsed:', result.length);
+    if (result.length > 0) {
+        console.log('First job sample:', result[0]);
     }
     
     return result;
@@ -1007,13 +1016,7 @@ function loadScrapedJobs() {
                 return;
             }
             
-            jobs.forEach(job => {
-                job.sortableDate = parseDate(job.postedDate);
-            });
-            
-            // Sort by date (newest first)
-            jobs.sort((a, b) => b.sortableDate - a.sortableDate);
-            
+            // No sorting - data already sorted in Google Sheet
             jobs.forEach(job => {
                 let tr = document.createElement('tr');
                 
@@ -1022,16 +1025,16 @@ function loadScrapedJobs() {
                 
                 let cellsHtml = '';
                 
-                // Position column - no link
+                // Position column
                 cellsHtml += `<td>${truncatedPosition}</td>`;
                 
-                // Institute column - plain text
+                // Institute column
                 cellsHtml += `<td>${job.institute}</td>`;
                 
-                // Location column - plain text
+                // Location column
                 cellsHtml += `<td>${job.location}</td>`;
                 
-                // Posted date column - with link
+                // Posted date column - with link to job details
                 if (job.details && job.details.trim() !== '') {
                     cellsHtml += `<td><a href="${job.details}" target="_blank" rel="noopener noreferrer">${formattedDate} 🔗</a></td>`;
                 } else {
@@ -1057,7 +1060,7 @@ function loadScrapedJobs() {
                 scrollX: false,
                 scrollCollapse: true,
                 fixedHeader: false,
-                order: [[3, 'desc']],
+                order: [], // No sorting - keep order from Google Sheet
                 columnDefs: [
                     { width: "35%", targets: 0, className: "text-wrap" },
                     { width: "30%", targets: 1, className: "text-wrap" },
