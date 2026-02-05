@@ -851,7 +851,15 @@ document.addEventListener('DOMContentLoaded', function() {
             const tableBody = document.getElementById('tableBody');
             tableBody.innerHTML = '';
             
-            // No sorting - data comes sorted from AppScript
+            // Add sortable dates FIRST
+            data.forEach(row => {
+                row.sortableDate = parseDate(row.timestamp);
+            });
+            
+            // Sort by date (newest first)
+            data.sort((a, b) => b.sortableDate - a.sortableDate);
+            
+            // Now build the table with sorted data
             data.forEach((row, index) => {
                 let tr = document.createElement('tr');
                 
@@ -883,12 +891,22 @@ document.addEventListener('DOMContentLoaded', function() {
                 scrollX: false,
                 scrollCollapse: true,
                 fixedHeader: false,
-                order: [], // No sorting - keep order from data source
+                order: [[3, 'desc']],
                 columnDefs: [
                     { width: "35%", targets: 0, className: "text-wrap" },
                     { width: "30%", targets: 1, className: "text-wrap" },
                     { width: "20%", targets: 2, className: "text-wrap" },
-                    { width: "15%", targets: 3, className: "text-wrap" }
+                    { 
+                        width: "15%", 
+                        targets: 3, 
+                        className: "text-wrap",
+                        render: function(data, type, row, meta) {
+                            if (type === 'sort' || type === 'type') {
+                                return jobsData[meta.row] ? jobsData[meta.row].sortableDate : 0;
+                            }
+                            return data;
+                        }
+                    }
                 ],
                 drawCallback: function() {
                     this.api().columns.adjust();
@@ -909,13 +927,54 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // ============================================================================
-// LOAD SCRAPED JOBS
+// LOAD SCRAPED JOBS - UPDATED TO USE COLUMN E FOR LINK
 // ============================================================================
+
+function parseScrapedCSV(text) {
+    const lines = text.split('\n');
+    const result = [];
+    
+    // Skip header (line 0), start from line 1
+    for (let i = 1; i < lines.length; i++) {
+        const line = lines[i].trim();
+        if (!line) continue;
+        
+        const values = [];
+        let current = '';
+        let inQuotes = false;
+        
+        for (let j = 0; j < line.length; j++) {
+            const char = line[j];
+            
+            if (char === '"') {
+                inQuotes = !inQuotes;
+            } else if (char === ',' && !inQuotes) {
+                values.push(current.trim());
+                current = '';
+            } else {
+                current += char;
+            }
+        }
+        values.push(current.trim());
+        
+        // Expecting 5 columns: Institute, Location, Position, Posted Date, Link
+        if (values.length >= 5) {
+            result.push({
+                institute: values[0].replace(/^"|"$/g, ''),
+                location: values[1].replace(/^"|"$/g, ''),
+                position: values[2].replace(/^"|"$/g, ''),
+                postedDate: values[3].replace(/^"|"$/g, ''),
+                link: values[4].replace(/^"|"$/g, '')  // Column E - Link
+            });
+        }
+    }
+    
+    return result;
+}
 
 function loadScrapedJobs() {
     const scrapedTableBody = document.getElementById('scrapedTableBody');
-    // Use Google Visualization API which includes formulas
-    const scrapedJobsUrl = `https://docs.google.com/spreadsheets/d/${SCRAPED_JOBS_SHEET_ID}/gviz/tq?tqx=out:json&sheet=Sheet1`;
+    const scrapedJobsUrl = `https://docs.google.com/spreadsheets/d/${SCRAPED_JOBS_SHEET_ID}/export?format=csv&gid=${SCRAPED_JOBS_GID}`;
     
     console.log('Loading scraped jobs from:', scrapedJobsUrl);
     
@@ -930,55 +989,9 @@ function loadScrapedJobs() {
             return response.text();
         })
         .then(text => {
-            console.log('Scraped jobs JSON loaded');
-            
-            // Remove Google's JSON wrapper
-            const jsonString = text.substring(47).slice(0, -2);
-            const data = JSON.parse(jsonString);
-            
-            const jobs = [];
-            const rows = data.table.rows;
-            
-            // Skip header row (index 0)
-            for (let i = 0; i < rows.length; i++) {
-                const row = rows[i];
-                if (!row.c || row.c.length < 4) continue;
-                
-                // Extract values
-                let institute = '';
-                let details = '';
-                
-                // Cell 0: Institute (with HYPERLINK formula)
-                if (row.c[0] && row.c[0].v) {
-                    const cellValue = row.c[0].v;
-                    // Check if it's a HYPERLINK formula
-                    const match = cellValue.match(/=HYPERLINK\("([^"]+)",\s*"([^"]+)"\)/);
-                    if (match) {
-                        details = match[1]; // URL
-                        institute = match[2]; // Display text
-                        console.log('Extracted link:', details);
-                    } else {
-                        institute = cellValue;
-                    }
-                }
-                
-                const location = row.c[1] && row.c[1].v ? row.c[1].v : '';
-                const position = row.c[2] && row.c[2].v ? row.c[2].v : '';
-                const postedDate = row.c[3] && row.c[3].v ? row.c[3].v : '';
-                
-                jobs.push({
-                    institute: institute,
-                    location: location,
-                    position: position,
-                    postedDate: postedDate,
-                    details: details
-                });
-            }
-            
+            console.log('Scraped jobs CSV loaded');
+            const jobs = parseScrapedCSV(text);
             console.log('Parsed scraped jobs:', jobs.length);
-            if (jobs.length > 0) {
-                console.log('First job:', jobs[0]);
-            }
             
             scrapedTableBody.innerHTML = '';
             
@@ -987,18 +1000,16 @@ function loadScrapedJobs() {
                 return;
             }
             
-            // No sorting - data already sorted in Google Sheet
-            jobs.forEach((job, index) => {
-                // Debug: Show first 3 jobs
-                if (index < 3) {
-                    console.log(`Job ${index}:`, {
-                        institute: job.institute,
-                        position: job.position.substring(0, 30),
-                        details: job.details,
-                        hasLink: !!job.details
-                    });
-                }
-                
+            // Add sortable dates
+            jobs.forEach(job => {
+                job.sortableDate = parseDate(job.postedDate);
+            });
+            
+            // Sort by date (newest first)
+            jobs.sort((a, b) => b.sortableDate - a.sortableDate);
+            
+            // Build table rows
+            jobs.forEach(job => {
                 let tr = document.createElement('tr');
                 
                 const truncatedPosition = truncatePosition(job.position);
@@ -1006,18 +1017,18 @@ function loadScrapedJobs() {
                 
                 let cellsHtml = '';
                 
-                // Position column
+                // Position column - no link
                 cellsHtml += `<td>${truncatedPosition}</td>`;
                 
-                // Institute column
+                // Institute column - plain text
                 cellsHtml += `<td>${job.institute}</td>`;
                 
-                // Location column
+                // Location column - plain text
                 cellsHtml += `<td>${job.location}</td>`;
                 
-                // Posted date column - with link to job details
-                if (job.details && job.details.trim() !== '') {
-                    cellsHtml += `<td><a href="${job.details}" target="_blank" rel="noopener noreferrer">${formattedDate} 🔗</a></td>`;
+                // Posted date column - with link from column E
+                if (job.link && job.link.trim() !== '') {
+                    cellsHtml += `<td><a href="${job.link}" target="_blank" rel="noopener noreferrer">${formattedDate} 🔗</a></td>`;
                 } else {
                     cellsHtml += `<td>${formattedDate}</td>`;
                 }
@@ -1026,6 +1037,7 @@ function loadScrapedJobs() {
                 scrapedTableBody.appendChild(tr);
             });
             
+            // Initialize DataTable
             if (scrapedTable) {
                 scrapedTable.destroy();
             }
@@ -1041,7 +1053,7 @@ function loadScrapedJobs() {
                 scrollX: false,
                 scrollCollapse: true,
                 fixedHeader: false,
-                order: [], // No sorting - keep order from Google Sheet
+                order: [[3, 'desc']],
                 columnDefs: [
                     { width: "35%", targets: 0, className: "text-wrap" },
                     { width: "30%", targets: 1, className: "text-wrap" },
