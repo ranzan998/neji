@@ -424,18 +424,43 @@
                 min-width: 90px;
             }
         }
-        /* Expired conference styling */
-        .expired-conference {
-            opacity: 0.5;
-            background-color: #f5f5f5 !important;
-        }
-        
-        .expired-indicator {
-            color: #dc3545;
-            font-weight: bold;
-            font-size: 12px;
-            margin-left: 5px;
-        }
+            /* Conference state styling */
+            .registration-open {
+                /* Normal styling - no changes needed */
+            }
+            
+            .registration-closed {
+                background-color: #fff3cd !important; /* Light yellow */
+            }
+            
+            .conference-ended {
+                opacity: 0.5;
+                background-color: #f5f5f5 !important; /* Gray */
+            }
+            
+            .status-indicator {
+                font-weight: bold;
+                font-size: 11px;
+                margin-left: 5px;
+                padding: 2px 6px;
+                border-radius: 3px;
+                white-space: nowrap;
+            }
+            
+            .status-open {
+                color: #28a745;
+                background-color: #d4edda;
+            }
+            
+            .status-reg-closed {
+                color: #856404;
+                background-color: #fff3cd;
+            }
+            
+            .status-ended {
+                color: #dc3545;
+                background-color: #f8d7da;
+            }
     </style>
 </head>
 
@@ -1137,39 +1162,67 @@ function loadConferencesData() {
             // Get current date for comparison
             const today = new Date();
             today.setHours(0, 0, 0, 0);
+            const todayTime = today.getTime();
             
-            // Add sortable registration deadline dates and mark expired
+            // Determine conference status for each row
             processedData.forEach(row => {
                 row.sortableRegDeadline = parseDate(row.registrationDeadline);
-                row.isExpired = row.sortableRegDeadline < today.getTime();
+                row.sortableEndDate = parseDate(row.eventEndDate);
+                
+                // Determine status
+                if (row.sortableEndDate < todayTime) {
+                    // Conference has ended
+                    row.status = 'ended';
+                    row.sortPriority = 3;
+                } else if (row.sortableRegDeadline < todayTime) {
+                    // Registration closed but conference hasn't happened yet
+                    row.status = 'reg-closed';
+                    row.sortPriority = 2;
+                } else {
+                    // Registration still open
+                    row.status = 'open';
+                    row.sortPriority = 1;
+                }
             });
             
-            // Sort: upcoming deadlines first (ascending), then expired at bottom
+            // Sort: Open first (by deadline), then reg-closed, then ended (all ascending by deadline)
             processedData.sort((a, b) => {
-                // If one is expired and the other isn't, expired goes to bottom
-                if (a.isExpired && !b.isExpired) return 1;
-                if (!a.isExpired && b.isExpired) return -1;
+                // First sort by priority (open < reg-closed < ended)
+                if (a.sortPriority !== b.sortPriority) {
+                    return a.sortPriority - b.sortPriority;
+                }
                 
-                // Otherwise sort by deadline ascending
+                // Within same priority, sort by registration deadline ascending
                 return a.sortableRegDeadline - b.sortableRegDeadline;
             });
             
             processedData.forEach((row, index) => {
                 let tr = document.createElement('tr');
                 
-                // Add expired class if deadline has passed
-                if (row.isExpired) {
-                    tr.classList.add('expired-conference');
+                // Add status class
+                if (row.status === 'ended') {
+                    tr.classList.add('conference-ended');
+                } else if (row.status === 'reg-closed') {
+                    tr.classList.add('registration-closed');
+                } else {
+                    tr.classList.add('registration-open');
                 }
                 
                 const formattedStartDate = formatDateToIST(row.eventStartDate);
                 const formattedEndDate = formatDateToIST(row.eventEndDate);
                 const formattedRegDeadline = formatDateToIST(row.registrationDeadline);
                 
-                // Add expired indicator
-                const expiredTag = row.isExpired ? '<span class="expired-indicator">(EXPIRED)</span>' : '';
+                // Add status indicator
+                let statusTag = '';
+                if (row.status === 'open') {
+                    statusTag = '<span class="status-indicator status-open">OPEN</span>';
+                } else if (row.status === 'reg-closed') {
+                    statusTag = '<span class="status-indicator status-reg-closed">REG CLOSED</span>';
+                } else if (row.status === 'ended') {
+                    statusTag = '<span class="status-indicator status-ended">ENDED</span>';
+                }
                 
-                let titleCell = `<td><a href="#" class="virtual-link" onclick="showConferenceDetail(conferencesData[${index}]); return false;">${row.eventTitle || ''} 📄</a>${expiredTag}</td>`;
+                let titleCell = `<td><a href="#" class="virtual-link" onclick="showConferenceDetail(conferencesData[${index}]); return false;">${row.eventTitle || ''} 📄</a>${statusTag}</td>`;
                 
                 let regDeadlineCell;
                 if (row.eventWebsite && row.eventWebsite.trim() !== '') {
@@ -1204,7 +1257,7 @@ function loadConferencesData() {
                 scrollX: false,
                 scrollCollapse: true,
                 fixedHeader: false,
-                order: [[4, 'asc']], // Sort by registration deadline ascending
+                order: [[4, 'asc']], // Sort by registration deadline
                 columnDefs: [
                     { width: "30%", targets: 0, className: "text-wrap" },
                     { width: "25%", targets: 1, className: "text-wrap" },
@@ -1217,8 +1270,8 @@ function loadConferencesData() {
                         render: function(data, type, row, meta) {
                             if (type === 'sort' || type === 'type') {
                                 const conf = conferencesData[meta.row];
-                                // Add large value to expired dates to push them to bottom
-                                return conf.isExpired ? conf.sortableRegDeadline + 999999999999 : conf.sortableRegDeadline;
+                                // Sort by priority first, then by deadline
+                                return (conf.sortPriority * 10000000000000) + conf.sortableRegDeadline;
                             }
                             return data;
                         }
