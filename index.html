@@ -629,19 +629,22 @@ function parseDate(dateStr) {
     
     dateStr = dateStr.trim();
     
-    let date = new Date(dateStr);
-    if (!isNaN(date.getTime())) return date.getTime();
-    
-    const ddmmyyyy = dateStr.match(/(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})/);
+    // CRITICAL: Try DD/MM/YYYY FIRST before new Date() to avoid MM/DD/YYYY ambiguity
+    const ddmmyyyy = dateStr.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/);
     if (ddmmyyyy) {
         const day = parseInt(ddmmyyyy[1]);
-        const month = parseInt(ddmmyyyy[2]) - 1;
+        const month = parseInt(ddmmyyyy[2]) - 1; // Month is 0-indexed
         const year = parseInt(ddmmyyyy[3]);
-        date = new Date(year, month, day);
+        const date = new Date(year, month, day);
         if (!isNaN(date.getTime())) return date.getTime();
     }
     
-    const yyyymmdd = dateStr.match(/(\d{4})[\/\-](\d{1,2})[\/\-](\d{1,2})/);
+    // Fallback to standard date parsing (for ISO formats)
+    let date = new Date(dateStr);
+    if (!isNaN(date.getTime())) return date.getTime();
+    
+    // Try YYYY-MM-DD format
+    const yyyymmdd = dateStr.match(/^(\d{4})[\/\-](\d{1,2})[\/\-](\d{1,2})$/);
     if (yyyymmdd) {
         const year = parseInt(yyyymmdd[1]);
         const month = parseInt(yyyymmdd[2]) - 1;
@@ -652,7 +655,6 @@ function parseDate(dateStr) {
     
     return 0;
 }
-
 // ============================================================================
 // JOB DETAIL MODAL
 // ============================================================================
