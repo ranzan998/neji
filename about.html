@@ -300,5 +300,124 @@ function toggleMenu() {
     </div>
 </div>
 
+<!-- Visitor Welcome Modal -->
+<div id="visitor-modal" style="
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(10, 47, 102, 0.55);
+    backdrop-filter: blur(3px);
+    z-index: 9999;
+    justify-content: center;
+    align-items: center;
+">
+    <div style="
+        background: #fff;
+        border-radius: 14px;
+        padding: 36px 32px 28px;
+        max-width: 420px;
+        width: 90%;
+        box-shadow: 0 8px 40px rgba(10,47,102,0.18);
+        text-align: center;
+        position: relative;
+        animation: popIn 0.35s cubic-bezier(.34,1.56,.64,1) both;
+    ">
+        <div id="modal-emoji" style="font-size: 42px; margin-bottom: 10px;">🎉</div>
+        <div id="modal-counter-badge" style="
+            display: inline-block;
+            background: #eef3fb;
+            color: #0a2f66;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            padding: 4px 14px;
+            border-radius: 20px;
+            margin-bottom: 14px;
+        "></div>
+        <p id="modal-message" style="
+            font-size: 15.5px;
+            line-height: 1.65;
+            color: #333;
+            margin: 0 0 22px;
+        "></p>
+        <button onclick="closeModal()" style="
+            background: #0a2f66;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 28px;
+            font-size: 14px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        " onmouseover="this.style.background='#0d3d85'" onmouseout="this.style.background='#0a2f66'">
+            Thanks! 🙌
+        </button>
+    </div>
+</div>
+
+<style>
+@keyframes popIn {
+    from { opacity: 0; transform: scale(0.82) translateY(20px); }
+    to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+</style>
+
+<script>
+function closeModal() {
+    document.getElementById('visitor-modal').style.display = 'none';
+}
+
+async function checkAndGreetVisitor() {
+    try {
+        // Hit CountAPI to increment and get current count
+        // Using a unique namespace+key for your about page
+        const res = await fetch('https://api.countapi.xyz/hit/neji-india/about-page-visitors');
+        const data = await res.json();
+        const count = data.value;
+
+        const modal   = document.getElementById('visitor-modal');
+        const badge   = document.getElementById('modal-counter-badge');
+        const message = document.getElementById('modal-message');
+        const emoji   = document.getElementById('modal-emoji');
+
+        let shouldShow = false;
+        let text = '';
+        let icon = '👋';
+
+        if (count <= 10) {
+            // First 10 visitors — every single one gets a special note
+            shouldShow = true;
+            icon = count === 1 ? '🌊' : count === 5 ? '⭐' : '🎉';
+            text = `You're visitor #${count} to the About page — that means a lot to us! 
+We built NEJI to make job-hunting in Earth sciences a little less overwhelming. 
+If this feels useful, please share it with a curious friend, junior, or colleague who's navigating the same path. Every share helps the community grow. 🌍`;
+            badge.textContent = `Visitor #${count}`;
+        } else if (count % 10 === 0) {
+            // Every 10th visitor after the first 10
+            shouldShow = true;
+            icon = '🙌';
+            text = `Hi there! You're visitor #${count} on this page. Thanks for stopping by NEJI!`;
+            badge.textContent = `Visitor #${count}`;
+        }
+
+        if (shouldShow) {
+            emoji.textContent = icon;
+            message.textContent = text;
+            modal.style.display = 'flex';
+        }
+
+    } catch (e) {
+        // CountAPI unavailable — fail silently, don't disrupt the page
+        console.warn('Visitor counter unavailable:', e);
+    }
+}
+
+// Run on page load
+window.addEventListener('DOMContentLoaded', checkAndGreetVisitor);
+</script>
+
 </body>
 </html>
