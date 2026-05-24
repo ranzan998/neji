@@ -378,7 +378,11 @@ async function checkAndGreetVisitor() {
         const data  = await res.json();
         const count = parseInt(data.value);
 
-        const modal   = document.getElementById('visitor-modal');
+        const countBadge = document.getElementById('visitor-count-text');
+        if (countBadge) {
+            countBadge.textContent = count.toLocaleString();
+            document.getElementById('visitor-count-badge').style.opacity = '0.85';
+        }
         const badge   = document.getElementById('modal-counter-badge');
         const message = document.getElementById('modal-message');
         const emoji   = document.getElementById('modal-emoji');
@@ -412,6 +416,25 @@ async function checkAndGreetVisitor() {
 
 window.addEventListener('DOMContentLoaded', checkAndGreetVisitor);
 </script>
+
+<!-- Visitor count badge — bottom right -->
+<div id="visitor-count-badge" style="
+    position: fixed;
+    bottom: 90px;
+    right: 16px;
+    background: #0a2f66;
+    color: white;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    padding: 5px 11px;
+    border-radius: 20px;
+    opacity: 0;
+    transition: opacity 0.6s ease;
+    z-index: 200;
+    pointer-events: none;
+    letter-spacing: 0.3px;
+">👁 <span id="visitor-count-text">...</span> visitors</div>
 
 </body>
 </html>
