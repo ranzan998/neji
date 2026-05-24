@@ -514,7 +514,7 @@ function toggleSection(sectionId) {
             <div class="institute-card">
                 <img src="https://upload.wikimedia.org/wikipedia/en/thumb/1/1a/Pondicherry_University_Logo.png/150px-Pondicherry_University_Logo.png" alt="Pondicherry University Logo" class="institute-logo">
                 <div class="institute-name">Pondicherry University</div>
-                <div class="institute-link"><a href="https://www.pondiuni.edu.in" ></div>
+                <div class="institute-link"><a href="https://www.pondiuni.edu.in" target="_blank">Visit Website</a></div>
              </div>
         </div>
     </div>
@@ -545,8 +545,12 @@ function toggleSection(sectionId) {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    cursor: pointer;
+    cursor: grab;
     user-select: none;
+  }
+
+  #map-floater-header:active {
+    cursor: grabbing;
   }
 
   #map-floater-header span {
@@ -733,6 +737,37 @@ function toggleSection(sectionId) {
       }
     });
   };
+
+  // ── Drag to move ───────────────────────────────────────────────────────────
+  const floater = document.getElementById("map-floater");
+  const handle  = document.getElementById("map-floater-header");
+  let dragging = false, startX, startY, origLeft, origTop;
+
+  handle.addEventListener("mousedown", function (e) {
+    // Don't start drag if clicking the toggle button
+    if (e.target.id === "map-toggle-btn") return;
+    dragging = true;
+    const rect = floater.getBoundingClientRect();
+    // Switch from right-anchored to left-anchored positioning
+    floater.style.right  = "auto";
+    floater.style.left   = rect.left + "px";
+    floater.style.top    = rect.top  + "px";
+    origLeft = rect.left;
+    origTop  = rect.top;
+    startX   = e.clientX;
+    startY   = e.clientY;
+    e.preventDefault();
+  });
+
+  document.addEventListener("mousemove", function (e) {
+    if (!dragging) return;
+    floater.style.left = (origLeft + e.clientX - startX) + "px";
+    floater.style.top  = (origTop  + e.clientY - startY) + "px";
+  });
+
+  document.addEventListener("mouseup", function () {
+    dragging = false;
+  });
 
   // ── Collapse toggle ────────────────────────────────────────────────────────
   let mapOpen = true;
