@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=2.0">
-    <title>NEJI - Institutes</title>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+    <title>Institutes - NEJI</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&display=swap');
         body {
@@ -195,106 +194,8 @@
                 grid-template-columns: 1fr;
             }
         }
-
-        /* Layout: main content + floating map panel */
-        .main-content {
-            min-width: 0;
-        }
-
-        .map-panel {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            width: 310px;
-            background: #fff;
-            border: 1px solid #ddd;
-            border-radius: 10px;
-            box-shadow: 0 4px 16px rgba(0,0,0,0.12);
-            z-index: 500;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .map-panel-header {
-            padding: 10px 14px 8px;
-            background: #eef3fb;
-            border-bottom: 1px solid #ddd;
-        }
-
-        .map-panel-header h3 {
-            margin: 0 0 8px 0;
-            font-size: 14px;
-            font-weight: 600;
-            color: #0a2f66;
-        }
-
-        .map-category-tabs {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 4px;
-        }
-
-        .map-tab {
-            font-size: 11px;
-            padding: 3px 8px;
-            border-radius: 20px;
-            border: 1px solid #ccc;
-            background: #fff;
-            cursor: pointer;
-            color: #555;
-            font-weight: 500;
-            transition: all 0.2s ease;
-            white-space: nowrap;
-        }
-
-        .map-tab.active {
-            background: #0a2f66;
-            color: #fff;
-            border-color: #0a2f66;
-        }
-
-        .map-tab:hover:not(.active) {
-            background: #e8eef8;
-            border-color: #0a2f66;
-            color: #0a2f66;
-        }
-
-        #institute-map {
-            width: 100%;
-            height: 300px;
-        }
-
-        .map-legend {
-            padding: 6px 14px 8px;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-            border-top: 1px solid #eee;
-            background: #fafafa;
-        }
-
-        .legend-item {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            font-size: 11px;
-            color: #555;
-        }
-
-        .legend-dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            display: inline-block;
-            flex-shrink: 0;
-        }
-
-        @media (max-width: 900px) {
-            .map-panel { display: none !important; }
-            body { padding-right: 0 !important; }
-        }
     </style>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 </head>
 
 <script>
@@ -319,8 +220,7 @@ function toggleSection(sectionId) {
 }
 </script>
 
-<body style="margin:20px; padding-right: 350px;">
-<div class="main-content">
+<body style="padding-right: 340px;">
     <div class="header">
         <div class="title-container">
             <div class="title-row">
@@ -636,97 +536,94 @@ function toggleSection(sectionId) {
                 <img src="https://upload.wikimedia.org/wikipedia/en/thumb/1/1a/Pondicherry_University_Logo.png/150px-Pondicherry_University_Logo.png" alt="Pondicherry University Logo" class="institute-logo">
                 <div class="institute-name">Pondicherry University</div>
                 <div class="institute-link"><a href="https://www.pondiuni.edu.in" ></div>
-</div>
 
 <!-- FLOATING MAP PANEL -->
-<div class="map-panel" id="mapPanel">
-  <div class="map-panel-header">
-    <h3>&#x1F4CD; Institutes on Map</h3>
-    <div class="map-category-tabs">
-      <button class="map-tab active" onclick="filterMap('all', this)">All</button>
-      <button class="map-tab" onclick="filterMap('research', this)">Research Labs</button>
-      <button class="map-tab" onclick="filterMap('iit_nit', this)">IITs &amp; NITs</button>
-      <button class="map-tab" onclick="filterMap('university', this)">Universities</button>
+<div style="position:fixed; top:20px; right:20px; width:310px; background:#fff; border:1px solid #ddd; border-radius:10px; box-shadow:0 4px 16px rgba(0,0,0,0.12); z-index:500; overflow:hidden; display:flex; flex-direction:column;">
+  <div style="padding:10px 14px 8px; background:#eef3fb; border-bottom:1px solid #ddd;">
+    <div style="font-size:14px; font-weight:600; color:#0a2f66; margin-bottom:8px;">&#128205; Institutes on Map</div>
+    <div style="display:flex; flex-wrap:wrap; gap:4px;" id="mapTabs">
+      <button onclick="filterMap('all',this)" style="font-size:11px;padding:3px 8px;border-radius:20px;border:1px solid #0a2f66;background:#0a2f66;color:#fff;cursor:pointer;font-weight:500;">All</button>
+      <button onclick="filterMap('research',this)" style="font-size:11px;padding:3px 8px;border-radius:20px;border:1px solid #ccc;background:#fff;color:#555;cursor:pointer;font-weight:500;">Research Labs</button>
+      <button onclick="filterMap('iit_nit',this)" style="font-size:11px;padding:3px 8px;border-radius:20px;border:1px solid #ccc;background:#fff;color:#555;cursor:pointer;font-weight:500;">IITs &amp; NITs</button>
+      <button onclick="filterMap('university',this)" style="font-size:11px;padding:3px 8px;border-radius:20px;border:1px solid #ccc;background:#fff;color:#555;cursor:pointer;font-weight:500;">Universities</button>
     </div>
   </div>
-  <div id="institute-map"></div>
-  <div class="map-legend">
-    <span class="legend-item"><span class="legend-dot" style="background:#e05c2a"></span>Research Labs</span>
-    <span class="legend-item"><span class="legend-dot" style="background:#0a2f66"></span>IITs &amp; NITs</span>
-    <span class="legend-item"><span class="legend-dot" style="background:#1a7a4a"></span>Universities</span>
+  <div id="institute-map" style="width:100%;height:300px;"></div>
+  <div style="padding:6px 14px 8px;display:flex;flex-wrap:wrap;gap:8px;border-top:1px solid #eee;background:#fafafa;">
+    <span style="display:flex;align-items:center;gap:4px;font-size:11px;color:#555;"><span style="width:10px;height:10px;border-radius:50%;background:#e05c2a;display:inline-block;"></span>Research Labs</span>
+    <span style="display:flex;align-items:center;gap:4px;font-size:11px;color:#555;"><span style="width:10px;height:10px;border-radius:50%;background:#0a2f66;display:inline-block;"></span>IITs &amp; NITs</span>
+    <span style="display:flex;align-items:center;gap:4px;font-size:11px;color:#555;"><span style="width:10px;height:10px;border-radius:50%;background:#1a7a4a;display:inline-block;"></span>Universities</span>
   </div>
 </div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
 const institutes = [
-  { name: "NIO Goa", lat: 15.4589, lon: 73.8022, cat: "research", url: "https://www.nio.org" },
-  { name: "INCOIS Hyderabad", lat: 17.4126, lon: 78.5478, cat: "research", url: "https://incois.gov.in/" },
-  { name: "IITM Pune", lat: 18.5314, lon: 73.8446, cat: "research", url: "https://www.tropmet.res.in" },
-  { name: "NIOT Chennai", lat: 12.9165, lon: 80.2127, cat: "research", url: "https://www.niot.res.in" },
-  { name: "NCPOR Goa", lat: 15.4529, lon: 73.8013, cat: "research", url: "http://ncpor.res.in//" },
-  { name: "NCESS Thiruvananthapuram", lat: 8.5241, lon: 76.9366, cat: "research", url: "https://www.ncess.gov.in" },
-  { name: "NGRI Hyderabad", lat: 17.4239, lon: 78.4738, cat: "research", url: "https://www.ngri.res.in" },
-  { name: "CMLRE Kochi", lat: 9.9312, lon: 76.2673, cat: "research", url: "https://www.cmlre.gov.in/" },
-  { name: "NCCR Chennai", lat: 12.8996, lon: 80.2209, cat: "research", url: "https://www.nccr.gov.in/" },
-  { name: "IMD New Delhi", lat: 28.6315, lon: 77.2167, cat: "research", url: "https://mausam.imd.gov.in/" },
-  { name: "NCMRWF Noida", lat: 28.5355, lon: 77.3910, cat: "research", url: "https://nwp.ncmrwf.gov.in/" },
-  { name: "MoES New Delhi", lat: 28.6129, lon: 77.2295, cat: "research", url: "https://moes.gov.in" },
-  { name: "IIT Kharagpur", lat: 22.3149, lon: 87.3105, cat: "iit_nit", url: "https://www.iitkgp.ac.in/department/GG" },
-  { name: "IIT Bhubaneswar", lat: 20.1489, lon: 85.6760, cat: "iit_nit", url: "https://www.iitbbs.ac.in/school-of-earth-ocean-climate-sciences/" },
-  { name: "IIT Bombay", lat: 19.1334, lon: 72.9133, cat: "iit_nit", url: "https://www.geos.iitb.ac.in/" },
-  { name: "IIT Kanpur", lat: 26.5123, lon: 80.2329, cat: "iit_nit", url: "https://www.iitk.ac.in/es/" },
-  { name: "IIT Roorkee", lat: 29.8674, lon: 77.8942, cat: "iit_nit", url: "https://iitr.ac.in" },
-  { name: "NIT Rourkela", lat: 22.2540, lon: 84.9020, cat: "iit_nit", url: "https://www.nitrkl.ac.in/ER/" },
-  { name: "IIT Delhi", lat: 28.5459, lon: 77.1926, cat: "iit_nit", url: "https://cas.iitd.ac.in/" },
-  { name: "IIT Madras", lat: 12.9915, lon: 80.2337, cat: "iit_nit", url: "https://www.iitm.ac.in" },
-  { name: "University of Hyderabad", lat: 17.4586, lon: 78.3311, cat: "university", url: "https://centres.uohyd.ac.in/ceoas/" },
-  { name: "Berhampur University", lat: 19.3149, lon: 84.7941, cat: "university", url: "https://www.buodisha.edu.in" },
-  { name: "CUSAT Kochi", lat: 10.0454, lon: 76.3209, cat: "university", url: "https://www.cusat.ac.in" },
-  { name: "KUFOS Kerala", lat: 10.1632, lon: 76.2144, cat: "university", url: "https://kufos.ac.in/" },
-  { name: "Andhra University Visakhapatnam", lat: 17.7231, lon: 83.3012, cat: "university", url: "https://www.andhrauniversity.edu.in" },
-  { name: "Delhi University", lat: 28.6880, lon: 77.2090, cat: "university", url: "https://www.du.ac.in" },
-  { name: "BHU Varanasi", lat: 25.2677, lon: 82.9913, cat: "university", url: "https://www.bhu.ac.in" },
-  { name: "Jadavpur University", lat: 22.4985, lon: 88.3711, cat: "university", url: "https://jadavpuruniversity.in" },
-  { name: "Pune University", lat: 18.5236, lon: 73.8478, cat: "university", url: "https://unipune.irins.org" },
-  { name: "Madras University", lat: 13.0696, lon: 80.2733, cat: "university", url: "https://www.unom.ac.in" },
-  { name: "JNU New Delhi", lat: 28.5403, lon: 77.1661, cat: "university", url: "https://www.jnu.ac.in/ses" },
-  { name: "AMU Aligarh", lat: 27.9153, lon: 78.0773, cat: "university", url: "https://www.amu.ac.in" },
-  { name: "Pondicherry University", lat: 11.9339, lon: 79.8308, cat: "university", url: "https://www.pondiuni.edu.in" }
+  {name:"NIO Goa",lat:15.4589,lon:73.8022,cat:"research",url:"https://www.nio.org"},
+  {name:"INCOIS Hyderabad",lat:17.4126,lon:78.5478,cat:"research",url:"https://incois.gov.in/"},
+  {name:"IITM Pune",lat:18.5314,lon:73.8446,cat:"research",url:"https://www.tropmet.res.in"},
+  {name:"NIOT Chennai",lat:12.9165,lon:80.2127,cat:"research",url:"https://www.niot.res.in"},
+  {name:"NCPOR Goa",lat:15.4529,lon:73.8013,cat:"research",url:"http://ncpor.res.in//"},
+  {name:"NCESS Thiruvananthapuram",lat:8.5241,lon:76.9366,cat:"research",url:"https://www.ncess.gov.in"},
+  {name:"NGRI Hyderabad",lat:17.4239,lon:78.4738,cat:"research",url:"https://www.ngri.res.in"},
+  {name:"CMLRE Kochi",lat:9.9312,lon:76.2673,cat:"research",url:"https://www.cmlre.gov.in/"},
+  {name:"NCCR Chennai",lat:12.8996,lon:80.2209,cat:"research",url:"https://www.nccr.gov.in/"},
+  {name:"IMD New Delhi",lat:28.6315,lon:77.2167,cat:"research",url:"https://mausam.imd.gov.in/"},
+  {name:"NCMRWF Noida",lat:28.5355,lon:77.3910,cat:"research",url:"https://nwp.ncmrwf.gov.in/"},
+  {name:"MoES New Delhi",lat:28.6129,lon:77.2295,cat:"research",url:"https://moes.gov.in"},
+  {name:"IIT Kharagpur",lat:22.3149,lon:87.3105,cat:"iit_nit",url:"https://www.iitkgp.ac.in/department/GG"},
+  {name:"IIT Bhubaneswar",lat:20.1489,lon:85.6760,cat:"iit_nit",url:"https://www.iitbbs.ac.in/school-of-earth-ocean-climate-sciences/"},
+  {name:"IIT Bombay",lat:19.1334,lon:72.9133,cat:"iit_nit",url:"https://www.geos.iitb.ac.in/"},
+  {name:"IIT Kanpur",lat:26.5123,lon:80.2329,cat:"iit_nit",url:"https://www.iitk.ac.in/es/"},
+  {name:"IIT Roorkee",lat:29.8674,lon:77.8942,cat:"iit_nit",url:"https://iitr.ac.in"},
+  {name:"NIT Rourkela",lat:22.2540,lon:84.9020,cat:"iit_nit",url:"https://www.nitrkl.ac.in/ER/"},
+  {name:"IIT Delhi",lat:28.5459,lon:77.1926,cat:"iit_nit",url:"https://cas.iitd.ac.in/"},
+  {name:"IIT Madras",lat:12.9915,lon:80.2337,cat:"iit_nit",url:"https://www.iitm.ac.in"},
+  {name:"University of Hyderabad",lat:17.4586,lon:78.3311,cat:"university",url:"https://centres.uohyd.ac.in/ceoas/"},
+  {name:"Berhampur University",lat:19.3149,lon:84.7941,cat:"university",url:"https://www.buodisha.edu.in"},
+  {name:"CUSAT Kochi",lat:10.0454,lon:76.3209,cat:"university",url:"https://www.cusat.ac.in"},
+  {name:"KUFOS Kerala",lat:10.1632,lon:76.2144,cat:"university",url:"https://kufos.ac.in/"},
+  {name:"Andhra University",lat:17.7231,lon:83.3012,cat:"university",url:"https://www.andhrauniversity.edu.in"},
+  {name:"Delhi University",lat:28.6880,lon:77.2090,cat:"university",url:"https://www.du.ac.in"},
+  {name:"BHU Varanasi",lat:25.2677,lon:82.9913,cat:"university",url:"https://www.bhu.ac.in"},
+  {name:"Jadavpur University",lat:22.4985,lon:88.3711,cat:"university",url:"https://jadavpuruniversity.in"},
+  {name:"Pune University",lat:18.5236,lon:73.8478,cat:"university",url:"https://unipune.irins.org"},
+  {name:"Madras University",lat:13.0696,lon:80.2733,cat:"university",url:"https://www.unom.ac.in"},
+  {name:"JNU New Delhi",lat:28.5403,lon:77.1661,cat:"university",url:"https://www.jnu.ac.in/ses"},
+  {name:"AMU Aligarh",lat:27.9153,lon:78.0773,cat:"university",url:"https://www.amu.ac.in"},
+  {name:"Pondicherry University",lat:11.9339,lon:79.8308,cat:"university",url:"https://www.pondiuni.edu.in"}
 ];
 
-const catColors = { research: "#e05c2a", iit_nit: "#0a2f66", university: "#1a7a4a" };
+const catColors = {research:"#e05c2a", iit_nit:"#0a2f66", university:"#1a7a4a"};
 
 function makeIcon(cat) {
-  const color = catColors[cat];
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="22" height="30" viewBox="0 0 22 30"><path d="M11 0C4.9 0 0 4.9 0 11c0 8.25 11 19 11 19s11-10.75 11-19C22 4.9 17.1 0 11 0z" fill="${color}" stroke="white" stroke-width="1.5"/><circle cx="11" cy="11" r="4" fill="white"/></svg>`;
-  return L.divIcon({ html: svg, className: '', iconSize: [22,30], iconAnchor: [11,30], popupAnchor: [0,-28] });
+  const c = catColors[cat];
+  const svg = '<svg xmlns="http://www.w3.org/2000/svg" width="22" height="30" viewBox="0 0 22 30"><path d="M11 0C4.9 0 0 4.9 0 11c0 8.25 11 19 11 19s11-10.75 11-19C22 4.9 17.1 0 11 0z" fill="'+c+'" stroke="white" stroke-width="1.5"/><circle cx="11" cy="11" r="4" fill="white"/></svg>';
+  return L.divIcon({html:svg, className:'', iconSize:[22,30], iconAnchor:[11,30], popupAnchor:[0,-28]});
 }
 
-const map = L.map('institute-map', { zoomControl: true, scrollWheelZoom: false }).setView([20.5937, 78.9629], 4);
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap', maxZoom: 18 }).addTo(map);
+const map = L.map('institute-map', {zoomControl:true, scrollWheelZoom:false}).setView([20.5937, 78.9629], 4);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {attribution:'&copy; OpenStreetMap', maxZoom:18}).addTo(map);
 
 let markers = [];
 
-function renderMarkers(filter) {
+function filterMap(cat, btn) {
+  document.querySelectorAll('#mapTabs button').forEach(b => {
+    b.style.background = '#fff'; b.style.color = '#555'; b.style.borderColor = '#ccc';
+  });
+  btn.style.background = '#0a2f66'; btn.style.color = '#fff'; btn.style.borderColor = '#0a2f66';
   markers.forEach(m => map.removeLayer(m));
   markers = [];
   institutes.forEach(inst => {
-    if (filter !== 'all' && inst.cat !== filter) return;
-    const m = L.marker([inst.lat, inst.lon], { icon: makeIcon(inst.cat) })
-      .bindPopup(`<b style="font-size:12px">${inst.name}</b><br><a href="${inst.url}" target="_blank" style="font-size:11px;color:#0a2f66">Visit website</a>`);
+    if (cat !== 'all' && inst.cat !== cat) return;
+    const m = L.marker([inst.lat, inst.lon], {icon: makeIcon(inst.cat)})
+      .bindPopup('<b style="font-size:12px">'+inst.name+'</b><br><a href="'+inst.url+'" target="_blank" style="font-size:11px;color:#0a2f66">Visit website</a>');
     m.addTo(map);
     markers.push(m);
   });
 }
 
-function filterMap(cat, btn) {
-  document.querySelectorAll('.map-tab').forEach(t => t.classList.remove('active'));
-  btn.classList.add('active');
-  renderMarkers(cat);
-}
-
-renderMarkers('all');
+filterMap('all', document.querySelector('#mapTabs button'));
 </script>
 
 </body>
