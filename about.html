@@ -372,11 +372,11 @@ function closeModal() {
 
 async function checkAndGreetVisitor() {
     try {
-        // Hit CountAPI to increment and get current count
-        // Using a unique namespace+key for your about page
-        const res = await fetch('https://api.countapi.xyz/hit/neji-india/about-page-visitors');
-        const data = await res.json();
-        const count = data.value;
+        // countapi.mileshilliard.com — free, no signup, global counter
+        // Using a unique key for this page
+        const res   = await fetch('https://countapi.mileshilliard.com/api/v1/hit/neji-india-about-page-2025');
+        const data  = await res.json();
+        const count = parseInt(data.value);
 
         const modal   = document.getElementById('visitor-modal');
         const badge   = document.getElementById('modal-counter-badge');
@@ -388,34 +388,28 @@ async function checkAndGreetVisitor() {
         let icon = '👋';
 
         if (count <= 10) {
-            // First 10 visitors — every single one gets a special note
             shouldShow = true;
             icon = count === 1 ? '🌊' : count === 5 ? '⭐' : '🎉';
-            text = `You're visitor #${count} to the About page — that means a lot to us! 
-We built NEJI to make job-hunting in Earth sciences a little less overwhelming. 
-If this feels useful, please share it with a curious friend, junior, or colleague who's navigating the same path. Every share helps the community grow. 🌍`;
-            badge.textContent = `Visitor #${count}`;
+            badge.textContent = 'Visitor #' + count;
+            text = 'You\'re among the first ' + count + ' visitors to this About page — that means a lot to us!<br><br>We built NEJI to make job-hunting in Earth sciences a little less overwhelming. If this feels useful, please share it with a curious friend, junior, or colleague navigating the same path. Every share helps the community grow. 🌍';
         } else if (count % 10 === 0) {
-            // Every 10th visitor after the first 10
             shouldShow = true;
             icon = '🙌';
-            text = `Hi there! You're visitor #${count} on this page. Thanks for stopping by NEJI!`;
-            badge.textContent = `Visitor #${count}`;
+            badge.textContent = 'Visitor #' + count;
+            text = 'Hi there! You\'re visitor #' + count + ' on this page. Thanks for stopping by NEJI!';
         }
 
         if (shouldShow) {
             emoji.textContent = icon;
-            message.textContent = text;
+            message.innerHTML = text;
             modal.style.display = 'flex';
         }
 
     } catch (e) {
-        // CountAPI unavailable — fail silently, don't disrupt the page
         console.warn('Visitor counter unavailable:', e);
     }
 }
 
-// Run on page load
 window.addEventListener('DOMContentLoaded', checkAndGreetVisitor);
 </script>
 
