@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=2.0">
-    <title>Institutes - NEJI</title>
+    <title>NEJI - Institutes</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&display=swap');
         body {
@@ -194,6 +195,105 @@
                 grid-template-columns: 1fr;
             }
         }
+
+        /* Layout: main content + floating map panel */
+        .main-content {
+            min-width: 0;
+        }
+
+        .map-panel {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 310px;
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+            z-index: 500;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .map-panel-header {
+            padding: 10px 14px 8px;
+            background: #eef3fb;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .map-panel-header h3 {
+            margin: 0 0 8px 0;
+            font-size: 14px;
+            font-weight: 600;
+            color: #0a2f66;
+        }
+
+        .map-category-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+        }
+
+        .map-tab {
+            font-size: 11px;
+            padding: 3px 8px;
+            border-radius: 20px;
+            border: 1px solid #ccc;
+            background: #fff;
+            cursor: pointer;
+            color: #555;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .map-tab.active {
+            background: #0a2f66;
+            color: #fff;
+            border-color: #0a2f66;
+        }
+
+        .map-tab:hover:not(.active) {
+            background: #e8eef8;
+            border-color: #0a2f66;
+            color: #0a2f66;
+        }
+
+        #institute-map {
+            width: 100%;
+            height: 300px;
+        }
+
+        .map-legend {
+            padding: 6px 14px 8px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            border-top: 1px solid #eee;
+            background: #fafafa;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 11px;
+            color: #555;
+        }
+
+        .legend-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            display: inline-block;
+            flex-shrink: 0;
+        }
+
+        @media (max-width: 900px) {
+            .map-panel { display: none !important; }
+            body { padding-right: 0 !important; }
+        }
     </style>
 </head>
 
@@ -219,7 +319,8 @@ function toggleSection(sectionId) {
 }
 </script>
 
-<body>
+<body style="margin:20px; padding-right: 350px;">
+<div class="main-content">
     <div class="header">
         <div class="title-container">
             <div class="title-row">
@@ -232,7 +333,7 @@ function toggleSection(sectionId) {
             <div class="menu-icon" onclick="toggleMenu()">☰</div>
             <div class="menu-links" id="menuLinks">
                 <a href="./index.html">Home</a>
-                <a href="./conference_n_jobs.html">conference and Jobs</a>
+                <a href="./institutes.html">Institutes</a>
                 <a href="./put_your_word.html">Put your word out</a>
                 <a href="./about.html">Who are we?</a>
             </div>
@@ -277,21 +378,21 @@ function toggleSection(sectionId) {
         <div class="institute-card">
             <img src="./logos/ncpor.webp" alt="ncpor Logo" class="institute-logo">
             <div class="institute-name">NCPOR</div>
-            <div class="institute-link"><a href="http://ncpor.res.in//" target="_blank">Visit Website</a></div>
-            <div class="institute-link"><a href="http://ncpor.res.in/recruitment" target="_blank">Recruitment</a></div>
+            <div class="institute-link"><a href="https://www.ncaor.gov.in/" target="_blank">Visit Website</a></div>
+            <div class="institute-link"><a href="https://ncpor.res.in/recruitment" target="_blank">Recruitment</a></div>
         </div>
         
         <div class="institute-card">
             <img src="./logos/ncess.webp" alt="NCESS Logo" class="institute-logo">
             <div class="institute-name">NCESS</div>
             <div class="institute-link"><a href="https://www.ncess.gov.in" target="_blank">Visit Website</a></div>
-            <div class="institute-link"><a href="https://www.ncess.gov.in/vacancies.php" target="_blank">Recruitment</a></div>
+            <div class="institute-link"><a href="https://www.ncess.gov.in/notifications/vacancies.html" target="_blank">Recruitment</a></div>
         </div>        
         
         <div class="institute-card">
             <img src="./logos/ngri.webp" alt="NGRI Logo" class="institute-logo">
             <div class="institute-name">NGRI</div>
-            <div class="institute-link"><a href="https://www.ngri.res.in" target="_blank">Visit Website</a></div>
+            <div class="institute-link"><a href="https://www.ngri.org.in" target="_blank">Visit Website</a></div>
             <div class="institute-link"><a href="https://www.ngri.res.in/openings-at-ngri.php" target="_blank">Recruitment</a></div>
         </div>
         
@@ -319,15 +420,15 @@ function toggleSection(sectionId) {
         <div class="institute-card">
             <img src="./logos/ncmrwf.webp" alt="ncmrwf Logo" class="institute-logo">
             <div class="institute-name">NCMRWF</div>
-            <div class="institute-link"><a href="https://nwp.ncmrwf.gov.in/" target="_blank">Visit Website</a></div>
-            <div class="institute-link"><a href="https://nwp.ncmrwf.gov.in/about/careers" target="_blank">Recruitment</a></div>
+            <div class="institute-link"><a href="https://www.ncmrwf.gov.in/" target="_blank">Visit Website</a></div>
+            <div class="institute-link"><a href="https://www.ncmrwf.gov.in/" target="_blank">Recruitment</a></div>
         </div>
 
         <div class="institute-card">
             <img src="./logos/moes.webp" alt="MoES Logo" class="institute-logo">
             <div class="institute-name">MoES</div>
             <div class="institute-link"><a href="https://moes.gov.in" target="_blank">Visit Website</a></div>
-            <div class="institute-link"><a href="https://www.moes.gov.in/offerings/vacancies?page=1" target="_blank">Recruitment</a></div>
+            <div class="institute-link"><a href="https://moes.gov.in/notices/recruitments" target="_blank">Recruitment</a></div>
         </div>
         </div>
     </div>
@@ -360,35 +461,29 @@ function toggleSection(sectionId) {
         </div>
 
         <div class="institute-card">
-            <img src="./iit_nit/iit_kanpur.webp" alt="IIT Kanpur Logo" class="institute-logo">
+            <img src="./iit_nit/iit_kan.webp" alt="IIT Kanpur Logo" class="institute-logo">
             <div class="institute-name">IIT Kanpur</div>
             <div class="institute-link"><a href="https://www.iitk.ac.in/es/" target="_blank">Visit Website</a></div>
         </div>
 
         <div class="institute-card">
-            <img src="./iit_nit/iit_roorkee.webp" alt="IIT Roorkee Logo" class="institute-logo">
+            <img src="./iit_nit/iit_rke.webp" alt="IIT Roorkee Logo" class="institute-logo">
             <div class="institute-name">IIT Roorkee</div>
-            <div class="institute-link"><a href="https://iitr.ac.in/Departments/Earth%20Sciences%20Department/Home.html" target="_blank">Visit Website</a></div>
+            <div class="institute-link"><a href="https://www.iitr.ac.in/departments/EQ" target="_blank">Visit Website</a></div>
         </div>
 
         <div class="institute-card">
-            <img src="./iit_nit/nit_rourkela.webp" alt="NIT Rourkela Logo" class="institute-logo">
+            <img src="./iit_nit/nit_rkl.webp" alt="NIT Rourkela Logo" class="institute-logo">
             <div class="institute-name">NIT Rourkela</div>
-            <div class="institute-link"><a href="https://www.nitrkl.ac.in/ER/" target="_blank">Visit Website</a></div>
+            <div class="institute-link"><a href="https://www.nitrkl.ac.in/Academic/Departments/Earth-and-Atmospheric-Sciences" target="_blank">Visit Website</a></div>
         </div>
 
         <div class="institute-card">
-            <img src="./iit_nit/iit_delhi.png" alt="IIT Delhi Logo" class="institute-logo">
-            <div class="institute-name">IIT Delhi</div>
-            <div class="institute-link"><a href="https://cas.iitd.ac.in/" target="_blank">Visit Website</a></div>
+            <img src="./iit_nit/nit_clt.webp" alt="NIT Calicut Logo" class="institute-logo">
+            <div class="institute-name">NIT Calicut</div>
+            <div class="institute-link"><a href="https://www.nitc.ac.in/index.php/?url=department/index/37" target="_blank">Visit Website</a></div>
         </div>
-        
-        <div class="institute-card">
-            <img src="./iit_nit/iit_madras.png" alt="IIT Madras Logo" class="institute-logo">
-            <div class="institute-name">IIT Madras</div>
-            <div class="institute-link"><a href="https://www.iitm.ac.in/academics/departments/department-of-ocean-engineering" target="_blank">Visit Website</a></div>
-        </div>
-        
+
     </div>
 </div>
 
@@ -400,109 +495,129 @@ function toggleSection(sectionId) {
     </div>
     <div id="central-state-content" class="section-content collapsed">
         <div class="grid-container">
-
-<div class="institute-card">
-    <img src="./logos/hyderabad_uni.png" alt="University of Hyderabad Logo" class="institute-logo">
-    <div class="institute-name">University of Hyderabad</div>
-
-    <div class="institute-link">
-        <a href="https://centres.uohyd.ac.in/ceoas/" target="_blank">
-            Earth, Ocean & Atmospheric Sciences
-        </a>
-    </div>
-</div>
-	<div class="institute-card">
-    <img src="./logos/berhampur_uni.jpeg" alt="Berhampur University Logo" class="institute-logo">
-    <div class="institute-name">Berhampur University</div>
-    <div class="institute-link">
-        <a href="https://www.buodisha.edu.in/pg_departments/department-of-marine-sciences/" target="_blank">
-            Marine Sciences
-        </a>
-    </div>
-</div>
-
-<div class="institute-card">
-    <img src="./logos/cusat_uni.png" alt="CUSAT Logo" class="institute-logo">
-    <div class="institute-name">CUSAT</div>
-    <div class="institute-link">
-        <a href="https://www.cusat.ac.in/marinegeo.php" target="_blank">
-            Marine Geology & Geophysics
-        </a>
-    </div>
-    <div class="institute-link">
-        <a href="https://www.cusat.ac.in/das.php" target="_blank">
-            Atmospheric Sciences
-        </a>
-    </div>
-    <div class="institute-link">
-        <a href="https://www.cusat.ac.in/physical-oceanography.php" target="_blank">
-            Physical Oceanography
-        </a>
-    </div>
-</div>
-
-<div class="institute-card">
-    <img src="./logos/kufos_uni.jpeg" alt="KUFOS Logo" class="institute-logo">
-    <div class="institute-name">KUFOS</div>
-    <div class="institute-link">
-        <a href="https://kufos.ac.in/" target="_blank">
-            Faculty of Ocean Science & Technology
-        </a>
-    </div>
-</div>
-
-<div class="institute-card">
-    <img src="./logos/andhra_uni.jpeg" alt="Andhra University Logo" class="institute-logo">
-    <div class="institute-name">Andhra University</div>
-    <div class="institute-link">
-        <a href="https://www.andhrauniversity.edu.in/college/college-of-science-and-technology/science-departments/meteorology-oceanography.html" target="_blank">
-            Meteorology & Oceanography
-        </a>
-    </div>
-</div>
-
         <div class="institute-card">
-            <img src="./logos/delhi_uni.png" alt="Delhi University Logo" class="institute-logo">
-            <div class="institute-name">Delhi University</div>
-            <div class="institute-link"><a href="https://www.du.ac.in/index.php?page=department-of-geology" target="_blank">Visit Website</a></div>
-        </div>
-
-        <div class="institute-card">
-            <img src="./logos/bhu.png" alt="BHU Logo" class="institute-logo">
-            <div class="institute-name">BHU</div>
-            <div class="institute-link"><a href="https://www.bhu.ac.in/Site/UnitHomeTemplate/1_152_425" target="_blank">Geography</a></div>
-            <div class="institute-link"><a href="https://www.bhu.ac.in/Site/UnitHomeTemplate/1_153_1137" target="_blank">Geology</a></div>
-            <div class="institute-link"><a href="https://www.bhu.ac.in/Site/UnitHomeTemplate/1_154_434" target="_blank">Geophysics</a></div>
-        </div>
-
-        <div class="institute-card">
-            <img src="./logos/jadavpur_uni.svg" alt="Jadavpur University Logo" class="institute-logo">
-            <div class="institute-name">Jadavpur University</div>
-            <div class="institute-link"><a href="hhttps://jadavpuruniversity.in/academics/geological-sciences/">Geological sciences</a></div>
-            <div class="institute-link"><a href="https://jadavpuruniversity.in/academics/geography/" target="_blank">Geography</a></div>
-        </div>
-
-        <div class="institute-card">
-            <img src="./logos/savitri_uni.jpg" alt="Pune University Logo" class="institute-logo">
-            <div class="institute-name">Pune University</div>
-            <div class="institute-link"><a href="https://unipune.irins.org/faculty/index/Department+of+Geology" target="_blank">Geology</a></div>
-            <div class="institute-link"><a href="https://unipune.irins.org/faculty/index/Department+of+Geography" target="_blank">Geography</a></div>
-        </div>
-
-        <div class="institute-card">
-            <img src="./logos/madras_uni.png" alt="Madras University Logo" class="institute-logo">
-            <div class="institute-name">Madras University</div>
-            <div class="institute-link"><a href="https://www.unom.ac.in" target="_blank">Visit Website</a></div>
-            <div class="institute-link"><a href="https://www.unom.ac.in/recruitment" target="_blank">Recruitment</a></div>
-        </div>
-            <div class="institute-card">
-            <img src="./logos/jnu.gif" alt="JNU Logo" class="institute-logo">
+            <img src="https://upload.wikimedia.org/wikipedia/en/thumb/b/b5/Jawaharlal_Nehru_University_Logo.png/150px-Jawaharlal_Nehru_University_Logo.png" alt="JNU Logo" class="institute-logo">
             <div class="institute-name">JNU</div>
             <div class="institute-link"><a href="https://www.jnu.ac.in/ses" target="_blank">Visit Website</a></div>
             <div class="institute-link"><a href="https://www.jnu.ac.in/recruitment" target="_blank">Recruitment</a></div>
         </div>
-        
-        
+
+        <div class="institute-card">
+            <img src="https://upload.wikimedia.org/wikipedia/en/thumb/c/c4/University_of_Delhi_Logo.png/150px-University_of_Delhi_Logo.png" alt="Delhi University Logo" class="institute-logo">
+            <div class="institute-name">Delhi University</div>
+            <div class="institute-link"><a href="https://www.du.ac.in" target="_blank">Visit Website</a></div>
+            <div class="institute-link"><a href="https://www.du.ac.in/recruitment" target="_blank">Recruitment</a></div>
+        </div>
+
+        <div class="institute-card">
+            <img src="https://upload.wikimedia.org/wikipedia/en/thumb/0/0c/BHU_Logo.png/150px-BHU_Logo.png" alt="BHU Logo" class="institute-logo">
+            <div class="institute-name">BHU</div>
+            <div class="institute-link"><a href="https://www.bhu.ac.in" target="_blank">Visit Website</a></div>
+            <div class="institute-link"><a href="https://www.bhu.ac.in/recruitment" target="_blank">Recruitment</a></div>
+        </div>
+
+        <div class="institute-card">
+            <img src="https://upload.wikimedia.org/wikipedia/en/thumb/b/b7/Jadavpur_University_Logo.png/150px-Jadavpur_University_Logo.png" alt="Jadavpur University Logo" class="institute-logo">
+            <div class="institute-name">Jadavpur University</div>
+            <div class="institute-link"><a href="https://www.jaduniv.edu.in" target="_blank">Visit Website</a></div>
+            <div class="institute-link"><a href="https://www.jaduniv.edu.in/recruitment" target="_blank">Recruitment</a></div>
+        </div>
+
+        <div class="institute-card">
+            <img src="https://upload.wikimedia.org/wikipedia/en/thumb/8/8f/Pune_University_Logo.png/150px-Pune_University_Logo.png" alt="Pune University Logo" class="institute-logo">
+            <div class="institute-name">Pune University</div>
+            <div class="institute-link"><a href="https://www.unipune.ac.in" target="_blank">Visit Website</a></div>
+            <div class="institute-link"><a href="https://www.unipune.ac.in/recruitment" target="_blank">Recruitment</a></div>
+        </div>
+
+        <div class="institute-card">
+            <img src="https://upload.wikimedia.org/wikipedia/en/thumb/f/f5/Madras_University_Logo.png/150px-Madras_University_Logo.png" alt="Madras University Logo" class="institute-logo">
+            <div class="institute-name">Madras University</div>
+            <div class="institute-link"><a href="https://www.unom.ac.in" target="_blank">Visit Website</a></div>
+            <div class="institute-link"><a href="https://www.unom.ac.in/recruitment" target="_blank">Recruitment</a></div>
+        </div>
+        </div>
+    </div>
+
+    <!-- Private Universities Section -->
+    <div class="section-title" onclick="toggleSection('private-content')">
+        Private Universities
+        <span class="expand-icon">▼</span>
+    </div>
+    <div id="private-content" class="section-content collapsed">
+        <div class="grid-container">
+        <div class="institute-card">
+            <img src="https://upload.wikimedia.org/wikipedia/en/thumb/f/f1/Manipal_University_Logo.png/150px-Manipal_University_Logo.png" alt="Manipal University Logo" class="institute-logo">
+            <div class="institute-name">Manipal University</div>
+            <div class="institute-link"><a href="https://manipal.edu" target="_blank">Visit Website</a></div>
+            <div class="institute-link"><a href="https://manipal.edu/careers" target="_blank">Recruitment</a></div>
+        </div>
+
+        <div class="institute-card">
+            <img src="https://upload.wikimedia.org/wikipedia/en/thumb/a/a8/Amrita_Vishwa_Vidyapeetham_Logo.png/150px-Amrita_Vishwa_Vidyapeetham_Logo.png" alt="Amrita University Logo" class="institute-logo">
+            <div class="institute-name">Amrita University</div>
+            <div class="institute-link"><a href="https://www.amrita.edu" target="_blank">Visit Website</a></div>
+            <div class="institute-link"><a href="https://www.amrita.edu/careers" target="_blank">Recruitment</a></div>
+        </div>
+
+        <div class="institute-card">
+            <img src="https://upload.wikimedia.org/wikipedia/en/thumb/1/19/VIT_University_Logo.png/150px-VIT_University_Logo.png" alt="VIT Logo" class="institute-logo">
+            <div class="institute-name">VIT University</div>
+            <div class="institute-link"><a href="https://vit.ac.in" target="_blank">Visit Website</a></div>
+            <div class="institute-link"><a href="https://vit.ac.in/careers" target="_blank">Recruitment</a></div>
+        </div>
+
+        <div class="institute-card">
+            <img src="https://upload.wikimedia.org/wikipedia/en/thumb/0/09/SRM_University_Logo.png/150px-SRM_University_Logo.png" alt="SRM University Logo" class="institute-logo">
+            <div class="institute-name">SRM University</div>
+            <div class="institute-link"><a href="https://www.srmist.edu.in" target="_blank">Visit Website</a></div>
+            <div class="institute-link"><a href="https://www.srmist.edu.in/careers" target="_blank">Recruitment</a></div>
+        </div>
+
+        <div class="institute-card">
+            <img src="https://upload.wikimedia.org/wikipedia/en/thumb/f/f3/Shiv_Nadar_University_Logo.png/150px-Shiv_Nadar_University_Logo.png" alt="Shiv Nadar University Logo" class="institute-logo">
+            <div class="institute-name">Shiv Nadar University</div>
+            <div class="institute-link"><a href="https://snu.edu.in" target="_blank">Visit Website</a></div>
+            <div class="institute-link"><a href="https://snu.edu.in/careers" target="_blank">Recruitment</a></div>
+        </div>
+
+        <div class="institute-card">
+            <img src="https://upload.wikimedia.org/wikipedia/en/thumb/d/d9/Ashoka_University_Logo.png/150px-Ashoka_University_Logo.png" alt="Ashoka University Logo" class="institute-logo">
+            <div class="institute-name">Ashoka University</div>
+            <div class="institute-link"><a href="https://www.ashoka.edu.in" target="_blank">Visit Website</a></div>
+            <div class="institute-link"><a href="https://www.ashoka.edu.in/careers" target="_blank">Recruitment</a></div>
+        </div>
+        </div>
+    </div>
+
+<!-- Central Universities Section -->
+    <div class="section-title" onclick="toggleSection('central-universities-content')">
+        Central Universities
+        <span class="expand-icon">▼</span>
+    </div>
+    <div id="central-universities-content" class="section-content collapsed">
+        <div class="grid-container">
+            <div class="institute-card">
+                <img src="https://upload.wikimedia.org/wikipedia/en/thumb/b/b5/Jawaharlal_Nehru_University_Logo.png/150px-Jawaharlal_Nehru_University_Logo.png" alt="JNU Logo" class="institute-logo">
+                <div class="institute-name">JNU Delhi</div>
+                <div class="institute-link"><a href="https://www.jnu.ac.in" target="_blank">Visit Website</a></div>
+                <div class="institute-link"><a href="https://www.jnu.ac.in/recruitment" target="_blank">Recruitment</a></div>
+            </div>
+
+            <div class="institute-card">
+                <img src="https://upload.wikimedia.org/wikipedia/en/thumb/c/c4/University_of_Delhi_Logo.png/150px-University_of_Delhi_Logo.png" alt="Delhi University Logo" class="institute-logo">
+                <div class="institute-name">Delhi University</div>
+                <div class="institute-link"><a href="https://www.du.ac.in" target="_blank">Visit Website</a></div>
+                <div class="institute-link"><a href="https://www.du.ac.in/recruitment" target="_blank">Recruitment</a></div>
+            </div>
+
+            <div class="institute-card">
+                <img src="https://upload.wikimedia.org/wikipedia/en/thumb/0/0c/BHU_Logo.png/150px-BHU_Logo.png" alt="BHU Logo" class="institute-logo">
+                <div class="institute-name">BHU Varanasi</div>
+                <div class="institute-link"><a href="https://www.bhu.ac.in" target="_blank">Visit Website</a></div>
+                <div class="institute-link"><a href="https://www.bhu.ac.in/recruitment" target="_blank">Recruitment</a></div>
+            </div>
+
             <div class="institute-card">
                 <img src="https://upload.wikimedia.org/wikipedia/en/thumb/3/3a/Aligarh_Muslim_University_Logo.png/150px-Aligarh_Muslim_University_Logo.png" alt="AMU Logo" class="institute-logo">
                 <div class="institute-name">AMU Aligarh</div>
@@ -510,14 +625,109 @@ function toggleSection(sectionId) {
                 <div class="institute-link"><a href="https://www.amu.ac.in/recruitment" target="_blank">Recruitment</a></div>
             </div>
 
+            <div class="institute-card">
+                <img src="https://upload.wikimedia.org/wikipedia/en/thumb/2/2f/University_of_Hyderabad_Logo.png/150px-University_of_Hyderabad_Logo.png" alt="UoH Logo" class="institute-logo">
+                <div class="institute-name">University of Hyderabad</div>
+                <div class="institute-link"><a href="https://www.uohyd.ac.in" target="_blank">Visit Website</a></div>
+                <div class="institute-link"><a href="https://www.uohyd.ac.in/careers" target="_blank">Recruitment</a></div>
+            </div>
 
             <div class="institute-card">
                 <img src="https://upload.wikimedia.org/wikipedia/en/thumb/1/1a/Pondicherry_University_Logo.png/150px-Pondicherry_University_Logo.png" alt="Pondicherry University Logo" class="institute-logo">
                 <div class="institute-name">Pondicherry University</div>
                 <div class="institute-link"><a href="https://www.pondiuni.edu.in" ></div>
-             </div>
-        </div>
+</div>
+
+<!-- FLOATING MAP PANEL -->
+<div class="map-panel" id="mapPanel">
+  <div class="map-panel-header">
+    <h3>&#x1F4CD; Institutes on Map</h3>
+    <div class="map-category-tabs">
+      <button class="map-tab active" onclick="filterMap('all', this)">All</button>
+      <button class="map-tab" onclick="filterMap('research', this)">Research Labs</button>
+      <button class="map-tab" onclick="filterMap('iit_nit', this)">IITs &amp; NITs</button>
+      <button class="map-tab" onclick="filterMap('university', this)">Universities</button>
     </div>
+  </div>
+  <div id="institute-map"></div>
+  <div class="map-legend">
+    <span class="legend-item"><span class="legend-dot" style="background:#e05c2a"></span>Research Labs</span>
+    <span class="legend-item"><span class="legend-dot" style="background:#0a2f66"></span>IITs &amp; NITs</span>
+    <span class="legend-item"><span class="legend-dot" style="background:#1a7a4a"></span>Universities</span>
+  </div>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+const institutes = [
+  { name: "NIO Goa", lat: 15.4589, lon: 73.8022, cat: "research", url: "https://www.nio.org" },
+  { name: "INCOIS Hyderabad", lat: 17.4126, lon: 78.5478, cat: "research", url: "https://incois.gov.in/" },
+  { name: "IITM Pune", lat: 18.5314, lon: 73.8446, cat: "research", url: "https://www.tropmet.res.in" },
+  { name: "NIOT Chennai", lat: 12.9165, lon: 80.2127, cat: "research", url: "https://www.niot.res.in" },
+  { name: "NCPOR Goa", lat: 15.4529, lon: 73.8013, cat: "research", url: "http://ncpor.res.in//" },
+  { name: "NCESS Thiruvananthapuram", lat: 8.5241, lon: 76.9366, cat: "research", url: "https://www.ncess.gov.in" },
+  { name: "NGRI Hyderabad", lat: 17.4239, lon: 78.4738, cat: "research", url: "https://www.ngri.res.in" },
+  { name: "CMLRE Kochi", lat: 9.9312, lon: 76.2673, cat: "research", url: "https://www.cmlre.gov.in/" },
+  { name: "NCCR Chennai", lat: 12.8996, lon: 80.2209, cat: "research", url: "https://www.nccr.gov.in/" },
+  { name: "IMD New Delhi", lat: 28.6315, lon: 77.2167, cat: "research", url: "https://mausam.imd.gov.in/" },
+  { name: "NCMRWF Noida", lat: 28.5355, lon: 77.3910, cat: "research", url: "https://nwp.ncmrwf.gov.in/" },
+  { name: "MoES New Delhi", lat: 28.6129, lon: 77.2295, cat: "research", url: "https://moes.gov.in" },
+  { name: "IIT Kharagpur", lat: 22.3149, lon: 87.3105, cat: "iit_nit", url: "https://www.iitkgp.ac.in/department/GG" },
+  { name: "IIT Bhubaneswar", lat: 20.1489, lon: 85.6760, cat: "iit_nit", url: "https://www.iitbbs.ac.in/school-of-earth-ocean-climate-sciences/" },
+  { name: "IIT Bombay", lat: 19.1334, lon: 72.9133, cat: "iit_nit", url: "https://www.geos.iitb.ac.in/" },
+  { name: "IIT Kanpur", lat: 26.5123, lon: 80.2329, cat: "iit_nit", url: "https://www.iitk.ac.in/es/" },
+  { name: "IIT Roorkee", lat: 29.8674, lon: 77.8942, cat: "iit_nit", url: "https://iitr.ac.in" },
+  { name: "NIT Rourkela", lat: 22.2540, lon: 84.9020, cat: "iit_nit", url: "https://www.nitrkl.ac.in/ER/" },
+  { name: "IIT Delhi", lat: 28.5459, lon: 77.1926, cat: "iit_nit", url: "https://cas.iitd.ac.in/" },
+  { name: "IIT Madras", lat: 12.9915, lon: 80.2337, cat: "iit_nit", url: "https://www.iitm.ac.in" },
+  { name: "University of Hyderabad", lat: 17.4586, lon: 78.3311, cat: "university", url: "https://centres.uohyd.ac.in/ceoas/" },
+  { name: "Berhampur University", lat: 19.3149, lon: 84.7941, cat: "university", url: "https://www.buodisha.edu.in" },
+  { name: "CUSAT Kochi", lat: 10.0454, lon: 76.3209, cat: "university", url: "https://www.cusat.ac.in" },
+  { name: "KUFOS Kerala", lat: 10.1632, lon: 76.2144, cat: "university", url: "https://kufos.ac.in/" },
+  { name: "Andhra University Visakhapatnam", lat: 17.7231, lon: 83.3012, cat: "university", url: "https://www.andhrauniversity.edu.in" },
+  { name: "Delhi University", lat: 28.6880, lon: 77.2090, cat: "university", url: "https://www.du.ac.in" },
+  { name: "BHU Varanasi", lat: 25.2677, lon: 82.9913, cat: "university", url: "https://www.bhu.ac.in" },
+  { name: "Jadavpur University", lat: 22.4985, lon: 88.3711, cat: "university", url: "https://jadavpuruniversity.in" },
+  { name: "Pune University", lat: 18.5236, lon: 73.8478, cat: "university", url: "https://unipune.irins.org" },
+  { name: "Madras University", lat: 13.0696, lon: 80.2733, cat: "university", url: "https://www.unom.ac.in" },
+  { name: "JNU New Delhi", lat: 28.5403, lon: 77.1661, cat: "university", url: "https://www.jnu.ac.in/ses" },
+  { name: "AMU Aligarh", lat: 27.9153, lon: 78.0773, cat: "university", url: "https://www.amu.ac.in" },
+  { name: "Pondicherry University", lat: 11.9339, lon: 79.8308, cat: "university", url: "https://www.pondiuni.edu.in" }
+];
+
+const catColors = { research: "#e05c2a", iit_nit: "#0a2f66", university: "#1a7a4a" };
+
+function makeIcon(cat) {
+  const color = catColors[cat];
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="22" height="30" viewBox="0 0 22 30"><path d="M11 0C4.9 0 0 4.9 0 11c0 8.25 11 19 11 19s11-10.75 11-19C22 4.9 17.1 0 11 0z" fill="${color}" stroke="white" stroke-width="1.5"/><circle cx="11" cy="11" r="4" fill="white"/></svg>`;
+  return L.divIcon({ html: svg, className: '', iconSize: [22,30], iconAnchor: [11,30], popupAnchor: [0,-28] });
+}
+
+const map = L.map('institute-map', { zoomControl: true, scrollWheelZoom: false }).setView([20.5937, 78.9629], 4);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap', maxZoom: 18 }).addTo(map);
+
+let markers = [];
+
+function renderMarkers(filter) {
+  markers.forEach(m => map.removeLayer(m));
+  markers = [];
+  institutes.forEach(inst => {
+    if (filter !== 'all' && inst.cat !== filter) return;
+    const m = L.marker([inst.lat, inst.lon], { icon: makeIcon(inst.cat) })
+      .bindPopup(`<b style="font-size:12px">${inst.name}</b><br><a href="${inst.url}" target="_blank" style="font-size:11px;color:#0a2f66">Visit website</a>`);
+    m.addTo(map);
+    markers.push(m);
+  });
+}
+
+function filterMap(cat, btn) {
+  document.querySelectorAll('.map-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  renderMarkers(cat);
+}
+
+renderMarkers('all');
+</script>
+
 </body>
 </html>
-
