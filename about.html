@@ -398,9 +398,9 @@ async function checkAndGreetVisitor() {
             text = 'You\'re among the first ' + count + ' visitors to this About page — that means a lot to us!<br><br>We built NEJI to make job-hunting in Earth sciences a little less overwhelming. If this feels useful, please share it with a curious friend, junior, or colleague navigating the same path. Every share helps the community grow. 🌍';
         } else if (count % 10 === 0) {
             shouldShow = true;
-            icon = '🙌';
+            icon = '🎯';
             badge.textContent = 'Visitor #' + count;
-            text = 'Hi there! You\'re visitor #' + count + ' on this page. Thanks for stopping by NEJI!';
+            text = 'You\'re visitor #' + count + '. Thanks for being here! 🌊';
         }
 
         if (shouldShow) {
