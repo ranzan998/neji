@@ -795,8 +795,8 @@ function toggleSection(sectionId) {
     dragging = false;
   });
 
-  // ── Position floater below header ─────────────────────────────────────────
-  function positionFloater() {
+// ── Position floater below header ─────────────────────────────────────────
+function positionFloater() {
     const header = document.querySelector('.header');
     if (header && !dragging) {
       const headerBottom = header.getBoundingClientRect().bottom;
@@ -813,6 +813,7 @@ function toggleSection(sectionId) {
   // Mark as dragged once user moves it
   handle.addEventListener('mousedown', function() { floater.dataset.dragged = 'true'; });
   handle.addEventListener('touchstart', function() { floater.dataset.dragged = 'true'; }, { passive: true });
+  
   let mapOpen = true;
   window.toggleMapFloater = function () {
     const body = document.getElementById("map-floater-body");
