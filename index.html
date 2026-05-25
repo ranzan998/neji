@@ -526,7 +526,7 @@ function toggleSection(sectionId) {
 <style>
   #map-floater {
     position: fixed;
-    top: 80px;
+    top: 220px;
     right: 18px;
     width: 320px;
     background: #fff;
@@ -769,7 +769,50 @@ function toggleSection(sectionId) {
     dragging = false;
   });
 
-  // ── Collapse toggle ────────────────────────────────────────────────────────
+  // ── Touch drag (mobile) ────────────────────────────────────────────────────
+  handle.addEventListener("touchstart", function (e) {
+    if (e.target.id === "map-toggle-btn") return;
+    dragging = true;
+    const rect  = floater.getBoundingClientRect();
+    floater.style.right = "auto";
+    floater.style.left  = rect.left + "px";
+    floater.style.top   = rect.top  + "px";
+    origLeft = rect.left;
+    origTop  = rect.top;
+    startX   = e.touches[0].clientX;
+    startY   = e.touches[0].clientY;
+    e.preventDefault();
+  }, { passive: false });
+
+  document.addEventListener("touchmove", function (e) {
+    if (!dragging) return;
+    floater.style.left = (origLeft + e.touches[0].clientX - startX) + "px";
+    floater.style.top  = (origTop  + e.touches[0].clientY - startY) + "px";
+    e.preventDefault();
+  }, { passive: false });
+
+  document.addEventListener("touchend", function () {
+    dragging = false;
+  });
+
+  // ── Position floater below header ─────────────────────────────────────────
+  function positionFloater() {
+    const header = document.querySelector('.header');
+    if (header && !dragging) {
+      const headerBottom = header.getBoundingClientRect().bottom;
+      // Only reset to default position if floater hasn't been dragged yet
+      if (floater.style.left === '' || floater.style.left === 'auto' || floater.dataset.dragged !== 'true') {
+        floater.style.top = (headerBottom + 20) + 'px';
+      }
+    }
+  }
+
+  positionFloater();
+  window.addEventListener('resize', positionFloater);
+
+  // Mark as dragged once user moves it
+  handle.addEventListener('mousedown', function() { floater.dataset.dragged = 'true'; });
+  handle.addEventListener('touchstart', function() { floater.dataset.dragged = 'true'; }, { passive: true });
   let mapOpen = true;
   window.toggleMapFloater = function () {
     const body = document.getElementById("map-floater-body");
